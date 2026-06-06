@@ -26,7 +26,7 @@ queryRouter.post("/", async (req, res) => {
       const { data: matches, error: matchErr } = await supabase.rpc(
         "match_documents",
         {
-          query_embedding: JSON.stringify(queryVector),
+          query_embedding: queryVector,
           target_org_id: org_id,
           match_threshold: 0.5,
           match_count: 5,

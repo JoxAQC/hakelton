@@ -8,21 +8,12 @@ interface ChatMessage {
   content: string;
 }
 
-// Static mock NGOs for sidebar indexing (matches ngos.json)
-const SIDEBAR_NGOS = [
-  { name: "EcoVida", focus: "Medio Ambiente", hq: "Lima, Perú" },
-  { name: "EducaYa", focus: "Educación", hq: "Santiago, Chile" },
-  { name: "SaludParaTodos", focus: "Salud", hq: "La Paz, Bolivia" },
-  { name: "Derechos Digitales", focus: "Derechos Humanos", hq: "Buenos Aires, Arg" },
-  { name: "Alianza Femenina", focus: "Desarrollo Económico", hq: "Medellín, Col" },
-];
-
 const QUICK_SUGGESTIONS = [
-  "¿Qué ONGs trabajan en medio ambiente?",
-  "Dime los detalles de la ONG EcoVida",
-  "Muéstrame el presupuesto anual de EducaYa",
-  "¿Qué impacto tiene SaludParaTodos?",
-  "Detalles del proyecto Semilla de Negocio",
+  "¿Cuáles son los programas de la Fundación Raíces?",
+  "Cuéntame sobre Aulas Conectadas",
+  "¿Cuántos beneficiarios tiene Becas Futuro?",
+  "¿Qué impacto tiene Tutorías Solidarias?",
+  "¿Cuál es el presupuesto de Formación Docente?",
 ];
 
 import { DATA } from "./LegacyApp";

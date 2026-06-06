@@ -90,7 +90,7 @@ ingestRouter.post("/", async (req, res) => {
             content_type,
             filename: file?.file_name || null,
           },
-          embedding: JSON.stringify(vectors[i]),
+          embedding: vectors[i],
         }));
 
         const { error: embErr } = await supabase

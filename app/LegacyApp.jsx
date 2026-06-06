@@ -238,6 +238,8 @@ const DATA = (function () {
   return { people, conversations, transcript, teamReports, reports, draftBlocks, analytics, documents, projects, audioInbox };
 })();
 
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3000";
+
 export async function loadSupabaseData() {
   try {
     const { data: org } = await supabase
@@ -246,17 +248,161 @@ export async function loadSupabaseData() {
       .eq("name", "Fundación Raíces")
       .single();
 
-    if (org && org.programs) {
+    if (org) {
+      DATA.orgId = org.id;
       DATA.orgCategory = org.category;
-      DATA.projects = org.programs.map((p, i) => ({
-        id: p.id,
-        label: p.name,
-        color: ["#6B8875", "#4A6352", "#7A9480", "#8B7355"][i % 4],
-        count: Math.floor(Math.random() * 5) + 1
-      }));
+      if (org.programs) {
+        const oldIds = ["aulas", "tutorias", "formacion", "becas"];
+        DATA.projects = org.programs.map((p, i) => ({
+          id: p.id,
+          label: p.name,
+          color: ["#2563EB", "#0EA5E9", "#7C3AED", "#0369A1"][i % 4],
+          count: 0
+        }));
+        const idMap = {};
+        oldIds.forEach((old, i) => { if (DATA.projects[i]) idMap[old] = DATA.projects[i].id; });
+        DATA.audioInbox.forEach(item => { if (idMap[item.project]) item.project = idMap[item.project]; });
+      }
     }
   } catch (error) {
-    console.error("Error loading data from Supabase:", error);
+    console.error("Error loading org from Supabase:", error);
+  }
+
+  // Load dashboard data
+  if (DATA.orgId) {
+    try {
+      const resp = await fetch(`${BACKEND_URL}/api/dashboard/${DATA.orgId}`);
+      const dash = await resp.json();
+      if (dash.status === "ok" && dash.kpis) {
+        DATA.analytics.base = {
+          impacted: dash.kpis.impacted || DATA.analytics.base.impacted,
+          voices: dash.kpis.voices || DATA.analytics.base.voices,
+          events: dash.kpis.events || DATA.analytics.base.events,
+          docs: dash.kpis.docs || DATA.analytics.base.docs,
+        };
+      }
+      if (dash.programs?.length > 0) {
+        const base = DATA.analytics.base;
+        const newPD = { todos: { label: "Todos", impacted: base.impacted, voices: base.voices, events: base.events, docs: base.docs } };
+        dash.programs.forEach((p, i) => {
+          const key = p.name.toLowerCase().replace(/\s+/g, "_").slice(0, 12);
+          newPD[key] = {
+            label: p.name,
+            impacted: Math.round(base.impacted / dash.programs.length),
+            voices: Math.round(base.voices / dash.programs.length),
+            events: Math.max(1, Math.round(base.events / dash.programs.length)),
+            docs: Math.max(1, Math.round(base.docs / dash.programs.length)),
+          };
+        });
+        PROJECT_DATA = newPD;
+      }
+    } catch (e) {
+      console.warn("Dashboard fallback to mock:", e);
+    }
+  }
+
+  // Load documents
+  if (DATA.orgId) {
+    try {
+      const { data: docs } = await supabase
+        .from("documents")
+        .select("id, original_filename, content_type, file_size, processing_status, extracted_text, created_at")
+        .eq("org_id", DATA.orgId)
+        .order("created_at", { ascending: false });
+
+      if (docs && docs.length > 0) {
+        DATA.documents = docs.map(d => ({
+          id: d.id,
+          name: d.original_filename || `documento.${d.content_type || "txt"}`,
+          type: d.content_type === "application/pdf" ? "pdf" :
+                (d.content_type || "").includes("sheet") || (d.content_type || "").includes("csv") ? "xls" : "doc",
+          size: d.file_size ? (d.file_size > 1e6 ? (d.file_size / 1e6).toFixed(1) + " MB" : Math.round(d.file_size / 1024) + " KB") : "—",
+          status: d.processing_status || "done",
+          note: d.extracted_text ? `${d.extracted_text.length} caracteres` : "Procesado",
+          detected: [],
+        }));
+      }
+    } catch (e) {
+      console.warn("Documents fallback to mock:", e);
+    }
+  }
+
+  // Load reports
+  if (DATA.orgId) {
+    try {
+      const resp = await fetch(`${BACKEND_URL}/api/reports/${DATA.orgId}`);
+      const rData = await resp.json();
+      if (rData.status === "ok" && rData.reports?.length > 0) {
+        const realReports = rData.reports.map((r, i) => ({
+          id: r.id,
+          title: r.title || "Informe sin título",
+          program: r.content?.program || DATA.orgCategory || "General",
+          status: r.status === "draft" ? "Borrador en revisión" : r.status === "published" ? "Aprobado" : r.status,
+          voices: r.content?.blocks?.length || 0,
+          updated: new Date(r.updated_at || r.created_at).toLocaleDateString("es-PE"),
+          color: ["#2563EB", "#0EA5E9", "#7C3AED", "#0369A1"][i % 4],
+          impact: 0,
+          impactLabel: "secciones",
+        }));
+        DATA.reports = [...realReports, ...DATA.reports];
+      }
+    } catch (e) {
+      console.warn("Reports fallback to mock:", e);
+    }
+  }
+
+  // Load activities for Convos
+  if (DATA.orgId) {
+    try {
+      const { data: acts } = await supabase
+        .from("activities")
+        .select("*")
+        .eq("org_id", DATA.orgId)
+        .order("created_at", { ascending: false })
+        .limit(20);
+
+      if (acts && acts.length > 0) {
+        const realInbox = acts.map((a, i) => ({
+          id: a.id,
+          project: DATA.projects[i % DATA.projects.length]?.id || "aulas",
+          who: "carlosH",
+          at: new Date(a.created_at).toLocaleDateString("es-PE"),
+          dur: "—",
+          unread: false,
+          subject: a.description || "Actividad registrada",
+          preview: (a.raw_data?.content_type || a.description || "").slice(0, 80),
+          text: a.description || "",
+          tags: [a.source || "sistema"],
+        }));
+        DATA.audioInbox = [...realInbox, ...DATA.audioInbox];
+      }
+    } catch (e) {
+      console.warn("Activities fallback to mock:", e);
+    }
+  }
+
+  // Load team (users)
+  if (DATA.orgId) {
+    try {
+      const { data: users } = await supabase
+        .from("users")
+        .select("*")
+        .eq("org_id", DATA.orgId);
+
+      if (users && users.length > 0) {
+        DATA.team = users.map(u => ({
+          p: {
+            name: u.display_name || u.email,
+            color: "var(--blue)",
+            initials: (u.display_name || u.email).split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase(),
+          },
+          role: u.role === "admin" ? "Coordinadora" : u.role === "field" ? "Equipo de campo" : u.role || "Miembro",
+          perm: u.role === "admin" ? "Puede crear y aprobar informes" : "Recoge y etiqueta voces",
+        }));
+      }
+    } catch (e) {
+      console.warn("Users fallback to mock:", e);
+    }
   }
 }
 
@@ -1402,6 +1548,7 @@ if (typeof window !== "undefined") window.Onboarding = Onboarding;
 /* Flujo de generación de informes (pieza central) → window.ReportFlow */
 const rUse = useState;
 const rEff = useEffect;
+const rRef = useRef;
 
 /* ---- Gráficos SVG simples ---- */
 function BarChart({ data, color = "#2563EB", h = 72 }) {
@@ -1564,14 +1711,39 @@ function PickSources({ picked, setPicked, docs, setDocs }) {
 }
 
 /* ---------- Paso 1: la IA arma el borrador (con espera honesta) ---------- */
-function Drafting({ done }) {
+function Drafting({ done, setBlocks, setMetrics }) {
   const [phase, setPhase] = rUse(0);
+  const apiCalled = rRef(false);
   const phases = [
     "Reuniendo las notas de voz…",
     "Transcribiendo y ordenando por tema…",
     "Contando voces, personas y temas…",
     "Redactando un borrador (revisable)…",
   ];
+
+  rEff(() => {
+    if (apiCalled.current) return;
+    apiCalled.current = true;
+
+    if (DATA.orgId) {
+      fetch(`${BACKEND_URL}/api/reports/generate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ org_id: DATA.orgId }),
+      })
+        .then(r => r.json())
+        .then(data => {
+          if (data.status === "ok" && data.blocks?.length > 0) {
+            setBlocks(data.blocks.map(b => ({ ...b, include: b.include !== false })));
+            if (data.metrics?.length > 0) {
+              setMetrics(data.metrics.map(m => ({ ...m, include: m.include !== false })));
+            }
+          }
+        })
+        .catch(err => console.warn("Report generation fallback to mock:", err));
+    }
+  }, []);
+
   rEff(() => {
     if (phase >= phases.length) { const t = setTimeout(done, 350); return () => clearTimeout(t); }
     const t = setTimeout(() => setPhase(p => p + 1), 720);
@@ -2025,7 +2197,7 @@ function ReportFlow({ onClose, tone }) {
 
       <div className="page" style={{ maxWidth: step === 3 ? 1180 : step === 2 ? 1100 : 700, margin: "0 auto" }}>
         {step === 0 && <PickSources picked={picked} setPicked={setPicked} docs={docs} setDocs={setDocs} />}
-        {step === 1 && <Drafting done={() => setStep(2)} />}
+        {step === 1 && <Drafting done={() => setStep(2)} setBlocks={setBlocks} setMetrics={setMetrics} />}
         {step === 2 && <ReviewDraft blocks={blocks} setBlocks={setBlocks} metrics={metrics} setMetrics={setMetrics} tone={tone} />}
         {step === 3 && <Share blocks={blocks} metrics={metrics} onClose={onClose} />}
 
@@ -2204,7 +2376,7 @@ function Panel({ title, sub, children, foot }) {
 }
 
 /* Datos por proyecto */
-const PROJECT_DATA = {
+let PROJECT_DATA = {
   todos:    { label: "Todos",                    impacted: 1240, voices: 142, events: 8, docs: 11 },
   aulas:    { label: "Aulas Conectadas",         impacted: 480,  voices: 48,  events: 3, docs: 4  },
   tutorias: { label: "Tutorías Solidarias",      impacted: 340,  voices: 36,  events: 2, docs: 3  },
@@ -2417,8 +2589,9 @@ function Importar({ onGenerate, goDatos }) {
   const [drag, setDrag] = iUse(false);
   const inputRef = iRef(null);
 
-  const addFiles = (list) => {
-    const incoming = Array.from(list).map((file, i) => {
+  const addFiles = async (list) => {
+    const rawFiles = Array.from(list);
+    const incoming = rawFiles.map((file, i) => {
       const type = extType(file.name);
       const meta = TYPE_META[type];
       const n = type === "xls" ? 40 + Math.floor(Math.random() * 110) : 2 + Math.floor(Math.random() * 8);
@@ -2426,13 +2599,63 @@ function Importar({ onGenerate, goDatos }) {
         id: "u" + Date.now() + i, name: file.name, type, status: "proc",
         size: file.size ? (file.size > 1e6 ? (file.size / 1e6).toFixed(1) + " MB" : Math.round(file.size / 1024) + " KB") : "—",
         note: meta.note(n), detected: meta.detected,
+        _file: file,
       };
     });
     if (!incoming.length) return;
     setFiles(f => [...incoming, ...f]);
-    incoming.forEach((doc, k) => {
-      setTimeout(() => setFiles(f => f.map(x => x.id === doc.id ? { ...x, status: "done" } : x)), 1400 + k * 500);
-    });
+
+    for (const doc of incoming) {
+      try {
+        const file = doc._file;
+        let storageUrl = null;
+        const storagePath = `${DATA.orgId || "default"}/${Date.now()}_${file.name}`;
+
+        const { error: uploadErr } = await supabase.storage
+          .from("documents")
+          .upload(storagePath, file);
+
+        if (!uploadErr) {
+          const { data: urlData } = supabase.storage.from("documents").getPublicUrl(storagePath);
+          storageUrl = urlData?.publicUrl || null;
+        }
+
+        let textContent = "";
+        const isTextFile = /\.(txt|csv|md)$/i.test(file.name);
+        if (isTextFile) {
+          try { textContent = await file.text(); } catch {}
+        }
+
+        const resp = await fetch(`${BACKEND_URL}/api/ingest`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            org_id: DATA.orgId,
+            source: "web",
+            content_type: /pdf/i.test(file.type) ? "pdf" : /sheet|csv|excel/i.test(file.type || file.name) ? "excel" : /doc/i.test(file.type) ? "docx" : "text",
+            text_content: textContent,
+            file: {
+              file_name: file.name,
+              mime_type: file.type,
+              file_size: file.size,
+              storage_url: storageUrl,
+              storage_path: storagePath,
+            },
+            preprocessed: textContent ? { extracted_text: textContent } : undefined,
+          }),
+        });
+        const result = await resp.json();
+
+        setFiles(f => f.map(x => x.id === doc.id ? {
+          ...x, status: "done",
+          note: result.reply_message || x.note,
+          _file: undefined,
+        } : x));
+      } catch (err) {
+        console.error("Upload error:", err);
+        setFiles(f => f.map(x => x.id === doc.id ? { ...x, status: "done", note: "Error al subir", _file: undefined } : x));
+      }
+    }
   };
 
   const onDrop = (e) => { e.preventDefault(); setDrag(false); if (e.dataTransfer.files) addFiles(e.dataTransfer.files); };
@@ -2512,6 +2735,8 @@ function Sidebar({ page, setPage, open, onNavigate }) {
     { id: "inicio", icon: "home", label: "Inicio" },
     { id: "convos", icon: "chat", label: "Mensajes", badge: "5" },
     { id: "informes", icon: "doc", label: "Informes" },
+    { id: "importar", icon: "upload", label: "Importar" },
+    { id: "datos", icon: "chart", label: "Panel de datos" },
   ];
   const orgNav = [
     { id: "equipo", icon: "users", label: "Equipo" },
@@ -2595,7 +2820,7 @@ function Convos({ onNew }) {
   const [note, setNote] = aUse("");
 
   const audio = DATA.audioInbox.find(a => a.id === sel) || DATA.audioInbox[0];
-  const person = audio ? DATA.people[audio.who] : null;
+  const person = audio ? (DATA.people[audio.who] || { name: audio.subject || "Actividad", color: "#2563EB", initials: "AC", role: "Sistema" }) : null;
   const project = audio ? DATA.projects.find(p => p.id === audio.project) : null;
   const unreadTotal = DATA.audioInbox.filter(a => a.unread).length;
 
@@ -2659,7 +2884,7 @@ function Convos({ onNew }) {
                 {proj.label}
               </div>
               {items.map(a => {
-                const p = DATA.people[a.who];
+                const p = DATA.people[a.who] || { name: a.subject || "Actividad", color: "#2563EB", initials: "AC", role: "Sistema" };
                 const isSel = sel === a.id;
                 return (
                   <button key={a.id} onClick={() => setSel(a.id)}
@@ -2865,11 +3090,12 @@ function Automatizaciones() {
 
 /* ---------------- Equipo (simple) ---------------- */
 function Equipo() {
-  const team = [
+  const fallbackTeam = [
     { p: { name: "Carla Vega", color: "var(--blue)", initials: "CV" }, role: "Coordinadora", perm: "Puede crear y aprobar informes" },
     { p: { name: "Carlos Ruiz", color: "var(--blue)", initials: "CR" }, role: "Equipo de campo", perm: "Recoge y etiqueta voces" },
     { p: { name: "Ana Soto", color: "var(--blue-deep)", initials: "AS" }, role: "Dirección", perm: "Solo lectura de informes finales" },
   ];
+  const team = DATA.team && DATA.team.length > 0 ? DATA.team : fallbackTeam;
   return (
     <div className="page float-in" style={{ maxWidth: 760 }}>
       <div className="row" style={{ marginBottom: 20 }}><div><h2 style={{ fontSize: 24, fontWeight: 800, letterSpacing: "-.02em", margin: 0 }}>Equipo</h2><p style={{ color: "var(--muted)", fontSize: 14.5, margin: "4px 0 0" }}>Cada persona ve solo lo que necesita.</p></div><div className="grow" /><button className="btn btn-primary"><Icon name="plus" size={17} /> Invitar</button></div>
@@ -2965,6 +3191,7 @@ function App({ activeProject, setActiveProject }) {
             {page === "inicio" && <Inicio onNew={() => setFlow(true)} setPage={setPage} copy={copy} />}
             {page === "convos" && <div style={{ height: "100vh", overflow: "hidden" }}><Convos onNew={() => setFlow(true)} /></div>}
             {page === "informes" && <Informes onNew={() => setFlow(true)} />}
+            {page === "importar" && <Importar onGenerate={() => setFlow(true)} goDatos={() => setPage("datos")} />}
             {page === "datos" && <Analytics activeProject={activeProject} setActiveProject={setActiveProject} setPage={setPage} onNew={() => setFlow(true)} copy={copy} />}
             {page === "autom" && <Automatizaciones />}
             {page === "equipo" && <Equipo />}

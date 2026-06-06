@@ -4,6 +4,9 @@ import cors from "cors";
 import { chatRouter } from "./routes/chat.js";
 import { ingestRouter } from "./routes/ingest.js";
 import { queryRouter } from "./routes/query.js";
+import { dashboardRouter } from "./routes/dashboard.js";
+import { reportsRouter } from "./routes/reports.js";
+import { onboardRouter } from "./routes/onboard.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -29,6 +32,9 @@ app.get("/health", (_req, res) => {
 app.use("/api/chat", chatRouter);
 app.use("/api/ingest", ingestRouter);
 app.use("/api/query", queryRouter);
+app.use("/api/dashboard", dashboardRouter);
+app.use("/api/reports", reportsRouter);
+app.use("/api/onboard", onboardRouter);
 
 app.listen(PORT, () => {
   console.log(`[hakelton-backend] listening on :${PORT}`);
