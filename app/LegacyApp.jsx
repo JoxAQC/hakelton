@@ -948,16 +948,59 @@ function Illu({ label, h = 220, tone = "blue" }) {
 }
 
 /* ============ VARIACIÓN A — Asistente guiado paso a paso ============ */
+
+const PROGRAM_METRICS = {
+  salud: {
+    emoji: "🫀", label: "Salud comunitaria",
+    metrics: [
+      "Número de personas atendidas (por campaña, por mes)",
+      "Tipo de atención brindada (consulta, derivación, tamizaje)",
+      "Porcentaje de derivaciones completadas vs. iniciadas",
+      "Cobertura geográfica (comunidades, distritos alcanzados)",
+      "Casos con seguimiento activo",
+    ],
+  },
+  amb: {
+    emoji: "🌿", label: "Medio ambiente",
+    metrics: [
+      "Kilos / toneladas de residuos gestionados",
+      "Número de jornadas realizadas",
+      "Familias o comunidades beneficiadas",
+      "Litros de agua tratada o acceso habilitado",
+      "Voluntarios movilizados por actividad",
+    ],
+  },
+  edu: {
+    emoji: "📋", label: "Educación",
+    metrics: [
+      "Número de beneficiarios por programa",
+      "Tasa de asistencia y deserción",
+      "Talleres completados vs. planificados",
+      "Becas otorgadas y seguimiento de beneficiarios",
+      "Avance individual (si hay seguimiento por persona)",
+    ],
+  },
+  der: {
+    emoji: "🛡️", label: "Derechos",
+    metrics: [
+      "Casos acompañados activos vs. cerrados",
+      "Tipo de vulneración más frecuente",
+      "Tiempo promedio de resolución o acompañamiento",
+      "Derivaciones a instancias legales o institucionales",
+      "Porcentaje de casos con resultado documentado",
+    ],
+  },
+};
+
 function VariantWizard({ onFinish }) {
   const [step, setStep] = oUse(0);
-  const [progs, setProgs] = oUse(["salud"]);
-  const steps = ["Hola", "Conectar", "Temas", "Listo"];
-  const toggle = (id) => setProgs(p => p.includes(id) ? p.filter(x => x !== id) : [...p, id]);
+  const [prog, setProg] = oUse("salud");
+  const steps = ["Hola", "Conectar", "Rubro", "Listo"];
   const programs = [
-    { id: "salud", icon: "heart", t: "Salud comunitaria", d: "Postas, campañas, acceso" },
-    { id: "amb", icon: "spark", t: "Medio ambiente", d: "Jornadas, agua, residuos" },
+    { id: "salud", icon: "heart", t: "Salud comunitaria", d: "Postas, campañas, acceso a medicinas" },
+    { id: "amb", icon: "spark", t: "Medio ambiente", d: "Jornadas de limpieza, agua, residuos" },
     { id: "edu", icon: "doc", t: "Educación", d: "Talleres, escuelas, becas" },
-    { id: "der", icon: "shield", t: "Derechos", d: "Acompañamiento, denuncias" },
+    { id: "der", icon: "shield", t: "Derechos", d: "Acompañamiento legal, denuncias" },
   ];
 
   return (
@@ -996,18 +1039,32 @@ function VariantWizard({ onFinish }) {
           </>}
           {step === 2 && <>
             <div><Chip tone="blue" dot>Paso 2 de 3</Chip></div>
-            <h2 style={{ fontSize: 27, fontWeight: 800, letterSpacing: "-.02em", margin: "16px 0 0", lineHeight: 1.15 }}>¿Qué temas quieres recoger?</h2>
-            <p style={{ fontSize: 15, color: "var(--ink-soft)", lineHeight: 1.6, marginTop: 12 }}>Solo para sugerirte mejor. <b>Tú siempre decides</b> qué entra en cada informe. Puedes cambiarlo después.</p>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginTop: 18 }}>
+            <h2 style={{ fontSize: 27, fontWeight: 800, letterSpacing: "-.02em", margin: "16px 0 0", lineHeight: 1.15 }}>¿Cuál es el rubro de tu organización?</h2>
+            <p style={{ fontSize: 14, color: "var(--ink-soft)", lineHeight: 1.55, marginTop: 10 }}>Selecciona uno. Esto le ayudará a Voz a sugerirte las métricas correctas para tus informes.</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 16 }}>
               {programs.map(p => {
-                const on = progs.includes(p.id);
+                const on = prog === p.id;
                 return (
-                  <button key={p.id} onClick={() => toggle(p.id)} style={{
-                    textAlign: "left", padding: "13px 14px", borderRadius: "var(--r-sm)", background: on ? "var(--blue-tint)" : "var(--surface)",
-                    border: "1.5px solid " + (on ? "var(--blue)" : "var(--line)"), transition: "all .15s", display: "flex", gap: 11, alignItems: "flex-start",
+                  <button key={p.id} onClick={() => setProg(p.id)} style={{
+                    textAlign: "left", padding: "12px 14px", borderRadius: "var(--r-sm)",
+                    background: on ? "var(--blue-tint)" : "var(--surface)",
+                    border: "1.5px solid " + (on ? "var(--blue)" : "var(--line)"),
+                    transition: "all .15s", display: "flex", gap: 12, alignItems: "center", cursor: "pointer",
                   }}>
-                    <span style={{ color: on ? "var(--blue)" : "var(--muted)" }}><Icon name={p.icon} size={19} /></span>
-                    <span><div style={{ fontWeight: 700, fontSize: 14 }}>{p.t}</div><div style={{ fontSize: 12, color: "var(--muted)" }}>{p.d}</div></span>
+                    {/* Radio dot */}
+                    <span style={{
+                      width: 18, height: 18, borderRadius: "50%", flex: "none",
+                      border: "2px solid " + (on ? "var(--blue)" : "var(--line)"),
+                      background: on ? "var(--blue)" : "transparent",
+                      display: "grid", placeItems: "center",
+                    }}>
+                      {on && <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#fff" }} />}
+                    </span>
+                    <span style={{ color: on ? "var(--blue)" : "var(--muted)", flex: "none" }}><Icon name={p.icon} size={17} /></span>
+                    <span>
+                      <div style={{ fontWeight: 700, fontSize: 14, color: on ? "var(--blue-deep)" : "var(--ink)" }}>{p.t}</div>
+                      <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 1 }}>{p.d}</div>
+                    </span>
                   </button>
                 );
               })}
@@ -1045,7 +1102,30 @@ function VariantWizard({ onFinish }) {
             </div>
           </div>}
           {step === 1 && <FakeQR />}
-          {step === 2 && <Illu label="ilustración · temas de tu ONG" h={240} />}
+          {step === 2 && (() => {
+            const m = PROGRAM_METRICS[prog];
+            return (
+              <div style={{ width: "100%", maxWidth: 280 }}>
+                <div style={{ background: "#fff", borderRadius: "var(--r)", padding: "20px 22px", boxShadow: "var(--sh)" }}>
+                  <div style={{ fontSize: 22, marginBottom: 6 }}>{m.emoji}</div>
+                  <div style={{ fontWeight: 800, fontSize: 14.5, color: "var(--ink)", marginBottom: 12 }}>
+                    Métricas que Voz tracked para <span style={{ color: "var(--blue)" }}>{m.label}</span>
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                    {m.metrics.map((metric, i) => (
+                      <div key={i} style={{ display: "flex", gap: 9, alignItems: "flex-start" }}>
+                        <span style={{ color: "var(--blue)", flex: "none", marginTop: 1 }}><Icon name="check" size={13} /></span>
+                        <span style={{ fontSize: 12.5, color: "var(--ink-soft)", lineHeight: 1.45 }}>{metric}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{ marginTop: 14, padding: "9px 12px", background: "var(--blue-tint)", borderRadius: "var(--r-sm)", fontSize: 11.5, color: "var(--blue-deep)", lineHeight: 1.4 }}>
+                    Puedes agregar o quitar métricas en cualquier momento desde la configuración.
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
           {step === 3 && <div style={{ textAlign: "center" }}>
             <div style={{ width: 92, height: 92, borderRadius: 999, background: "var(--green-tint)", display: "grid", placeItems: "center", margin: "0 auto 16px", color: "var(--green)" }}><Icon name="check" size={46} /></div>
             <div style={{ fontWeight: 700, color: "var(--ink-soft)" }}>WhatsApp conectado</div>
@@ -1232,6 +1312,57 @@ if (typeof window !== "undefined") window.Onboarding = Onboarding;
 const rUse = useState;
 const rEff = useEffect;
 
+/* ---- Gráficos SVG simples ---- */
+function BarChart({ data, color = "#5D7A66", h = 72 }) {
+  const max = Math.max(...data.map(d => d.value), 1);
+  const w = 100 / data.length;
+  return (
+    <svg width="100%" height={h} style={{ display: "block" }}>
+      {data.map((d, i) => {
+        const barH = Math.max(3, (d.value / max) * (h - 18));
+        const x = i * w + w * 0.15;
+        const bw = w * 0.7;
+        return (
+          <g key={i}>
+            <rect x={`${x}%`} y={h - 18 - barH} width={`${bw}%`} height={barH}
+              fill={color} opacity={0.75} rx={3} />
+            <text x={`${x + bw / 2}%`} y={h - 3} textAnchor="middle"
+              fontSize={8} fill="#999" fontFamily="inherit">{d.label}</text>
+            <text x={`${x + bw / 2}%`} y={h - 20 - barH} textAnchor="middle"
+              fontSize={8} fill={color} fontFamily="inherit" fontWeight="700">{d.value}</text>
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+function DonutChart({ segments, size = 72 }) {
+  const total = segments.reduce((s, d) => s + d.value, 0) || 1;
+  const r = size / 2 - 9;
+  const cx = size / 2, cy = size / 2;
+  const circ = 2 * Math.PI * r;
+  let off = -0.25;
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ display: "block" }}>
+      {segments.map((seg, i) => {
+        const pct = seg.value / total;
+        const dash = pct * circ;
+        const rot = off * 360;
+        off += pct;
+        return (
+          <circle key={i} r={r} cx={cx} cy={cy} fill="none"
+            stroke={seg.color} strokeWidth={11}
+            strokeDasharray={`${dash} ${circ - dash}`}
+            transform={`rotate(${rot} ${cx} ${cy})`} />
+        );
+      })}
+      <text x={cx} y={cy + 4} textAnchor="middle" fontSize={11} fontWeight="800"
+        fill="#1A1A1A" fontFamily="inherit">{segments[0]?.value}%</text>
+    </svg>
+  );
+}
+
 function StepBar({ step }) {
   const names = ["Elegir voces", "Borrador IA", "Revisar y editar", "Compartir"];
   return (
@@ -1247,43 +1378,95 @@ function StepBar({ step }) {
   );
 }
 
-/* ---------- Paso 0: elegir fuentes ---------- */
-function PickSources({ picked, setPicked, tone }) {
+/* ---------- Paso 0: elegir fuentes + documentos ---------- */
+function PickSources({ picked, setPicked, docs, setDocs }) {
   const toggle = (id) => setPicked(p => p.includes(id) ? p.filter(x => x !== id) : [...p, id]);
   const totalVoices = DATA.conversations.filter(c => picked.includes(c.id)).reduce((a, c) => a + c.voiceNotes, 0);
+
+  const handleFileDrop = (e) => {
+    e.preventDefault();
+    const files = Array.from(e.dataTransfer?.files || e.target.files || []);
+    const newDocs = files.map(f => ({ id: f.name, name: f.name, size: (f.size / 1024).toFixed(0) + " KB", status: "done" }));
+    setDocs(d => [...d, ...newDocs]);
+  };
+
   return (
-    <div className="float-in">
-      <div style={{ maxWidth: 720 }}>
-        <h2 style={{ fontSize: 23, fontWeight: 800, letterSpacing: "-.02em", margin: "0 0 6px" }}>¿De qué voces quieres partir?</h2>
-        <p style={{ color: "var(--ink-soft)", fontSize: 15, margin: 0, lineHeight: 1.55 }}>Elige las conversaciones. Voz reunirá las notas de voz y mensajes ya transcritos — y siempre te mostrará quién dijo qué.</p>
+    <div className="float-in" style={{ maxWidth: 800 }}>
+      {/* Conversaciones */}
+      <div style={{ marginBottom: 28 }}>
+        <h2 style={{ fontSize: 22, fontWeight: 800, letterSpacing: "-.02em", margin: "0 0 4px" }}>¿De qué voces quieres partir?</h2>
+        <p style={{ color: "var(--ink-soft)", fontSize: 14.5, margin: "0 0 18px", lineHeight: 1.5 }}>Elige las conversaciones de audio que entrarán en el informe.</p>
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          {DATA.conversations.map(c => {
+            const on = picked.includes(c.id);
+            return (
+              <button key={c.id} onClick={() => toggle(c.id)} style={{
+                padding: "14px 16px", display: "flex", gap: 13, alignItems: "center", textAlign: "left",
+                border: "1.5px solid " + (on ? "var(--blue)" : "var(--line)"),
+                background: on ? "var(--blue-tint)" : "#fff",
+                borderRadius: "var(--r)", transition: "all .15s", cursor: "pointer",
+              }}>
+                <div style={{ width: 22, height: 22, borderRadius: 6, border: "2px solid " + (on ? "var(--blue)" : "var(--line)"), background: on ? "var(--blue)" : "transparent", display: "grid", placeItems: "center", flex: "none", color: "#fff" }}>
+                  {on && <Icon name="check" size={13} />}
+                </div>
+                <Avatar p={{ color: c.color, initials: c.initials }} size={38} />
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 2 }}>
+                    <span style={{ fontWeight: 700, fontSize: 14.5 }}>{c.name}</span>
+                    <span style={{ fontSize: 11, color: "var(--muted)", background: "var(--surface-2)", padding: "1px 7px", borderRadius: 999, fontWeight: 600 }}>{c.kind}</span>
+                  </div>
+                  <div style={{ fontSize: 12.5, color: "var(--muted)" }}>{c.summary}</div>
+                </div>
+                <div style={{ textAlign: "right", flex: "none" }}>
+                  <div style={{ display: "flex", gap: 5, alignItems: "center", color: "var(--warm-deep)", fontWeight: 700, fontSize: 13 }}><Icon name="mic" size={13} /> {c.voiceNotes} voces</div>
+                  <div style={{ fontSize: 11.5, color: "var(--faint)", marginTop: 2 }}>{c.lastAt}</div>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+        <div style={{ marginTop: 12, display: "flex", gap: 8, alignItems: "center", color: "var(--ink-soft)", fontSize: 13.5 }}>
+          <Icon name="mic" size={15} style={{ color: "var(--warm)" }} />
+          <span><b style={{ color: "var(--ink)" }}>{totalVoices} voces</b> de {picked.length} conversación{picked.length !== 1 ? "es" : ""}</span>
+        </div>
       </div>
-      <div className="col" style={{ gap: 11, marginTop: 22, maxWidth: 760 }}>
-        {DATA.conversations.map(c => {
-          const on = picked.includes(c.id);
-          return (
-            <button key={c.id} onClick={() => toggle(c.id)} className="card" style={{
-              padding: 16, display: "flex", gap: 14, alignItems: "center", textAlign: "left",
-              border: "1.5px solid " + (on ? "var(--blue)" : "var(--line)"), background: on ? "var(--blue-tint)" : "var(--surface)", transition: "all .15s",
-            }}>
-              <div style={{ width: 24, height: 24, borderRadius: 7, border: "2px solid " + (on ? "var(--blue)" : "var(--line)"), background: on ? "var(--blue)" : "transparent", display: "grid", placeItems: "center", flex: "none", color: "#fff" }}>
-                {on && <Icon name="check" size={15} />}
+
+      {/* Documentos adicionales */}
+      <div>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+          <h3 style={{ fontSize: 16, fontWeight: 800, margin: 0 }}>Documentos adicionales</h3>
+          <span style={{ fontSize: 12, color: "var(--muted)", fontWeight: 600 }}>Opcional</span>
+        </div>
+        <p style={{ color: "var(--ink-soft)", fontSize: 13.5, margin: "0 0 14px", lineHeight: 1.5 }}>Sube actas, listas de asistencia, encuestas o cualquier archivo que quieras incluir en el contexto del informe.</p>
+
+        {/* Drop zone */}
+        <label onDragOver={e => e.preventDefault()} onDrop={handleFileDrop}
+          style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 10, padding: "24px 20px", border: "2px dashed var(--line)", borderRadius: "var(--r)", background: "var(--surface-2)", cursor: "pointer", transition: "border-color .15s", textAlign: "center" }}>
+          <input type="file" multiple onChange={handleFileDrop} style={{ display: "none" }} accept=".pdf,.xlsx,.xls,.csv,.docx,.txt" />
+          <Icon name="upload" size={28} style={{ color: "var(--muted)" }} />
+          <div>
+            <div style={{ fontWeight: 700, fontSize: 14, color: "var(--ink)" }}>Arrastra archivos aquí o haz clic para seleccionar</div>
+            <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 3 }}>PDF, Excel, CSV, Word · Máx 20 MB por archivo</div>
+          </div>
+        </label>
+
+        {/* Archivos ya subidos (mock inicial + nuevos) */}
+        {(docs.length > 0) && (
+          <div style={{ marginTop: 12, display: "flex", flexDirection: "column", gap: 8 }}>
+            {[...DATA.documents, ...docs].map((d, i) => (
+              <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 14px", background: "#fff", border: "1px solid var(--line-soft)", borderRadius: "var(--r-sm)" }}>
+                <div style={{ width: 32, height: 32, borderRadius: 8, background: "var(--blue-tint)", display: "grid", placeItems: "center", flex: "none" }}>
+                  <Icon name="doc" size={16} style={{ color: "var(--blue)" }} />
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 13.5, fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{d.name}</div>
+                  <div style={{ fontSize: 11.5, color: "var(--muted)" }}>{d.size} · {d.note || "Listo"}</div>
+                </div>
+                <span style={{ fontSize: 11, fontWeight: 700, color: "var(--green-deep)", background: "var(--green-tint)", padding: "2px 8px", borderRadius: 999 }}>✓ Listo</span>
               </div>
-              <Avatar p={{ color: c.color, initials: c.initials }} size={42} />
-              <div className="grow">
-                <div className="row" style={{ gap: 8 }}><span style={{ fontWeight: 800, fontSize: 15.5 }}>{c.name}</span><Chip>{c.kind}</Chip></div>
-                <div style={{ fontSize: 13, color: "var(--muted)", marginTop: 2 }}>{c.summary}</div>
-              </div>
-              <div style={{ textAlign: "right", flex: "none" }}>
-                <div className="row" style={{ gap: 6, color: "var(--warm-deep)", fontWeight: 700, fontSize: 13.5 }}><Icon name="mic" size={15} /> {c.voiceNotes} voces</div>
-                <div style={{ fontSize: 12, color: "var(--faint)", marginTop: 2 }}>{c.lastAt}</div>
-              </div>
-            </button>
-          );
-        })}
-      </div>
-      <div className="row" style={{ marginTop: 16, gap: 10, color: "var(--ink-soft)", fontSize: 14 }}>
-        <Icon name="mic" size={17} style={{ color: "var(--warm)" }} />
-        <span><b style={{ color: "var(--ink)" }}>{totalVoices} voces</b> de {picked.length} conversación{picked.length !== 1 ? "es" : ""} entrarán como materia prima.</span>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -1326,52 +1509,137 @@ function Drafting({ done }) {
   );
 }
 
-/* ---------- Paso 2: revisar bloques (humano en control) ---------- */
-/* ---------- Indicadores: lo que se cuenta vs. lo que se estima ---------- */
-function MetricBadge({ kind }) {
-  return kind === "counted"
-    ? <Chip tone="green"><Icon name="check" size={13} /> Contado por Voz</Chip>
-    : <Chip tone="amber" dot>Estimado · confírmalo</Chip>;
-}
+/* ---------- Paso 2: WYSIWYG — reporte visual + sidebar de edición ---------- */
+function ReportPreview({ blocks, metrics }) {
+  const included = blocks.filter(b => b.include);
+  const mInc = metrics.filter(m => m.include);
+  const hasEst = mInc.some(m => m.kind === "estimated");
+  const totalVoices = new Set(included.flatMap(b => b.sources.map(s => s.who))).size;
+  const testimBlocks = included.filter(b => b.kindTag === "testimonio");
+  const teamBlocks   = included.filter(b => b.kindTag === "reporte");
 
-function MetricsPanel({ metrics, setMetrics }) {
-  const setVal = (id, v) => setMetrics(m => m.map(x => x.id === id ? { ...x, value: v.replace(/[^0-9.]/g, "") } : x));
-  const setInc = (id, v) => setMetrics(m => m.map(x => x.id === id ? { ...x, include: v } : x));
-  const inc = metrics.filter(m => m.include).length;
   return (
-    <div className="card" style={{ marginBottom: 22, overflow: "hidden" }}>
-      <div className="row" style={{ padding: "15px 18px", borderBottom: "1px solid var(--line-soft)", gap: 11 }}>
-        <span style={{ color: "var(--blue)" }}><Icon name="spark" size={18} /></span>
-        <span style={{ fontWeight: 800, fontSize: 16.5 }}>Indicadores del informe</span>
-        <div className="grow" />
-        <Chip>{inc} incluidos</Chip>
-      </div>
-      <div style={{ padding: "14px 18px" }}>
-        <AINote>Voz <b>cuenta</b> lo que puede verificar (voces, personas, temas) y <b>marca como estimado</b> lo demás. Las cifras estimadas las ajustas tú — <b>nunca inventamos un número</b> para tu informe.</AINote>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(212px,1fr))", gap: 12, marginTop: 14 }}>
-          {metrics.map(mt => {
-            const est = mt.kind === "estimated";
-            return (
-              <div key={mt.id} style={{ padding: 14, borderRadius: "var(--r-sm)", border: "1px solid " + (mt.include && est ? "var(--amber)" : "var(--line)"), background: mt.include ? "var(--surface)" : "var(--surface-2)", opacity: mt.include ? 1 : .55, transition: "all .2s" }}>
-                <div className="row" style={{ marginBottom: 9 }}>
-                  <MetricBadge kind={mt.kind} />
-                  <div className="grow" />
-                  <Switch on={mt.include} warm={est} onClick={() => setInc(mt.id, !mt.include)} />
-                </div>
-                <div className="row" style={{ gap: 4, alignItems: "baseline" }}>
-                  {est
-                    ? <input value={mt.value} onChange={e => setVal(mt.id, e.target.value)} inputMode="numeric"
-                        style={{ width: `${Math.max(2, String(mt.value).length)}ch`, fontSize: 27, fontWeight: 800, letterSpacing: "-.02em", border: "none", borderBottom: "2px dashed var(--amber)", background: "transparent", color: "var(--warm-deep)", fontFamily: "inherit", padding: "0 1px", outline: "none" }} />
-                    : <span style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-.02em" }}>{mt.value}</span>}
-                  {mt.unit && <span style={{ fontSize: 18, fontWeight: 800, color: est ? "var(--warm-deep)" : "var(--muted)" }}>{mt.unit}</span>}
-                  {est && <span style={{ color: "var(--amber)", marginLeft: 2 }} title="Editable"><Icon name="edit" size={13} /></span>}
-                </div>
-                <div style={{ fontSize: 13, fontWeight: 700, color: "var(--ink-soft)", marginTop: 3 }}>{mt.label}</div>
-                {mt.note && <div style={{ fontSize: 11.5, color: "var(--muted)", marginTop: 6, lineHeight: 1.4 }}>{mt.note}</div>}
-              </div>
-            );
-          })}
+    <div style={{ borderRadius: "var(--r-lg)", overflow: "hidden", background: "var(--blue)", boxShadow: "var(--sh-lg)", fontSize: 13 }}>
+
+      {/* Encabezado */}
+      <div style={{ padding: "22px 24px 18px", background: "var(--blue)" }}>
+        <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: ".1em", textTransform: "uppercase", color: "rgba(255,255,255,.55)", marginBottom: 5 }}>
+          Informe de Impacto · Fundación Raíces
         </div>
+        <h2 style={{ fontSize: 22, fontWeight: 900, letterSpacing: "-.025em", color: "#fff", margin: "0 0 10px", lineHeight: 1.1, textTransform: "uppercase" }}>
+          Impacto de la posta médica en Villa El Sol
+        </h2>
+        <div style={{ display: "flex", gap: 8 }}>
+          <span style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,.65)", background: "rgba(255,255,255,.12)", padding: "2px 9px", borderRadius: 999 }}>Salud Comunitaria</span>
+          <span style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,.65)", background: "rgba(255,255,255,.12)", padding: "2px 9px", borderRadius: 999 }}>Marzo 2026</span>
+          <span style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,.65)", background: "rgba(255,255,255,.12)", padding: "2px 9px", borderRadius: 999 }}>
+            {totalVoices} voces recogidas
+          </span>
+        </div>
+      </div>
+
+      {/* Métricas */}
+      {mInc.length > 0 && (
+        <div style={{ display: "grid", gridTemplateColumns: `repeat(${Math.min(mInc.length, 4)}, 1fr)`, gap: 1, background: "var(--blue)" }}>
+          {mInc.slice(0, 4).map((m) => (
+            <div key={m.id} style={{ background: "#fff", padding: "14px 16px" }}>
+              <div style={{ fontSize: 9, fontWeight: 800, letterSpacing: ".06em", textTransform: "uppercase", color: "var(--muted)", marginBottom: 4 }}>{m.label}</div>
+              <div style={{ fontSize: 26, fontWeight: 900, letterSpacing: "-.03em", color: m.kind === "estimated" ? "var(--warm-deep)" : "var(--blue)", lineHeight: 1 }}>
+                {m.value}{m.unit || ""}{m.kind === "estimated" && <span style={{ fontSize: 13, verticalAlign: "super" }}>*</span>}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Cuerpo 2 columnas */}
+      <div style={{ background: "#fff", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 0 }}>
+
+        {/* Col izquierda */}
+        <div style={{ padding: "18px 20px", borderRight: "1px solid var(--line-soft)" }}>
+          {testimBlocks.slice(0, 1).map(b => (
+            <div key={b.id} style={{ marginBottom: 16 }}>
+              <div style={{ fontSize: 9, fontWeight: 800, letterSpacing: ".07em", textTransform: "uppercase", color: "var(--blue)", marginBottom: 6 }}>Resumen ejecutivo</div>
+              <div style={{ fontWeight: 800, fontSize: 13, color: "var(--ink)", marginBottom: 4 }}>{b.heading}</div>
+              <p style={{ fontSize: 12, lineHeight: 1.6, color: "var(--ink-soft)", margin: 0 }}>{b.ai}</p>
+            </div>
+          ))}
+
+          {testimBlocks.flatMap(b => b.sources).length > 0 && (
+            <div>
+              <div style={{ fontSize: 9, fontWeight: 800, letterSpacing: ".07em", textTransform: "uppercase", color: "var(--warm-deep)", marginBottom: 8 }}>Voces de la comunidad</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {testimBlocks.flatMap(b => b.sources).slice(0, 3).map((s, i) => {
+                  const p = DATA.people[s.who];
+                  return (
+                    <div key={i} style={{ padding: "9px 11px", background: "var(--warm-tint)", borderRadius: "var(--r-sm)", borderLeft: "3px solid var(--warm)" }}>
+                      <div style={{ fontStyle: "italic", fontSize: 12, lineHeight: 1.5, color: "var(--ink)", marginBottom: 4 }}>"{s.quote}"</div>
+                      <div style={{ fontSize: 10.5, fontWeight: 700, color: "var(--warm-deep)" }}>— {p.name}</div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Col derecha */}
+        <div style={{ padding: "18px 20px" }}>
+          {teamBlocks.length > 0 && (
+            <div style={{ marginBottom: 14 }}>
+              <div style={{ fontSize: 9, fontWeight: 800, letterSpacing: ".07em", textTransform: "uppercase", color: "var(--blue)", marginBottom: 8 }}>Reporte del equipo</div>
+              {teamBlocks.map(b => (
+                <div key={b.id} style={{ marginBottom: 10 }}>
+                  <div style={{ fontWeight: 800, fontSize: 13, color: "var(--ink)", marginBottom: 3 }}>{b.heading}</div>
+                  <p style={{ fontSize: 12, lineHeight: 1.55, color: "var(--ink-soft)", margin: "0 0 7px" }}>{b.ai}</p>
+                  {b.sources.slice(0, 1).map((s, i) => {
+                    const p = DATA.people[s.who];
+                    return (
+                      <div key={i} style={{ padding: "8px 10px", background: "var(--blue-tint)", borderRadius: "var(--r-sm)", borderLeft: "3px solid var(--blue)" }}>
+                        <div style={{ fontStyle: "italic", fontSize: 11.5, color: "var(--ink)", marginBottom: 3 }}>"{s.quote}"</div>
+                        <div style={{ fontSize: 10.5, fontWeight: 700, color: "var(--blue-deep)" }}>— {p.name}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Gráfico de voces por tema */}
+          <div style={{ marginBottom: 12 }}>
+            <div style={{ fontSize: 9, fontWeight: 800, letterSpacing: ".07em", textTransform: "uppercase", color: "var(--ink-soft)", marginBottom: 5 }}>Voces por tema</div>
+            <BarChart color="var(--blue)" h={60} data={[
+              { label: "Acceso", value: 5 }, { label: "Insumos", value: 3 },
+              { label: "Horario", value: 4 }, { label: "Equipo", value: 6 },
+            ]} />
+          </div>
+
+          {/* Demografía */}
+          <div style={{ padding: "10px 12px", background: "var(--surface-2)", borderRadius: "var(--r-sm)", display: "flex", gap: 10, alignItems: "center" }}>
+            <DonutChart size={56} segments={[
+              { value: 58, color: "var(--blue)" },
+              { value: 42, color: "var(--warm)" },
+            ]} />
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 9, fontWeight: 800, letterSpacing: ".07em", textTransform: "uppercase", color: "var(--ink-soft)", marginBottom: 5 }}>Género</div>
+              {[{ label: "Femenino", v: "58%", c: "var(--blue)" }, { label: "Masculino", v: "42%", c: "var(--warm)" }].map(g => (
+                <div key={g.label} style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 10.5, marginBottom: 2 }}>
+                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: g.c }} />
+                  <span style={{ color: "var(--ink-soft)" }}>{g.label}</span>
+                  <span style={{ fontWeight: 700, color: "var(--ink)", marginLeft: "auto" }}>{g.v}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Pie */}
+      <div style={{ background: "var(--blue)", padding: "10px 22px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <span style={{ fontSize: 10.5, color: "rgba(255,255,255,.55)", fontWeight: 600 }}>Fundación Raíces · Generado con Voz</span>
+        {hasEst && <span style={{ fontSize: 10, color: "rgba(255,255,255,.4)" }}>* Cifra estimada revisada por el equipo</span>}
+        <span style={{ fontSize: 10.5, color: "rgba(255,255,255,.55)", fontWeight: 600 }}>Basado en {totalVoices} voces</span>
       </div>
     </div>
   );
@@ -1381,75 +1649,86 @@ function ReviewDraft({ blocks, setBlocks, metrics, setMetrics, tone }) {
   const [editing, setEditing] = rUse(null);
   const setInc = (id, v) => setBlocks(b => b.map(x => x.id === id ? { ...x, include: v } : x));
   const setText = (id, txt) => setBlocks(b => b.map(x => x.id === id ? { ...x, ai: txt } : x));
-  const incCount = blocks.filter(b => b.include).length;
+  const setMetVal = (id, v) => setMetrics(m => m.map(x => x.id === id ? { ...x, value: v.replace(/[^0-9.]/g, "") } : x));
+  const setMetInc = (id, v) => setMetrics(m => m.map(x => x.id === id ? { ...x, include: v } : x));
 
   return (
-    <div className="float-in">
-      <div className="row" style={{ alignItems: "flex-start", gap: 20, marginBottom: 18, flexWrap: "wrap" }}>
-        <div style={{ maxWidth: 560 }}>
-          <h2 style={{ fontSize: 23, fontWeight: 800, letterSpacing: "-.02em", margin: "0 0 6px" }}>Tu borrador, palabra por palabra</h2>
-          <p style={{ color: "var(--ink-soft)", fontSize: 15, margin: 0, lineHeight: 1.55 }}>Cada sección muestra <b>lo que redactó la IA</b> y, al lado, <b>las voces reales</b> que la sustentan. Edita, quita o conserva lo que quieras.</p>
+    <div className="float-in" style={{ display: "grid", gridTemplateColumns: "1fr 300px", gap: 20, alignItems: "start" }}>
+
+      {/* ── Centro: vista previa viva ── */}
+      <div>
+        <div style={{ fontSize: 12, color: "var(--muted)", fontWeight: 600, marginBottom: 10, display: "flex", alignItems: "center", gap: 7 }}>
+          <span style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--green)", display: "inline-block" }} />
+          Vista previa en tiempo real — lo que edites se refleja aquí
         </div>
-        <div className="grow" />
-        <div className="chip blue" style={{ padding: "7px 13px", fontSize: 13 }}><Icon name="check" size={15} /> {incCount} de {blocks.length} secciones incluidas</div>
+        <ReportPreview blocks={blocks} metrics={metrics} />
       </div>
 
-      <MetricsPanel metrics={metrics} setMetrics={setMetrics} />
+      {/* ── Sidebar: controles de edición ── */}
+      <div style={{ position: "sticky", top: 80, display: "flex", flexDirection: "column", gap: 14 }}>
 
-      <div className="col" style={{ gap: 16 }}>
-        {blocks.map(b => { const isTeam = b.kindTag === "reporte"; return (
-          <div key={b.id} className="card" style={{ opacity: b.include ? 1 : .58, transition: "opacity .2s", border: b.flagged ? "1.5px solid var(--amber)" : "1px solid var(--line)" }}>
-            <div className="row" style={{ padding: "15px 18px", borderBottom: b.include ? "1px solid var(--line-soft)" : "none", gap: 12 }}>
-              <span style={{ fontWeight: 800, fontSize: 16.5 }}>{b.heading}</span>
-              {b.kindTag === "reporte" && <Chip tone="blue"><Icon name="users" size={13} /> Reporte del equipo</Chip>}
-              {b.kindTag === "testimonio" && <Chip tone="warm" dot>Testimonio de comunidad</Chip>}
-              {b.flagged && <Chip tone="amber" dot>Sugerencia de la IA — revísala bien</Chip>}
-              <div className="grow" />
-              <span style={{ fontSize: 13, color: "var(--muted)", fontWeight: 600 }}>{b.include ? "Incluida" : "Omitida"}</span>
-              <Switch on={b.include} onClick={() => setInc(b.id, !b.include)} />
-            </div>
-            {b.include && (
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 320px" }}>
-                {/* texto IA editable */}
-                <div style={{ padding: 18, borderRight: "1px solid var(--line-soft)" }}>
-                  <div className="row" style={{ gap: 7, marginBottom: 9, color: "var(--blue)" }}>
-                    <Icon name="spark" size={15} /><span style={{ fontSize: 11.5, fontWeight: 800, letterSpacing: ".04em", textTransform: "uppercase" }}>Redactado por la IA · editable</span>
-                  </div>
-                  {editing === b.id
-                    ? <textarea autoFocus value={b.ai} onChange={e => setText(b.id, e.target.value)} onBlur={() => setEditing(null)}
-                        style={{ width: "100%", minHeight: 96, border: "1.5px solid var(--blue)", borderRadius: 10, padding: 11, fontFamily: "inherit", fontSize: 15, lineHeight: 1.55, color: "var(--ink)", resize: "vertical", outline: "none" }} />
-                    : <p onClick={() => setEditing(b.id)} style={{ margin: 0, fontSize: 15, lineHeight: 1.6, color: "var(--ink)", cursor: "text", borderRadius: 8, padding: 4, marginLeft: -4 }}>
-                        {b.ai} <span className="row" style={{ display: "inline-flex", gap: 4, color: "var(--blue)", fontSize: 12.5, fontWeight: 700, verticalAlign: "middle", marginLeft: 4 }}><Icon name="edit" size={13} /> editar</span>
-                      </p>}
-                </div>
-                {/* fuentes reales */}
-                <div style={{ padding: 18, background: isTeam ? "var(--blue-tint)" : "var(--warm-tint)" }}>
-                  <div className="row" style={{ gap: 7, marginBottom: 11, color: isTeam ? "var(--blue-deep)" : "var(--warm-deep)" }}>
-                    <Icon name={isTeam ? "users" : "mic"} size={15} /><span style={{ fontSize: 11.5, fontWeight: 800, letterSpacing: ".04em", textTransform: "uppercase" }}>{isTeam ? "Reporte del equipo" : "Voces de la comunidad"}</span>
-                  </div>
-                  {b.sources.length === 0
-                    ? <div style={{ fontSize: 13.5, color: "var(--warm-deep)", lineHeight: 1.5, fontStyle: "italic" }}>⚠ Esta sección no cita ninguna voz directa. Es una interpretación de la IA — decide si va.</div>
-                    : <div className="col" style={{ gap: 13 }}>
-                        {b.sources.map((s, i) => {
-                          const p = DATA.people[s.who];
-                          return (
-                            <div key={i}>
-                              <div className="row" style={{ gap: 8, marginBottom: 4 }}><Avatar p={p} size={26} /><span style={{ fontWeight: 700, fontSize: 13 }}>{p.name}</span></div>
-                              <div style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 14.5, color: "var(--ink)", lineHeight: 1.45, paddingLeft: 4, borderLeft: "2px solid " + (isTeam ? "var(--blue)" : "var(--warm)") }}>&nbsp;&nbsp;"{s.quote}"</div>
-                            </div>
-                          );
-                        })}
-                      </div>}
-                </div>
-              </div>
-            )}
+        {/* Métricas */}
+        <div className="card" style={{ padding: 0, overflow: "hidden" }}>
+          <div style={{ padding: "12px 16px", borderBottom: "1px solid var(--line-soft)", display: "flex", alignItems: "center", gap: 8 }}>
+            <Icon name="spark" size={15} style={{ color: "var(--blue)" }} />
+            <span style={{ fontWeight: 800, fontSize: 13.5 }}>Métricas</span>
           </div>
-        ); })}
-      </div>
+          <div style={{ padding: "12px 14px", display: "flex", flexDirection: "column", gap: 8 }}>
+            {metrics.map(mt => {
+              const est = mt.kind === "estimated";
+              return (
+                <div key={mt.id} style={{ display: "flex", alignItems: "center", gap: 8, opacity: mt.include ? 1 : .45, padding: "6px 8px", borderRadius: "var(--r-sm)", background: mt.include && est ? "var(--amber-tint)" : "var(--surface-2)" }}>
+                  <Switch on={mt.include} warm={est} onClick={() => setMetInc(mt.id, !mt.include)} />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 11, color: "var(--muted)", fontWeight: 600 }}>{mt.label}</div>
+                    {est
+                      ? <input value={mt.value} onChange={e => setMetVal(mt.id, e.target.value)} inputMode="numeric"
+                          style={{ width: "100%", fontSize: 15, fontWeight: 800, border: "none", borderBottom: "1.5px dashed var(--amber)", background: "transparent", color: "var(--warm-deep)", fontFamily: "inherit", outline: "none", padding: 0 }} />
+                      : <div style={{ fontSize: 15, fontWeight: 800, color: "var(--ink)" }}>{mt.value}{mt.unit || ""}</div>}
+                  </div>
+                  {est && <Icon name="edit" size={12} style={{ color: "var(--amber)", flex: "none" }} />}
+                </div>
+              );
+            })}
+          </div>
+        </div>
 
-      <div className="row" style={{ gap: 10, marginTop: 16 }}>
-        <button className="btn btn-ghost"><Icon name="plus" size={16} /> Añadir sección a mano</button>
-        <button className="btn btn-soft"><Icon name="spark" size={16} /> Pedir otra redacción</button>
+        {/* Secciones */}
+        <div className="card" style={{ padding: 0, overflow: "hidden" }}>
+          <div style={{ padding: "12px 16px", borderBottom: "1px solid var(--line-soft)", display: "flex", alignItems: "center", gap: 8 }}>
+            <Icon name="doc" size={15} style={{ color: "var(--blue)" }} />
+            <span style={{ fontWeight: 800, fontSize: 13.5 }}>Secciones</span>
+            <span style={{ marginLeft: "auto", fontSize: 11, color: "var(--muted)", fontWeight: 600 }}>{blocks.filter(b=>b.include).length}/{blocks.length}</span>
+          </div>
+          <div style={{ padding: "8px 10px", display: "flex", flexDirection: "column", gap: 4 }}>
+            {blocks.map(b => (
+              <div key={b.id}>
+                <div style={{ display: "flex", alignItems: "flex-start", gap: 8, padding: "6px 6px", borderRadius: "var(--r-sm)", background: editing === b.id ? "var(--blue-tint)" : "transparent" }}>
+                  <Switch on={b.include} onClick={() => setInc(b.id, !b.include)} />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 12.5, fontWeight: 700, color: b.include ? "var(--ink)" : "var(--muted)", lineHeight: 1.3 }}>{b.heading}</div>
+                    {b.flagged && <div style={{ fontSize: 10.5, color: "var(--amber)", fontWeight: 600, marginTop: 2 }}>⚠ Revisar antes de publicar</div>}
+                  </div>
+                  <button onClick={() => setEditing(editing === b.id ? null : b.id)}
+                    style={{ border: "none", background: "none", color: "var(--blue)", cursor: "pointer", padding: 2, flex: "none" }}>
+                    <Icon name="edit" size={13} />
+                  </button>
+                </div>
+                {editing === b.id && b.include && (
+                  <div style={{ margin: "4px 6px 6px", padding: 8, background: "var(--surface-2)", borderRadius: "var(--r-sm)" }}>
+                    <textarea value={b.ai} onChange={e => setText(b.id, e.target.value)}
+                      style={{ width: "100%", minHeight: 80, border: "1px solid var(--line)", borderRadius: 6, padding: 8, fontFamily: "inherit", fontSize: 12, lineHeight: 1.5, color: "var(--ink)", resize: "vertical", outline: "none", background: "#fff" }} />
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div style={{ fontSize: 11.5, color: "var(--muted)", lineHeight: 1.5, padding: "4px 2px", display: "flex", gap: 7, alignItems: "flex-start" }}>
+          <Icon name="shield" size={14} style={{ color: "var(--green)", flex: "none", marginTop: 1 }} />
+          Nada se publica hasta que tú lo apruebes en el paso siguiente.
+        </div>
       </div>
     </div>
   );
@@ -1458,6 +1737,7 @@ function ReviewDraft({ blocks, setBlocks, metrics, setMetrics, tone }) {
 /* ---------- Paso 3: aprobar y compartir ---------- */
 function Share({ blocks, metrics, onClose }) {
   const [approved, setApproved] = rUse(false);
+  const handlePDF = () => { window.print(); };
   const included = blocks.filter(b => b.include);
   const mInc = (metrics || []).filter(m => m.include);
   const hasEst = mInc.some(m => m.kind === "estimated");
@@ -1610,7 +1890,7 @@ function Share({ blocks, metrics, onClose }) {
         <div className="card card-pad">
           <div style={{ fontWeight: 800, fontSize: 14.5, marginBottom: 12 }}>Compartir</div>
           <div className="col" style={{ gap: 9 }}>
-            <button className="btn btn-primary" disabled={!approved}><Icon name="down" size={17} /> Descargar PDF</button>
+            <button className="btn btn-primary" disabled={!approved} onClick={handlePDF}><Icon name="down" size={17} /> Descargar PDF</button>
             <button className="btn btn-ghost" disabled={!approved}><Icon name="link" size={17} /> Copiar enlace para dirección</button>
             <button className="btn btn-ghost" disabled={!approved}><Icon name="chat" size={17} /> Enviar resumen por WhatsApp</button>
           </div>
@@ -1629,6 +1909,7 @@ function Share({ blocks, metrics, onClose }) {
 function ReportFlow({ onClose, tone }) {
   const [step, setStep] = rUse(0);
   const [picked, setPicked] = rUse(["salud"]);
+  const [docs, setDocs] = rUse([]);
   const [blocks, setBlocks] = rUse(() => DATA.draftBlocks.map(b => ({ ...b })));
   const [metrics, setMetrics] = rUse(() => ([
     { id: "voces", label: "Voces recogidas", value: "8", kind: "counted", include: true },
@@ -1652,7 +1933,7 @@ function ReportFlow({ onClose, tone }) {
       </div>
 
       <div className="page" style={{ maxWidth: step === 3 ? 1180 : 900 }}>
-        {step === 0 && <PickSources picked={picked} setPicked={setPicked} tone={tone} />}
+        {step === 0 && <PickSources picked={picked} setPicked={setPicked} docs={docs} setDocs={setDocs} />}
         {step === 1 && <Drafting done={() => setStep(2)} />}
         {step === 2 && <ReviewDraft blocks={blocks} setBlocks={setBlocks} metrics={metrics} setMetrics={setMetrics} tone={tone} />}
         {step === 3 && <Share blocks={blocks} metrics={metrics} onClose={onClose} />}
@@ -1717,12 +1998,14 @@ function Donut({ data, size = 150, thickness = 22 }) {
 function AgeBars({ data }) {
   const max = Math.max(...data.map(d => d.value));
   return (
-    <div style={{ display: "flex", alignItems: "stretch", gap: 12, height: 168 }}>
+    <div style={{ display: "flex", alignItems: "flex-end", gap: 8, height: 140, paddingBottom: 20, position: "relative" }}>
       {data.map(d => (
-        <div key={d.label} style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-end", alignItems: "center", gap: 8 }}>
-          <div style={{ fontSize: 12, fontWeight: 800, color: "var(--ink-soft)" }}>{d.value}%</div>
-          <div style={{ width: "100%", maxWidth: 46, height: `${d.value / max * 118}px`, background: "linear-gradient(180deg, var(--blue), var(--blue-deep))", borderRadius: "7px 7px 3px 3px" }} />
-          <div style={{ fontSize: 11.5, color: "var(--muted)", fontWeight: 600 }}>{d.label}</div>
+        <div key={d.label} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 5, height: "100%" }}>
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-end", width: "100%", alignItems: "center" }}>
+            <div style={{ fontSize: 11, fontWeight: 800, color: "var(--blue-deep)", marginBottom: 4 }}>{d.value}%</div>
+            <div style={{ width: "100%", maxWidth: 36, height: `${Math.round(d.value / max * 100)}%`, minHeight: 4, background: "var(--blue)", borderRadius: "6px 6px 2px 2px", opacity: 0.8 }} />
+          </div>
+          <div style={{ fontSize: 11, color: "var(--muted)", fontWeight: 600, textAlign: "center", lineHeight: 1.2, whiteSpace: "nowrap" }}>{d.label}</div>
         </div>
       ))}
     </div>
@@ -1752,13 +2035,16 @@ function ProgBars({ data, mult }) {
 function Trend({ data, mult }) {
   const max = Math.max(...data.map(d => d.v));
   return (
-    <div style={{ display: "flex", alignItems: "stretch", gap: 9, height: 150 }}>
+    <div style={{ display: "flex", alignItems: "flex-end", gap: 10, height: 140, paddingBottom: 20 }}>
       {data.map((d, i) => {
         const last = i === data.length - 1;
+        const h = Math.round(d.v / max * 100);
         return (
-          <div key={d.m} style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-end", alignItems: "center", gap: 7 }}>
-            <div style={{ fontSize: 10.5, fontWeight: 800, color: last ? "var(--warm-deep)" : "var(--faint)", whiteSpace: "nowrap" }}>{last ? fmt(d.v * mult) : ""}</div>
-            <div style={{ width: "100%", maxWidth: 34, height: `${d.v / max * 100}px`, background: last ? "var(--warm)" : "var(--blue-tint2)", borderRadius: "6px 6px 3px 3px" }} />
+          <div key={d.m} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 5, height: "100%" }}>
+            <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-end", width: "100%", alignItems: "center" }}>
+              {last && <div style={{ fontSize: 10.5, fontWeight: 800, color: "var(--warm-deep)", marginBottom: 4 }}>{fmt(d.v * mult)}</div>}
+              <div style={{ width: "100%", maxWidth: 32, height: `${h}%`, minHeight: 4, background: last ? "var(--warm)" : "var(--blue-tint2)", borderRadius: "6px 6px 2px 2px" }} />
+            </div>
             <div style={{ fontSize: 11, color: "var(--muted)", fontWeight: 600 }}>{d.m}</div>
           </div>
         );
@@ -1833,122 +2119,135 @@ function Analytics({ setPage, onNew, copy }) {
   const [scope, setScope] = dUse("mes");
   const sc = a.scopes.find(s => s.id === scope);
   const mult = sc.mult;
-  const recentVoices = [DATA.teamReports[0], ...DATA.transcript].slice(0, 2);
 
   return (
     <div className="page float-in">
-      <div className="inicio-header">
-        <div className="inicio-header-main">
-          <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-.025em", margin: 0 }}>{copy?.greet ?? "Buenos días"}, Carla 👋</h2>
-          <p style={{ color: "var(--muted)", fontSize: 14.5, margin: "4px 0 0" }}>Datos fusionados de tus eventos, voces y documentos · <b style={{ color: "var(--ink-soft)" }}>{sc.label}</b></p>
+      {/* Cabecera */}
+      <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 24, flexWrap: "wrap" }}>
+        <div style={{ flex: 1 }}>
+          <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-.025em", margin: "0 0 3px" }}>
+            {copy?.greet ?? "Buenos días"}, Carla 👋
+          </h2>
+          <p style={{ color: "var(--muted)", fontSize: 14, margin: 0 }}>
+            Resumen de impacto · <b style={{ color: "var(--ink-soft)" }}>{sc.label}</b>
+          </p>
         </div>
-        <div className="inicio-header-actions">
-          <div className="scope-toggle">
+        <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+          <div style={{ display: "flex", background: "var(--surface-2)", borderRadius: 999, padding: 3, border: "1px solid var(--line-soft)" }}>
             {a.scopes.map(s => (
               <button key={s.id} onClick={() => setScope(s.id)} style={{
-                border: "none", padding: "7px 14px", borderRadius: 999, fontWeight: 700, fontSize: 13,
-                background: scope === s.id ? "var(--surface)" : "transparent",
+                border: "none", padding: "6px 14px", borderRadius: 999, fontWeight: 700, fontSize: 13,
+                background: scope === s.id ? "#fff" : "transparent",
                 color: scope === s.id ? "var(--blue-deep)" : "var(--muted)",
                 boxShadow: scope === s.id ? "var(--sh-sm)" : "none",
-              }}>{s.id === "mes" ? "Mes" : s.id === "tri" ? "Trimestre" : "Año"}</button>
+                transition: "all .15s", cursor: "pointer", fontFamily: "inherit",
+              }}>{s.id === "mes" ? "Este mes" : s.id === "tri" ? "Trimestre" : "Este año"}</button>
             ))}
           </div>
-          <button className="btn btn-ghost"><Icon name="down" size={16} /> Exportar</button>
-          {onNew && <button className="btn btn-primary btn-lg" onClick={onNew}><Icon name="plus" size={18} /> Nuevo informe</button>}
+          <button className="btn btn-ghost" style={{ fontSize: 13 }}><Icon name="down" size={15} /> Exportar</button>
+          {onNew && <button className="btn btn-primary" onClick={onNew}><Icon name="plus" size={16} /> Nuevo informe</button>}
         </div>
       </div>
 
-      <div style={{ marginBottom: 16 }}>
-        <AINote>Estos indicadores <b>fusionan</b> tus eventos, los testimonios de la comunidad, los reportes del equipo y los documentos que subiste. Los datos demográficos son <b>auto-declarados</b> por las personas — trátalos como aproximados, no como censo.</AINote>
-      </div>
-
-      <div className="inicio-bento">
-        {/* Col 1 — caja destacada + mini stats */}
-        <HeroStat
-          value={fmt(a.base.impacted * mult)}
-          label="Personas impactadas"
-          sub="Suma de todos los eventos"
-          period={sc.label.toLowerCase()}
-        />
-        <div className="bento-minis">
-          <StatMini value={fmt(a.base.events * mult)} label="Eventos / jornadas" />
-          <StatMini value={fmt(a.base.docs * mult)} label="Documentos" />
-        </div>
-
-        {/* Col 2 — gráfico principal + demografía */}
-        <div className="bento-trend">
-          <Panel title="Tendencia de impacto" sub="Personas alcanzadas por mes">
-            <Trend data={a.trend} mult={mult} />
-          </Panel>
-        </div>
-        <div className="bento-demo">
-          <Panel title="Género" sub="Distribución" foot="Auto-declarado · 3% sin dato">
-            <div className="donut-row">
-              <Donut data={a.gender} size={120} thickness={18} />
-              <div className="col" style={{ gap: 8, flex: 1, minWidth: 100 }}>
-                {a.gender.map(g => (
-                  <div key={g.label} className="row" style={{ gap: 8 }}>
-                    <span style={{ width: 10, height: 10, borderRadius: 3, background: g.color, flex: "none" }} />
-                    <span style={{ fontSize: 12.5, fontWeight: 600, color: "var(--ink-soft)" }}>{g.label}</span>
-                    <div className="grow" />
-                    <span style={{ fontSize: 13, fontWeight: 800 }}>{g.value}%</span>
-                  </div>
-                ))}
-              </div>
+      {/* Fila de métricas clave — 4 tarjetas */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14, marginBottom: 20 }}>
+        {[
+          { val: fmt(a.base.impacted * mult), label: "Personas alcanzadas", icon: "users", color: "var(--blue)", bg: "var(--blue-tint)" },
+          { val: fmt(a.base.voices * mult), label: "Voces recogidas", icon: "mic", color: "var(--warm-deep)", bg: "var(--warm-tint)" },
+          { val: fmt(a.base.events * mult), label: "Eventos realizados", icon: "check", color: "var(--green-deep)", bg: "var(--green-tint)" },
+          { val: fmt(a.base.docs * mult), label: "Documentos subidos", icon: "doc", color: "var(--ink-soft)", bg: "var(--surface-2)" },
+        ].map((m, i) => (
+          <div key={i} style={{ background: "#fff", borderRadius: "var(--r)", padding: "18px 20px", border: "1px solid var(--line-soft)", boxShadow: "var(--sh-sm)" }}>
+            <div style={{ width: 36, height: 36, borderRadius: 10, background: m.bg, display: "grid", placeItems: "center", marginBottom: 12, color: m.color }}>
+              <Icon name={m.icon} size={18} />
             </div>
-          </Panel>
-          <Panel title="Rango de edad" sub="% alcanzadas">
-            <AgeBars data={a.age} />
-          </Panel>
-        </div>
-
-        {/* Fila ancha — programas (como Payment History) */}
-        <div className="bento-wide">
-          <Panel title="Personas por programa" sub={`Total: ${fmt(a.base.impacted * mult)} · ${sc.label}`}>
-            <ProgBars data={a.programs} mult={mult} />
-          </Panel>
-        </div>
-
-        {/* Col 3 — voces + CTA */}
-        <StatAccent
-          value={fmt(a.base.voices * mult)}
-          label="Voces recogidas"
-          sub="Testimonios + reportes"
-        />
-        <div className="bento-voices card voices-card">
-          <div className="voices-card-head">
-            <h3>Voces recientes</h3>
-            <div className="grow" />
-            {setPage && <button className="btn btn-soft btn-sm" onClick={() => setPage("convos")}>Ver todas <Icon name="arrow" size={14} /></button>}
+            <div style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-.03em", color: "var(--ink)", lineHeight: 1 }}>{m.val}</div>
+            <div style={{ fontSize: 12.5, color: "var(--muted)", fontWeight: 600, marginTop: 5 }}>{m.label}</div>
           </div>
-          {recentVoices.map((t, i) => {
-            const p = DATA.people[t.who];
-            return (
-              <div key={i} className="voice-item">
-                <div className="voice-item-head">
-                  <Avatar p={p} size={34} />
-                  <div className="voice-item-meta">
-                    <span className="voice-item-name">{p.name}</span>
-                    <span className="voice-item-time">{t.at}</span>
-                  </div>
-                </div>
-                <p className="voice-item-text">{t.text}</p>
-                <VoicePlayer dur={t.dur} color={p.color} compact />
-              </div>
-            );
-          })}
-        </div>
-        {onNew && (
-          <div className="bento-cta card card-pad">
-            <div style={{ color: "var(--blue)", marginBottom: 8 }}><Icon name="spark" size={22} /></div>
-            <h3 style={{ fontSize: 15, fontWeight: 800, margin: "0 0 6px" }}>8 voces sobre salud</h3>
-            <p style={{ fontSize: 12.5, color: "var(--ink-soft)", lineHeight: 1.5, margin: "0 0 12px" }}>Listas para un informe sólido.</p>
-            <button className="btn btn-primary" style={{ width: "100%" }} onClick={onNew}>Crear informe</button>
-          </div>
-        )}
+        ))}
       </div>
 
-      <div style={{ marginTop: 14, fontSize: 12, color: "var(--muted)" }}>* Cifra que combina conteos exactos y estimaciones revisadas por el equipo.</div>
+      {/* Fila principal — gráfico + programas */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: 16, marginBottom: 16 }}>
+        {/* Tendencia */}
+        <div style={{ background: "#fff", borderRadius: "var(--r)", padding: "20px 22px", border: "1px solid var(--line-soft)", boxShadow: "var(--sh-sm)" }}>
+          <div style={{ fontWeight: 800, fontSize: 15, marginBottom: 4 }}>Tendencia de personas alcanzadas</div>
+          <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 18 }}>Últimos 6 meses</div>
+          <Trend data={a.trend} mult={mult} />
+        </div>
+
+        {/* Programas */}
+        <div style={{ background: "#fff", borderRadius: "var(--r)", padding: "20px 22px", border: "1px solid var(--line-soft)", boxShadow: "var(--sh-sm)" }}>
+          <div style={{ fontWeight: 800, fontSize: 15, marginBottom: 4 }}>Personas por programa</div>
+          <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 18 }}>Total {sc.label}</div>
+          <ProgBars data={a.programs} mult={mult} />
+        </div>
+      </div>
+
+      {/* Fila inferior — género + edad + voces recientes */}
+      <div style={{ display: "grid", gridTemplateColumns: "220px 1fr 1fr", gap: 16 }}>
+        {/* Género */}
+        <div style={{ background: "#fff", borderRadius: "var(--r)", padding: "20px 22px", border: "1px solid var(--line-soft)", boxShadow: "var(--sh-sm)" }}>
+          <div style={{ fontWeight: 800, fontSize: 15, marginBottom: 4 }}>Género</div>
+          <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 16 }}>Autoreportado</div>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 14 }}>
+            <Donut data={a.gender} size={110} thickness={16} />
+            <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: 7 }}>
+              {a.gender.map(g => (
+                <div key={g.label} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ width: 10, height: 10, borderRadius: 3, background: g.color, flex: "none" }} />
+                  <span style={{ fontSize: 12.5, fontWeight: 600, color: "var(--ink-soft)", flex: 1 }}>{g.label}</span>
+                  <span style={{ fontSize: 13, fontWeight: 800 }}>{g.value}%</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Edad */}
+        <div style={{ background: "#fff", borderRadius: "var(--r)", padding: "20px 22px", border: "1px solid var(--line-soft)", boxShadow: "var(--sh-sm)" }}>
+          <div style={{ fontWeight: 800, fontSize: 15, marginBottom: 4 }}>Rango de edad</div>
+          <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 16 }}>% de personas alcanzadas</div>
+          <AgeBars data={a.age} />
+        </div>
+
+        {/* Voces recientes */}
+        <div style={{ background: "#fff", borderRadius: "var(--r)", padding: "20px 22px", border: "1px solid var(--line-soft)", boxShadow: "var(--sh-sm)" }}>
+          <div style={{ display: "flex", alignItems: "center", marginBottom: 16 }}>
+            <div style={{ fontWeight: 800, fontSize: 15, flex: 1 }}>Voces recientes</div>
+            {setPage && (
+              <button onClick={() => setPage("convos")} style={{ border: "none", background: "none", color: "var(--blue)", fontWeight: 700, fontSize: 12.5, cursor: "pointer", fontFamily: "inherit", display: "flex", alignItems: "center", gap: 4 }}>
+                Ver todas <Icon name="arrow" size={13} />
+              </button>
+            )}
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            {[DATA.teamReports[0], ...DATA.transcript].slice(0, 2).map((t, i) => {
+              const p = DATA.people[t.who];
+              return (
+                <div key={i} style={{ paddingBottom: i === 0 ? 14 : 0, borderBottom: i === 0 ? "1px solid var(--line-soft)" : "none" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+                    <Avatar p={p} size={30} />
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontWeight: 700, fontSize: 13 }}>{p.name}</div>
+                      <div style={{ fontSize: 11.5, color: "var(--muted)" }}>{t.at}</div>
+                    </div>
+                  </div>
+                  <p style={{ margin: "0 0 8px", fontSize: 12.5, color: "var(--ink-soft)", lineHeight: 1.5, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{t.text}</p>
+                  <VoicePlayer dur={t.dur} color={p.color} compact />
+                </div>
+              );
+            })}
+          </div>
+          {onNew && (
+            <button onClick={onNew} className="btn btn-primary" style={{ width: "100%", marginTop: 14, justifyContent: "center" }}>
+              <Icon name="spark" size={15} /> Crear informe con estas voces
+            </button>
+          )}
+        </div>
+      </div>
+
+      <div style={{ marginTop: 12, fontSize: 11.5, color: "var(--faint)" }}>* Las cifras combinan datos exactos y estimaciones del equipo.</div>
     </div>
   );
 }
@@ -2096,8 +2395,7 @@ function Sidebar({ page, setPage, open, onNavigate }) {
   const go = (id) => { setPage(id); onNavigate?.(); };
   const mainNav = [
     { id: "inicio", icon: "home", label: "Inicio" },
-    { id: "convos", icon: "chat", label: "Conversaciones", badge: "5" },
-    { id: "importar", icon: "upload", label: "Importar" },
+    { id: "convos", icon: "chat", label: "Mensajes", badge: "5" },
     { id: "informes", icon: "doc", label: "Informes" },
   ];
   const orgNav = [
@@ -2105,31 +2403,56 @@ function Sidebar({ page, setPage, open, onNavigate }) {
     { id: "autom", icon: "wand", label: "Automatizaciones" },
   ];
 
-  const NavIcon = ({ item }) => (
-    <button
-      type="button"
-      className={"nav-icon" + (page === item.id ? " active" : "")}
-      onClick={() => go(item.id)}
-      title={item.label}
-      aria-label={item.label}
-      aria-current={page === item.id ? "page" : undefined}
-    >
-      <Icon name={item.icon} size={22} />
-      {item.badge && <span className="nav-badge">{item.badge}</span>}
-    </button>
-  );
-
   return (
     <aside className={"sidebar" + (open ? " open" : "")}>
-      <nav className="nav-island" aria-label="Trabajo">
-        {mainNav.map(n => <NavIcon key={n.id} item={n} />)}
+      {/* Logo */}
+      <div className="sidebar-logo">
+        <div className="sidebar-logo-icon">
+          <Icon name="mic" size={18} />
+        </div>
+        <span className="sidebar-logo-name">Voz</span>
+      </div>
+
+      {/* Nav principal */}
+      <nav className="nav-group" aria-label="Principal">
+        {mainNav.map(n => (
+          <button
+            key={n.id}
+            type="button"
+            className={"nav-item-row" + (page === n.id ? " active" : "")}
+            onClick={() => go(n.id)}
+            aria-current={page === n.id ? "page" : undefined}
+          >
+            <span className="nav-icon-wrap"><Icon name={n.icon} size={19} /></span>
+            <span className="nav-item-label">{n.label}</span>
+            {n.badge && <span className="nav-badge">{n.badge}</span>}
+          </button>
+        ))}
       </nav>
-      <nav className="nav-island" aria-label="Organización">
-        {orgNav.map(n => <NavIcon key={n.id} item={n} />)}
+
+      {/* Nav organización */}
+      <div className="nav-group-label" style={{ padding: "14px 14px 4px" }}>Organización</div>
+      <nav className="nav-group" aria-label="Organización">
+        {orgNav.map(n => (
+          <button
+            key={n.id}
+            type="button"
+            className={"nav-item-row" + (page === n.id ? " active" : "")}
+            onClick={() => go(n.id)}
+          >
+            <span className="nav-icon-wrap"><Icon name={n.icon} size={19} /></span>
+            <span className="nav-item-label">{n.label}</span>
+          </button>
+        ))}
       </nav>
-      <nav className="nav-island nav-island-foot" aria-label="Sistema">
-        <button type="button" className="nav-icon" title="Configuración" aria-label="Configuración">
-          <Icon name="gear" size={22} />
+
+      <div className="nav-spacer" />
+
+      {/* Config */}
+      <nav className="nav-group" aria-label="Sistema">
+        <button type="button" className="nav-item-row">
+          <span className="nav-icon-wrap"><Icon name="gear" size={19} /></span>
+          <span className="nav-item-label">Configuración</span>
         </button>
       </nav>
     </aside>
@@ -2308,34 +2631,72 @@ function Convos({ onNew }) {
 function Informes({ onNew }) {
   return (
     <div className="page float-in">
-      <div className="row" style={{ marginBottom: 22 }}>
-        <div><h2 style={{ fontSize: 24, fontWeight: 800, letterSpacing: "-.02em", margin: 0 }}>Informes</h2><p style={{ color: "var(--muted)", fontSize: 14.5, margin: "4px 0 0" }}>Reportes armados con las voces de tu comunidad, tu equipo y tus documentos.</p></div>
+      <div className="row" style={{ marginBottom: 26 }}>
+        <div>
+          <h2 style={{ fontSize: 24, fontWeight: 800, letterSpacing: "-.02em", margin: 0 }}>Informes</h2>
+          <p style={{ color: "var(--muted)", fontSize: 14.5, margin: "4px 0 0" }}>Reportes armados con las voces de tu comunidad.</p>
+        </div>
         <div className="grow" />
         <button className="btn btn-primary btn-lg" onClick={onNew}><Icon name="plus" size={18} /> Nuevo informe</button>
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(290px,1fr))", gap: 16 }}>
-        <button onClick={onNew} className="card" style={{ padding: 24, border: "1.5px dashed var(--blue)", background: "var(--blue-tint)", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 10, textAlign: "left", minHeight: 200, justifyContent: "center" }}>
-          <div style={{ width: 50, height: 50, borderRadius: 14, background: "var(--blue)", color: "#fff", display: "grid", placeItems: "center" }}><Icon name="spark" size={26} /></div>
-          <div style={{ fontWeight: 800, fontSize: 17, color: "var(--blue-deep)" }}>Empezar un informe</div>
-          <div style={{ fontSize: 13.5, color: "var(--blue-ink)", lineHeight: 1.5 }}>Elige las voces, Voz arma un borrador y tú lo revisas paso a paso.</div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(300px,1fr))", gap: 20 }}>
+
+        {/* Tarjeta: crear nuevo */}
+        <button onClick={onNew} style={{
+          border: "2px dashed var(--blue)", borderRadius: "var(--r-lg)", background: "var(--blue-tint)",
+          display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+          gap: 12, textAlign: "center", minHeight: 240, cursor: "pointer", transition: "all .15s", padding: 28,
+        }}>
+          <div style={{ width: 56, height: 56, borderRadius: 16, background: "var(--blue)", color: "#fff", display: "grid", placeItems: "center" }}>
+            <Icon name="spark" size={28} />
+          </div>
+          <div style={{ fontWeight: 800, fontSize: 17, color: "var(--blue-deep)" }}>Nuevo informe</div>
+          <div style={{ fontSize: 13.5, color: "var(--blue-ink)", lineHeight: 1.5, maxWidth: 200 }}>Elige las voces, Voz arma un borrador y tú lo revisas.</div>
         </button>
+
+        {/* Tarjetas de informes existentes — estilo reporte visual */}
         {DATA.reports.map(r => (
-          <div key={r.id} className="card" style={{ padding: 0, overflow: "hidden", display: "flex", flexDirection: "column" }}>
-            <div style={{ height: 7, background: r.color }} />
-            <div style={{ padding: 20, display: "flex", flexDirection: "column", flex: 1 }}>
-              <div className="row" style={{ marginBottom: 12 }}>
-                <Chip tone={r.status === "Aprobado" ? "green" : "amber"} dot>{r.status}</Chip>
-                <div className="grow" />
-                <span style={{ fontSize: 12, color: "var(--faint)" }}>{r.updated}</span>
+          <div key={r.id} style={{ borderRadius: "var(--r-lg)", overflow: "hidden", boxShadow: "var(--sh)", display: "flex", flexDirection: "column", minHeight: 240 }}>
+
+            {/* Encabezado con color del programa */}
+            <div style={{ background: r.color, padding: "22px 22px 18px", flex: "none" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
+                <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: ".08em", textTransform: "uppercase", color: "rgba(255,255,255,.7)", background: "rgba(255,255,255,.15)", padding: "3px 9px", borderRadius: 999 }}>
+                  {r.program}
+                </span>
+                <span style={{ fontSize: 11, color: "rgba(255,255,255,.6)", fontWeight: 600 }}>{r.updated}</span>
               </div>
-              <h3 style={{ fontSize: 17, fontWeight: 800, margin: "0 0 6px", lineHeight: 1.25 }}>{r.title}</h3>
-              <div style={{ fontSize: 13, color: "var(--muted)" }}>{r.program}</div>
-              <div className="row" style={{ marginTop: "auto", paddingTop: 16, gap: 8 }}>
-                <span className="row" style={{ gap: 6, color: "var(--warm-deep)", fontWeight: 700, fontSize: 13 }}><Icon name="mic" size={14} /> {r.voices} voces</span>
-                {r.impact && <span style={{ fontSize: 12.5, color: "var(--muted)", fontWeight: 600 }}>· <b style={{ color: "var(--ink)" }}>{r.impact}</b> {r.impactLabel}</span>}
-                <div className="grow" />
-                <button className="btn btn-ghost btn-sm"><Icon name="eye" size={14} /> Abrir</button>
+              <h3 style={{ fontSize: 16, fontWeight: 900, color: "#fff", margin: 0, lineHeight: 1.2, letterSpacing: "-.01em", textTransform: "uppercase" }}>{r.title}</h3>
+            </div>
+
+            {/* Métricas */}
+            <div style={{ background: "#fff", display: "grid", gridTemplateColumns: "1fr 1fr", borderBottom: "1px solid var(--line-soft)" }}>
+              <div style={{ padding: "14px 16px", borderRight: "1px solid var(--line-soft)" }}>
+                <div style={{ fontSize: 22, fontWeight: 900, color: r.color, letterSpacing: "-.02em", lineHeight: 1 }}>{r.voices}</div>
+                <div style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)", marginTop: 3, textTransform: "uppercase", letterSpacing: ".04em" }}>Voces</div>
               </div>
+              {r.impact && (
+                <div style={{ padding: "14px 16px" }}>
+                  <div style={{ fontSize: 22, fontWeight: 900, color: r.color, letterSpacing: "-.02em", lineHeight: 1 }}>{r.impact}</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)", marginTop: 3, textTransform: "uppercase", letterSpacing: ".04em" }}>{r.impactLabel}</div>
+                </div>
+              )}
+            </div>
+
+            {/* Footer */}
+            <div style={{ background: "#fff", padding: "12px 16px", display: "flex", alignItems: "center", gap: 10, marginTop: "auto" }}>
+              <span style={{
+                display: "inline-flex", alignItems: "center", gap: 5, fontSize: 11.5, fontWeight: 700,
+                color: r.status === "Aprobado" ? "var(--green-deep)" : "var(--warm-deep)",
+                background: r.status === "Aprobado" ? "var(--green-tint)" : "var(--amber-tint)",
+                padding: "3px 10px", borderRadius: 999,
+              }}>
+                <span style={{ width: 6, height: 6, borderRadius: "50%", background: r.status === "Aprobado" ? "var(--green)" : "var(--amber)" }} />
+                {r.status}
+              </span>
+              <div className="grow" />
+              <button className="btn btn-ghost btn-sm" style={{ fontSize: 12 }}><Icon name="eye" size={14} /> Abrir</button>
             </div>
           </div>
         ))}
@@ -2488,7 +2849,6 @@ function App() {
           : <>
               {page === "inicio" && <Inicio onNew={() => setFlow(true)} setPage={setPage} copy={copy} />}
               {page === "convos" && <div style={{ height: "100vh", overflow: "hidden" }}><Convos onNew={() => setFlow(true)} /></div>}
-              {page === "importar" && <Importar onGenerate={() => setFlow(true)} goDatos={() => setPage("inicio")} />}
               {page === "informes" && <Informes onNew={() => setFlow(true)} />}
               {page === "autom" && <Automatizaciones />}
               {page === "equipo" && <Equipo />}

@@ -6,8 +6,7 @@ function Sidebar({ page, setPage, open, onNavigate }) {
   const go = (id) => { setPage(id); onNavigate?.(); };
   const mainNav = [
     { id: "inicio", icon: "home", label: "Inicio" },
-    { id: "convos", icon: "chat", label: "Conversaciones", badge: "5" },
-    { id: "importar", icon: "upload", label: "Importar" },
+    { id: "convos", icon: "chat", label: "Mensajes", badge: "5" },
     { id: "informes", icon: "doc", label: "Informes" },
   ];
   const orgNav = [
@@ -15,31 +14,56 @@ function Sidebar({ page, setPage, open, onNavigate }) {
     { id: "autom", icon: "wand", label: "Automatizaciones" },
   ];
 
-  const NavIcon = ({ item }) => (
-    <button
-      type="button"
-      className={"nav-icon" + (page === item.id ? " active" : "")}
-      onClick={() => go(item.id)}
-      title={item.label}
-      aria-label={item.label}
-      aria-current={page === item.id ? "page" : undefined}
-    >
-      <Icon name={item.icon} size={22} />
-      {item.badge && <span className="nav-badge">{item.badge}</span>}
-    </button>
-  );
-
   return (
     <aside className={"sidebar" + (open ? " open" : "")}>
-      <nav className="nav-island" aria-label="Trabajo">
-        {mainNav.map(n => <NavIcon key={n.id} item={n} />)}
+      {/* Logo */}
+      <div className="sidebar-logo">
+        <div className="sidebar-logo-icon">
+          <Icon name="mic" size={18} />
+        </div>
+        <span className="sidebar-logo-name">Voz</span>
+      </div>
+
+      {/* Nav principal */}
+      <nav className="nav-group" aria-label="Principal">
+        {mainNav.map(n => (
+          <button
+            key={n.id}
+            type="button"
+            className={"nav-item-row" + (page === n.id ? " active" : "")}
+            onClick={() => go(n.id)}
+            aria-current={page === n.id ? "page" : undefined}
+          >
+            <span className="nav-icon-wrap"><Icon name={n.icon} size={19} /></span>
+            <span className="nav-item-label">{n.label}</span>
+            {n.badge && <span className="nav-badge">{n.badge}</span>}
+          </button>
+        ))}
       </nav>
-      <nav className="nav-island" aria-label="Organización">
-        {orgNav.map(n => <NavIcon key={n.id} item={n} />)}
+
+      {/* Nav organización */}
+      <div className="nav-group-label" style={{ padding: "14px 14px 4px" }}>Organización</div>
+      <nav className="nav-group" aria-label="Organización">
+        {orgNav.map(n => (
+          <button
+            key={n.id}
+            type="button"
+            className={"nav-item-row" + (page === n.id ? " active" : "")}
+            onClick={() => go(n.id)}
+          >
+            <span className="nav-icon-wrap"><Icon name={n.icon} size={19} /></span>
+            <span className="nav-item-label">{n.label}</span>
+          </button>
+        ))}
       </nav>
-      <nav className="nav-island nav-island-foot" aria-label="Sistema">
-        <button type="button" className="nav-icon" title="Configuración" aria-label="Configuración">
-          <Icon name="gear" size={22} />
+
+      <div className="nav-spacer" />
+
+      {/* Config */}
+      <nav className="nav-group" aria-label="Sistema">
+        <button type="button" className="nav-item-row">
+          <span className="nav-icon-wrap"><Icon name="gear" size={19} /></span>
+          <span className="nav-item-label">Configuración</span>
         </button>
       </nav>
     </aside>
@@ -218,34 +242,72 @@ function Convos({ onNew }) {
 function Informes({ onNew }) {
   return (
     <div className="page float-in">
-      <div className="row" style={{ marginBottom: 22 }}>
-        <div><h2 style={{ fontSize: 24, fontWeight: 800, letterSpacing: "-.02em", margin: 0 }}>Informes</h2><p style={{ color: "var(--muted)", fontSize: 14.5, margin: "4px 0 0" }}>Reportes armados con las voces de tu comunidad, tu equipo y tus documentos.</p></div>
+      <div className="row" style={{ marginBottom: 26 }}>
+        <div>
+          <h2 style={{ fontSize: 24, fontWeight: 800, letterSpacing: "-.02em", margin: 0 }}>Informes</h2>
+          <p style={{ color: "var(--muted)", fontSize: 14.5, margin: "4px 0 0" }}>Reportes armados con las voces de tu comunidad.</p>
+        </div>
         <div className="grow" />
         <button className="btn btn-primary btn-lg" onClick={onNew}><Icon name="plus" size={18} /> Nuevo informe</button>
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(290px,1fr))", gap: 16 }}>
-        <button onClick={onNew} className="card" style={{ padding: 24, border: "1.5px dashed var(--blue)", background: "var(--blue-tint)", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 10, textAlign: "left", minHeight: 200, justifyContent: "center" }}>
-          <div style={{ width: 50, height: 50, borderRadius: 14, background: "var(--blue)", color: "#fff", display: "grid", placeItems: "center" }}><Icon name="spark" size={26} /></div>
-          <div style={{ fontWeight: 800, fontSize: 17, color: "var(--blue-deep)" }}>Empezar un informe</div>
-          <div style={{ fontSize: 13.5, color: "var(--blue-ink)", lineHeight: 1.5 }}>Elige las voces, Voz arma un borrador y tú lo revisas paso a paso.</div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(300px,1fr))", gap: 20 }}>
+
+        {/* Tarjeta: crear nuevo */}
+        <button onClick={onNew} style={{
+          border: "2px dashed var(--blue)", borderRadius: "var(--r-lg)", background: "var(--blue-tint)",
+          display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+          gap: 12, textAlign: "center", minHeight: 240, cursor: "pointer", transition: "all .15s", padding: 28,
+        }}>
+          <div style={{ width: 56, height: 56, borderRadius: 16, background: "var(--blue)", color: "#fff", display: "grid", placeItems: "center" }}>
+            <Icon name="spark" size={28} />
+          </div>
+          <div style={{ fontWeight: 800, fontSize: 17, color: "var(--blue-deep)" }}>Nuevo informe</div>
+          <div style={{ fontSize: 13.5, color: "var(--blue-ink)", lineHeight: 1.5, maxWidth: 200 }}>Elige las voces, Voz arma un borrador y tú lo revisas.</div>
         </button>
+
+        {/* Tarjetas de informes existentes — estilo reporte visual */}
         {DATA.reports.map(r => (
-          <div key={r.id} className="card" style={{ padding: 0, overflow: "hidden", display: "flex", flexDirection: "column" }}>
-            <div style={{ height: 7, background: r.color }} />
-            <div style={{ padding: 20, display: "flex", flexDirection: "column", flex: 1 }}>
-              <div className="row" style={{ marginBottom: 12 }}>
-                <Chip tone={r.status === "Aprobado" ? "green" : "amber"} dot>{r.status}</Chip>
-                <div className="grow" />
-                <span style={{ fontSize: 12, color: "var(--faint)" }}>{r.updated}</span>
+          <div key={r.id} style={{ borderRadius: "var(--r-lg)", overflow: "hidden", boxShadow: "var(--sh)", display: "flex", flexDirection: "column", minHeight: 240 }}>
+
+            {/* Encabezado con color del programa */}
+            <div style={{ background: r.color, padding: "22px 22px 18px", flex: "none" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
+                <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: ".08em", textTransform: "uppercase", color: "rgba(255,255,255,.7)", background: "rgba(255,255,255,.15)", padding: "3px 9px", borderRadius: 999 }}>
+                  {r.program}
+                </span>
+                <span style={{ fontSize: 11, color: "rgba(255,255,255,.6)", fontWeight: 600 }}>{r.updated}</span>
               </div>
-              <h3 style={{ fontSize: 17, fontWeight: 800, margin: "0 0 6px", lineHeight: 1.25 }}>{r.title}</h3>
-              <div style={{ fontSize: 13, color: "var(--muted)" }}>{r.program}</div>
-              <div className="row" style={{ marginTop: "auto", paddingTop: 16, gap: 8 }}>
-                <span className="row" style={{ gap: 6, color: "var(--warm-deep)", fontWeight: 700, fontSize: 13 }}><Icon name="mic" size={14} /> {r.voices} voces</span>
-                {r.impact && <span style={{ fontSize: 12.5, color: "var(--muted)", fontWeight: 600 }}>· <b style={{ color: "var(--ink)" }}>{r.impact}</b> {r.impactLabel}</span>}
-                <div className="grow" />
-                <button className="btn btn-ghost btn-sm"><Icon name="eye" size={14} /> Abrir</button>
+              <h3 style={{ fontSize: 16, fontWeight: 900, color: "#fff", margin: 0, lineHeight: 1.2, letterSpacing: "-.01em", textTransform: "uppercase" }}>{r.title}</h3>
+            </div>
+
+            {/* Métricas */}
+            <div style={{ background: "#fff", display: "grid", gridTemplateColumns: "1fr 1fr", borderBottom: "1px solid var(--line-soft)" }}>
+              <div style={{ padding: "14px 16px", borderRight: "1px solid var(--line-soft)" }}>
+                <div style={{ fontSize: 22, fontWeight: 900, color: r.color, letterSpacing: "-.02em", lineHeight: 1 }}>{r.voices}</div>
+                <div style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)", marginTop: 3, textTransform: "uppercase", letterSpacing: ".04em" }}>Voces</div>
               </div>
+              {r.impact && (
+                <div style={{ padding: "14px 16px" }}>
+                  <div style={{ fontSize: 22, fontWeight: 900, color: r.color, letterSpacing: "-.02em", lineHeight: 1 }}>{r.impact}</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)", marginTop: 3, textTransform: "uppercase", letterSpacing: ".04em" }}>{r.impactLabel}</div>
+                </div>
+              )}
+            </div>
+
+            {/* Footer */}
+            <div style={{ background: "#fff", padding: "12px 16px", display: "flex", alignItems: "center", gap: 10, marginTop: "auto" }}>
+              <span style={{
+                display: "inline-flex", alignItems: "center", gap: 5, fontSize: 11.5, fontWeight: 700,
+                color: r.status === "Aprobado" ? "var(--green-deep)" : "var(--warm-deep)",
+                background: r.status === "Aprobado" ? "var(--green-tint)" : "var(--amber-tint)",
+                padding: "3px 10px", borderRadius: 999,
+              }}>
+                <span style={{ width: 6, height: 6, borderRadius: "50%", background: r.status === "Aprobado" ? "var(--green)" : "var(--amber)" }} />
+                {r.status}
+              </span>
+              <div className="grow" />
+              <button className="btn btn-ghost btn-sm" style={{ fontSize: 12 }}><Icon name="eye" size={14} /> Abrir</button>
             </div>
           </div>
         ))}
@@ -398,7 +460,6 @@ function App() {
           : <>
               {page === "inicio" && <Inicio onNew={() => setFlow(true)} setPage={setPage} copy={copy} />}
               {page === "convos" && <div style={{ height: "100vh", overflow: "hidden" }}><Convos onNew={() => setFlow(true)} /></div>}
-              {page === "importar" && <Importar onGenerate={() => setFlow(true)} goDatos={() => setPage("inicio")} />}
               {page === "informes" && <Informes onNew={() => setFlow(true)} />}
               {page === "autom" && <Automatizaciones />}
               {page === "equipo" && <Equipo />}

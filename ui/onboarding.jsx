@@ -43,16 +43,59 @@ function Illu({ label, h = 220, tone = "blue" }) {
 }
 
 /* ============ VARIACIÓN A — Asistente guiado paso a paso ============ */
+
+const PROGRAM_METRICS = {
+  salud: {
+    emoji: "🫀", label: "Salud comunitaria",
+    metrics: [
+      "Número de personas atendidas (por campaña, por mes)",
+      "Tipo de atención brindada (consulta, derivación, tamizaje)",
+      "Porcentaje de derivaciones completadas vs. iniciadas",
+      "Cobertura geográfica (comunidades, distritos alcanzados)",
+      "Casos con seguimiento activo",
+    ],
+  },
+  amb: {
+    emoji: "🌿", label: "Medio ambiente",
+    metrics: [
+      "Kilos / toneladas de residuos gestionados",
+      "Número de jornadas realizadas",
+      "Familias o comunidades beneficiadas",
+      "Litros de agua tratada o acceso habilitado",
+      "Voluntarios movilizados por actividad",
+    ],
+  },
+  edu: {
+    emoji: "📋", label: "Educación",
+    metrics: [
+      "Número de beneficiarios por programa",
+      "Tasa de asistencia y deserción",
+      "Talleres completados vs. planificados",
+      "Becas otorgadas y seguimiento de beneficiarios",
+      "Avance individual (si hay seguimiento por persona)",
+    ],
+  },
+  der: {
+    emoji: "🛡️", label: "Derechos",
+    metrics: [
+      "Casos acompañados activos vs. cerrados",
+      "Tipo de vulneración más frecuente",
+      "Tiempo promedio de resolución o acompañamiento",
+      "Derivaciones a instancias legales o institucionales",
+      "Porcentaje de casos con resultado documentado",
+    ],
+  },
+};
+
 function VariantWizard({ onFinish }) {
   const [step, setStep] = oUse(0);
-  const [progs, setProgs] = oUse(["salud"]);
-  const steps = ["Hola", "Conectar", "Temas", "Listo"];
-  const toggle = (id) => setProgs(p => p.includes(id) ? p.filter(x => x !== id) : [...p, id]);
+  const [prog, setProg] = oUse("salud");
+  const steps = ["Hola", "Conectar", "Rubro", "Listo"];
   const programs = [
-    { id: "salud", icon: "heart", t: "Salud comunitaria", d: "Postas, campañas, acceso" },
-    { id: "amb", icon: "spark", t: "Medio ambiente", d: "Jornadas, agua, residuos" },
+    { id: "salud", icon: "heart", t: "Salud comunitaria", d: "Postas, campañas, acceso a medicinas" },
+    { id: "amb", icon: "spark", t: "Medio ambiente", d: "Jornadas de limpieza, agua, residuos" },
     { id: "edu", icon: "doc", t: "Educación", d: "Talleres, escuelas, becas" },
-    { id: "der", icon: "shield", t: "Derechos", d: "Acompañamiento, denuncias" },
+    { id: "der", icon: "shield", t: "Derechos", d: "Acompañamiento legal, denuncias" },
   ];
 
   return (
@@ -91,18 +134,32 @@ function VariantWizard({ onFinish }) {
           </>}
           {step === 2 && <>
             <div><Chip tone="blue" dot>Paso 2 de 3</Chip></div>
-            <h2 style={{ fontSize: 27, fontWeight: 800, letterSpacing: "-.02em", margin: "16px 0 0", lineHeight: 1.15 }}>¿Qué temas quieres recoger?</h2>
-            <p style={{ fontSize: 15, color: "var(--ink-soft)", lineHeight: 1.6, marginTop: 12 }}>Solo para sugerirte mejor. <b>Tú siempre decides</b> qué entra en cada informe. Puedes cambiarlo después.</p>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginTop: 18 }}>
+            <h2 style={{ fontSize: 27, fontWeight: 800, letterSpacing: "-.02em", margin: "16px 0 0", lineHeight: 1.15 }}>¿Cuál es el rubro de tu organización?</h2>
+            <p style={{ fontSize: 14, color: "var(--ink-soft)", lineHeight: 1.55, marginTop: 10 }}>Selecciona uno. Esto le ayudará a Voz a sugerirte las métricas correctas para tus informes.</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 16 }}>
               {programs.map(p => {
-                const on = progs.includes(p.id);
+                const on = prog === p.id;
                 return (
-                  <button key={p.id} onClick={() => toggle(p.id)} style={{
-                    textAlign: "left", padding: "13px 14px", borderRadius: "var(--r-sm)", background: on ? "var(--blue-tint)" : "var(--surface)",
-                    border: "1.5px solid " + (on ? "var(--blue)" : "var(--line)"), transition: "all .15s", display: "flex", gap: 11, alignItems: "flex-start",
+                  <button key={p.id} onClick={() => setProg(p.id)} style={{
+                    textAlign: "left", padding: "12px 14px", borderRadius: "var(--r-sm)",
+                    background: on ? "var(--blue-tint)" : "var(--surface)",
+                    border: "1.5px solid " + (on ? "var(--blue)" : "var(--line)"),
+                    transition: "all .15s", display: "flex", gap: 12, alignItems: "center", cursor: "pointer",
                   }}>
-                    <span style={{ color: on ? "var(--blue)" : "var(--muted)" }}><Icon name={p.icon} size={19} /></span>
-                    <span><div style={{ fontWeight: 700, fontSize: 14 }}>{p.t}</div><div style={{ fontSize: 12, color: "var(--muted)" }}>{p.d}</div></span>
+                    {/* Radio dot */}
+                    <span style={{
+                      width: 18, height: 18, borderRadius: "50%", flex: "none",
+                      border: "2px solid " + (on ? "var(--blue)" : "var(--line)"),
+                      background: on ? "var(--blue)" : "transparent",
+                      display: "grid", placeItems: "center",
+                    }}>
+                      {on && <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#fff" }} />}
+                    </span>
+                    <span style={{ color: on ? "var(--blue)" : "var(--muted)", flex: "none" }}><Icon name={p.icon} size={17} /></span>
+                    <span>
+                      <div style={{ fontWeight: 700, fontSize: 14, color: on ? "var(--blue-deep)" : "var(--ink)" }}>{p.t}</div>
+                      <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 1 }}>{p.d}</div>
+                    </span>
                   </button>
                 );
               })}
@@ -140,7 +197,30 @@ function VariantWizard({ onFinish }) {
             </div>
           </div>}
           {step === 1 && <FakeQR />}
-          {step === 2 && <Illu label="ilustración · temas de tu ONG" h={240} />}
+          {step === 2 && (() => {
+            const m = PROGRAM_METRICS[prog];
+            return (
+              <div style={{ width: "100%", maxWidth: 280 }}>
+                <div style={{ background: "#fff", borderRadius: "var(--r)", padding: "20px 22px", boxShadow: "var(--sh)" }}>
+                  <div style={{ fontSize: 22, marginBottom: 6 }}>{m.emoji}</div>
+                  <div style={{ fontWeight: 800, fontSize: 14.5, color: "var(--ink)", marginBottom: 12 }}>
+                    Métricas que Voz tracked para <span style={{ color: "var(--blue)" }}>{m.label}</span>
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                    {m.metrics.map((metric, i) => (
+                      <div key={i} style={{ display: "flex", gap: 9, alignItems: "flex-start" }}>
+                        <span style={{ color: "var(--blue)", flex: "none", marginTop: 1 }}><Icon name="check" size={13} /></span>
+                        <span style={{ fontSize: 12.5, color: "var(--ink-soft)", lineHeight: 1.45 }}>{metric}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{ marginTop: 14, padding: "9px 12px", background: "var(--blue-tint)", borderRadius: "var(--r-sm)", fontSize: 11.5, color: "var(--blue-deep)", lineHeight: 1.4 }}>
+                    Puedes agregar o quitar métricas en cualquier momento desde la configuración.
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
           {step === 3 && <div style={{ textAlign: "center" }}>
             <div style={{ width: 92, height: 92, borderRadius: 999, background: "var(--green-tint)", display: "grid", placeItems: "center", margin: "0 auto 16px", color: "var(--green)" }}><Icon name="check" size={46} /></div>
             <div style={{ fontWeight: 700, color: "var(--ink-soft)" }}>WhatsApp conectado</div>
