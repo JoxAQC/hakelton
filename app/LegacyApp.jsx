@@ -2803,6 +2803,22 @@ function Sidebar({ page, setPage, open, onNavigate }) {
           <span className="nav-icon-wrap"><Icon name="gear" size={19} /></span>
           {!collapsed && <span className="nav-item-label" style={{ opacity: 1 }}>Configuración</span>}
         </button>
+        <button type="button" className="nav-item-row"
+          title={collapsed ? "Cerrar sesión" : undefined}
+          onClick={async () => {
+            const { createClient } = await import("@supabase/supabase-js");
+            const sb = createClient(
+              process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+              process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
+            );
+            await sb.auth.signOut();
+            window.location.reload();
+          }}
+          style={{ justifyContent: collapsed ? "center" : "flex-start", padding: collapsed ? "10px" : "9px 10px", color: "#dc2626" }}
+        >
+          <span className="nav-icon-wrap"><Icon name="arrow-left" size={19} /></span>
+          {!collapsed && <span className="nav-item-label" style={{ opacity: 1 }}>Cerrar sesión</span>}
+        </button>
       </nav>
     </aside>
   );

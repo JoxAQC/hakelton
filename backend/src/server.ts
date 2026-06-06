@@ -7,6 +7,8 @@ import { queryRouter } from "./routes/query.js";
 import { dashboardRouter } from "./routes/dashboard.js";
 import { reportsRouter } from "./routes/reports.js";
 import { onboardRouter } from "./routes/onboard.js";
+import { authRouter } from "./routes/auth.js";
+import { validateApiKey } from "./middleware/api-key.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -30,11 +32,12 @@ app.get("/health", (_req, res) => {
 });
 
 app.use("/api/chat", chatRouter);
-app.use("/api/ingest", ingestRouter);
-app.use("/api/query", queryRouter);
+app.use("/api/ingest", validateApiKey, ingestRouter);
+app.use("/api/query", validateApiKey, queryRouter);
 app.use("/api/dashboard", dashboardRouter);
 app.use("/api/reports", reportsRouter);
 app.use("/api/onboard", onboardRouter);
+app.use("/api/auth", authRouter);
 
 app.listen(PORT, () => {
   console.log(`[hakelton-backend] listening on :${PORT}`);

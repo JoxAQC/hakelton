@@ -3,20 +3,62 @@
 import React, { useState, useEffect } from "react";
 import LegacyApp, { loadSupabaseData } from "./LegacyApp";
 import ChatSidebar from "./ChatSidebar";
+import AuthPage from "./AuthPage";
 import "./legacy-styles.css";
 import { MessageCircle } from "lucide-react";
+import { supabase } from "../lib/supabase/client";
 
 export default function Home() {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [activeProject, setActiveProject] = useState(null);
   const [dataLoaded, setDataLoaded] = useState(false);
+  const [authUser, setAuthUser] = useState<any>(null);
+  const [checkingAuth, setCheckingAuth] = useState(true);
 
   useEffect(() => {
-    loadSupabaseData().then(() => setDataLoaded(true));
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        setAuthUser(session.user);
+      }
+      setCheckingAuth(false);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        setAuthUser(session.user);
+      } else {
+        setAuthUser(null);
+        setDataLoaded(false);
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
+  useEffect(() => {
+    if (authUser && !dataLoaded) {
+      loadSupabaseData().then(() => setDataLoaded(true));
+    }
+  }, [authUser, dataLoaded]);
+
+  if (checkingAuth) {
+    return (
+      <div style={{ height: "100vh", display: "grid", placeItems: "center", color: "var(--muted)", fontFamily: "var(--sans)" }}>
+        Verificando sesión...
+      </div>
+    );
+  }
+
+  if (!authUser) {
+    return <AuthPage onAuth={(user) => setAuthUser(user)} />;
+  }
+
   if (!dataLoaded) {
-    return <div style={{ height: "100vh", display: "grid", placeItems: "center", color: "var(--muted)", fontFamily: "var(--sans)" }}>Cargando entorno Demo de Supabase...</div>;
+    return (
+      <div style={{ height: "100vh", display: "grid", placeItems: "center", color: "var(--muted)", fontFamily: "var(--sans)" }}>
+        Cargando entorno...
+      </div>
+    );
   }
 
   return (
