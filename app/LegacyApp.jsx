@@ -166,102 +166,7 @@ const DATA = (function () {
     { id: "d3", name: "Encuesta_satisfaccion.xlsx", type: "xls", size: "77 KB", status: "done", note: "120 respuestas", detected: ["Edad", "Género", "Valoración 1–5"] },
   ];
 
-  const proyectos = [
-    {
-      id: "aulas-conectadas",
-      nombre: "Aulas Conectadas",
-      dashboard_data: {
-        base: { impacted: 1500, events: 12, voices: 85, docs: 6 },
-        gender: [
-          { label: "Femenino", value: 52, color: "oklch(0.64 0.13 18)" },
-          { label: "Masculino", value: 46, color: "oklch(0.55 0.11 250)" },
-          { label: "Otro / NS", value: 2, color: "oklch(0.70 0.03 258)" },
-        ],
-        age: [
-          { label: "0–12", value: 60 }, { label: "13–17", value: 35 }, { label: "18–29", value: 5 },
-          { label: "30–44", value: 0 }, { label: "45–64", value: 0 }, { label: "65+", value: 0 },
-        ],
-        trend: [
-          { m: "Oct", v: 300 }, { m: "Nov", v: 600 }, { m: "Dic", v: 850 },
-          { m: "Ene", v: 1100 }, { m: "Feb", v: 1350 }, { m: "Mar", v: 1500 },
-        ]
-      },
-      rag_documents_mock: [
-        { text: "El proyecto Aulas Conectadas equipó 12 laboratorios de computación en escuelas rurales, beneficiando a 1500 estudiantes.", metadata: { proyecto: "Aulas Conectadas", año: 2026 } }
-      ]
-    },
-    {
-      id: "tutorias-solidarias",
-      nombre: "Tutorías Solidarias",
-      dashboard_data: {
-        base: { impacted: 320, events: 45, voices: 120, docs: 12 },
-        gender: [
-          { label: "Femenino", value: 55, color: "oklch(0.64 0.13 18)" },
-          { label: "Masculino", value: 43, color: "oklch(0.55 0.11 250)" },
-          { label: "Otro / NS", value: 2, color: "oklch(0.70 0.03 258)" },
-        ],
-        age: [
-          { label: "0–12", value: 40 }, { label: "13–17", value: 50 }, { label: "18–29", value: 10 },
-          { label: "30–44", value: 0 }, { label: "45–64", value: 0 }, { label: "65+", value: 0 },
-        ],
-        trend: [
-          { m: "Oct", v: 80 }, { m: "Nov", v: 150 }, { m: "Dic", v: 220 },
-          { m: "Ene", v: 280 }, { m: "Feb", v: 300 }, { m: "Mar", v: 320 },
-        ]
-      },
-      rag_documents_mock: [
-        { text: "El proyecto Tutorías Solidarias ha brindado acompañamiento a 320 estudiantes para prevenir la deserción escolar.", metadata: { proyecto: "Tutorías Solidarias", año: 2026 } }
-      ]
-    },
-    {
-      id: "formacion-docente",
-      nombre: "Formación Docente",
-      dashboard_data: {
-        base: { impacted: 150, events: 5, voices: 40, docs: 3 },
-        gender: [
-          { label: "Femenino", value: 70, color: "oklch(0.64 0.13 18)" },
-          { label: "Masculino", value: 28, color: "oklch(0.55 0.11 250)" },
-          { label: "Otro / NS", value: 2, color: "oklch(0.70 0.03 258)" },
-        ],
-        age: [
-          { label: "0–12", value: 0 }, { label: "13–17", value: 0 }, { label: "18–29", value: 30 },
-          { label: "30–44", value: 50 }, { label: "45–64", value: 15 }, { label: "65+", value: 5 },
-        ],
-        trend: [
-          { m: "Oct", v: 0 }, { m: "Nov", v: 40 }, { m: "Dic", v: 80 },
-          { m: "Ene", v: 120 }, { m: "Feb", v: 150 }, { m: "Mar", v: 150 },
-        ]
-      },
-      rag_documents_mock: [
-        { text: "150 maestros de escuelas públicas se certificaron en herramientas pedagógicas digitales a través de este proyecto.", metadata: { proyecto: "Formación Docente", año: 2026 } }
-      ]
-    },
-    {
-      id: "becas-futuro",
-      nombre: "Becas Futuro",
-      dashboard_data: {
-        base: { impacted: 50, events: 2, voices: 15, docs: 10 },
-        gender: [
-          { label: "Femenino", value: 60, color: "oklch(0.64 0.13 18)" },
-          { label: "Masculino", value: 40, color: "oklch(0.55 0.11 250)" },
-          { label: "Otro / NS", value: 0, color: "oklch(0.70 0.03 258)" },
-        ],
-        age: [
-          { label: "0–12", value: 0 }, { label: "13–17", value: 90 }, { label: "18–29", value: 10 },
-          { label: "30–44", value: 0 }, { label: "45–64", value: 0 }, { label: "65+", value: 0 },
-        ],
-        trend: [
-          { m: "Oct", v: 10 }, { m: "Nov", v: 20 }, { m: "Dic", v: 30 },
-          { m: "Ene", v: 40 }, { m: "Feb", v: 50 }, { m: "Mar", v: 50 },
-        ]
-      },
-      rag_documents_mock: [
-        { text: "El proyecto otorgó becas de sostenimiento a 50 estudiantes de secundaria con excelencia académica.", metadata: { proyecto: "Becas Futuro", año: 2026 } }
-      ]
-    }
-  ];
-
-  return { people, conversations, transcript, teamReports, reports, draftBlocks, analytics, documents, proyectos };
+  return { people, conversations, transcript, teamReports, reports, draftBlocks, analytics, documents };
 })();
 
 /* --- tweaks-panel.jsx --- */
@@ -923,11 +828,9 @@ function AINote({ children }) {
 if (typeof window !== "undefined") Object.assign(window, { Icon, Avatar, Wave, VoicePlayer, Switch, Chip, AINote });
 
 /* animación de barras */
-if (typeof document !== "undefined") {
-const __vp = document.createElement("style");
+let __vp; if (typeof document !== "undefined") { __vp = document.createElement("style");
 __vp.textContent = "@keyframes vp{from{transform:scaleY(.5)}to{transform:scaleY(1.25)}}";
-document.head.appendChild(__vp);
-}
+document.head.appendChild(__vp); }
 
 /* --- onboarding.jsx --- */
 /* Onboarding — 3 variaciones comparables → window.Onboarding */
@@ -978,7 +881,7 @@ function Illu({ label, h = 220, tone = "blue" }) {
 function VariantWizard({ onFinish }) {
   const [step, setStep] = oUse(0);
   const [progs, setProgs] = oUse(["salud"]);
-  const steps = ["Hola", "Conectar", "Temas", "Listo"];
+  const steps = ["Hola", "Conectar", "Temas", "Integraciones", "Listo"];
   const toggle = (id) => setProgs(p => p.includes(id) ? p.filter(x => x !== id) : [...p, id]);
   const programs = [
     { id: "salud", icon: "heart", t: "Salud comunitaria", d: "Postas, campañas, acceso" },
@@ -1010,7 +913,7 @@ function VariantWizard({ onFinish }) {
             </div>
           </>}
           {step === 1 && <>
-            <div><Chip tone="blue" dot>Paso 1 de 3</Chip></div>
+            <div><Chip tone="blue" dot>Paso 1 de 4</Chip></div>
             <h2 style={{ fontSize: 27, fontWeight: 800, letterSpacing: "-.02em", margin: "16px 0 0", lineHeight: 1.15 }}>Conecta tu WhatsApp</h2>
             <p style={{ fontSize: 15, color: "var(--ink-soft)", lineHeight: 1.6, marginTop: 12 }}>En tu teléfono abre WhatsApp → <b>Dispositivos vinculados</b> → <b>Vincular dispositivo</b>, y apunta a este código.</p>
             <ul style={{ listStyle: "none", padding: 0, margin: "18px 0 0", display: "flex", flexDirection: "column", gap: 11 }}>
@@ -1022,7 +925,7 @@ function VariantWizard({ onFinish }) {
             </ul>
           </>}
           {step === 2 && <>
-            <div><Chip tone="blue" dot>Paso 2 de 3</Chip></div>
+            <div><Chip tone="blue" dot>Paso 2 de 4</Chip></div>
             <h2 style={{ fontSize: 27, fontWeight: 800, letterSpacing: "-.02em", margin: "16px 0 0", lineHeight: 1.15 }}>¿Qué temas quieres recoger?</h2>
             <p style={{ fontSize: 15, color: "var(--ink-soft)", lineHeight: 1.6, marginTop: 12 }}>Solo para sugerirte mejor. <b>Tú siempre decides</b> qué entra en cada informe. Puedes cambiarlo después.</p>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginTop: 18 }}>
@@ -1041,6 +944,22 @@ function VariantWizard({ onFinish }) {
             </div>
           </>}
           {step === 3 && <>
+            <div><Chip tone="blue" dot>Paso 3 de 4 (Opcional)</Chip></div>
+            <h2 style={{ fontSize: 27, fontWeight: 800, letterSpacing: "-.02em", margin: "16px 0 0", lineHeight: 1.15 }}>Vincula tus herramientas</h2>
+            <p style={{ fontSize: 15, color: "var(--ink-soft)", lineHeight: 1.6, marginTop: 12 }}>¿Tu ONG usa Drive o Notion? Conéctalos para que la IA extraiga contexto histórico de forma segura.</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 18 }}>
+              {["Google Workspace / Drive", "Notion", "OneDrive"].map(plat => (
+                <div key={plat} style={{ padding: "12px 14px", borderRadius: "var(--r-sm)", border: "1px solid var(--line)", background: "var(--surface)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <span style={{ color: "var(--muted)" }}><Icon name="doc" size={18} /></span>
+                    <span style={{ fontWeight: 600, fontSize: 14 }}>{plat}</span>
+                  </div>
+                  <button className="btn btn-soft btn-sm" disabled>Próximamente</button>
+                </div>
+              ))}
+            </div>
+          </>}
+          {step === 4 && <>
             <div><Chip tone="green" dot>¡Todo listo!</Chip></div>
             <h2 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-.02em", margin: "16px 0 0", lineHeight: 1.15 }}>Ya puedes empezar a escuchar.</h2>
             <p style={{ fontSize: 15, color: "var(--ink-soft)", lineHeight: 1.6, marginTop: 12 }}>Cuando lleguen notas de voz, las verás transcritas aquí. Cuando tengas suficientes, te ayudo a armar tu primer informe — y tú lo revisas antes de compartir.</p>
@@ -1052,8 +971,8 @@ function VariantWizard({ onFinish }) {
           <div className="row" style={{ marginTop: "auto", paddingTop: 26, gap: 10 }}>
             {step > 0 && <button className="btn btn-ghost" onClick={() => setStep(s => s - 1)}><Icon name="back" size={17} /> Atrás</button>}
             <div className="grow" />
-            {step < 3
-              ? <button className="btn btn-primary btn-lg" onClick={() => setStep(s => s + 1)}>{step === 0 ? "Empezar" : "Continuar"} <Icon name="arrow" size={17} /></button>
+            {step < 4
+              ? <button className="btn btn-primary btn-lg" onClick={() => setStep(s => s + 1)}>{step === 0 ? "Empezar" : step === 3 ? "Omitir por ahora" : "Continuar"} <Icon name="arrow" size={17} /></button>
               : <button className="btn btn-primary btn-lg" onClick={onFinish}>Entrar a Voz <Icon name="arrow" size={17} /></button>}
           </div>
         </div>
@@ -1073,7 +992,8 @@ function VariantWizard({ onFinish }) {
           </div>}
           {step === 1 && <FakeQR />}
           {step === 2 && <Illu label="ilustración · temas de tu ONG" h={240} />}
-          {step === 3 && <div style={{ textAlign: "center" }}>
+          {step === 3 && <Illu label="MCP Integrations" h={240} tone="blue" />}
+          {step === 4 && <div style={{ textAlign: "center" }}>
             <div style={{ width: 92, height: 92, borderRadius: 999, background: "var(--green-tint)", display: "grid", placeItems: "center", margin: "0 auto 16px", color: "var(--green)" }}><Icon name="check" size={46} /></div>
             <div style={{ fontWeight: 700, color: "var(--ink-soft)" }}>WhatsApp conectado</div>
           </div>}
@@ -1605,11 +1525,9 @@ function ReportFlow({ onClose, tone }) {
 
 if (typeof window !== "undefined") window.ReportFlow = ReportFlow;
 
-if (typeof document !== "undefined") {
-const __sp = document.createElement("style");
+let __sp; if (typeof document !== "undefined") { __sp = document.createElement("style");
 __sp.textContent = "@keyframes spin{to{transform:rotate(360deg)}}.spin{animation:spin .7s linear infinite}";
-document.head.appendChild(__sp);
-}
+document.head.appendChild(__sp); }
 
 /* --- analytics.jsx --- */
 /* Panel de datos — indicadores demográficos fusionados → window.Analytics */
@@ -1760,12 +1678,10 @@ function Panel({ title, sub, children, foot }) {
   );
 }
 
-function Analytics({ activeProject, setActiveProject, setPage, onNew, copy }) {
+function Analytics({ setPage, onNew, copy }) {
+  const a = DATA.analytics;
   const [scope, setScope] = dUse("mes");
-  const a = activeProject ? activeProject.dashboard_data : DATA.analytics;
-  
-  // If a project is selected, force mult to 1 (all-time) and hide scopes
-  const sc = activeProject ? { id: "all", label: "Histórico del Proyecto", mult: 1 } : DATA.analytics.scopes.find(s => s.id === scope);
+  const sc = a.scopes.find(s => s.id === scope);
   const mult = sc.mult;
   const recentVoices = [DATA.teamReports[0], ...DATA.transcript].slice(0, 2);
 
@@ -1776,34 +1692,17 @@ function Analytics({ activeProject, setActiveProject, setPage, onNew, copy }) {
           <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-.025em", margin: 0 }}>{copy?.greet ?? "Buenos días"}, Carla 👋</h2>
           <p style={{ color: "var(--muted)", fontSize: 14.5, margin: "4px 0 0" }}>Datos fusionados de tus eventos, voces y documentos · <b style={{ color: "var(--ink-soft)" }}>{sc.label}</b></p>
         </div>
-        <div className="inicio-header-actions" style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-          {/* Project Selector */}
-          <select 
-            value={activeProject ? activeProject.id : "general"} 
-            onChange={(e) => {
-              if (e.target.value === "general") setActiveProject(null);
-              else setActiveProject(DATA.proyectos.find(p => p.id === e.target.value));
-            }}
-            style={{ padding: "8px 12px", borderRadius: "8px", border: "1px solid var(--line)", background: "var(--surface)", fontWeight: 600, fontSize: 13, outline: "none", cursor: "pointer" }}
-          >
-            <option value="general">Visión General (Todos)</option>
-            {DATA.proyectos.map(p => (
-              <option key={p.id} value={p.id}>{p.nombre}</option>
+        <div className="inicio-header-actions">
+          <div className="scope-toggle">
+            {a.scopes.map(s => (
+              <button key={s.id} onClick={() => setScope(s.id)} style={{
+                border: "none", padding: "7px 14px", borderRadius: 999, fontWeight: 700, fontSize: 13,
+                background: scope === s.id ? "var(--surface)" : "transparent",
+                color: scope === s.id ? "var(--blue-deep)" : "var(--muted)",
+                boxShadow: scope === s.id ? "var(--sh-sm)" : "none",
+              }}>{s.id === "mes" ? "Mes" : s.id === "tri" ? "Trimestre" : "Año"}</button>
             ))}
-          </select>
-
-          {!activeProject && (
-            <div className="scope-toggle">
-              {DATA.analytics.scopes.map(s => (
-                <button key={s.id} onClick={() => setScope(s.id)} style={{
-                  border: "none", padding: "7px 14px", borderRadius: 999, fontWeight: 700, fontSize: 13,
-                  background: scope === s.id ? "var(--surface)" : "transparent",
-                  color: scope === s.id ? "var(--blue-deep)" : "var(--muted)",
-                  boxShadow: scope === s.id ? "var(--sh-sm)" : "none",
-                }}>{s.id === "mes" ? "Mes" : s.id === "tri" ? "Trimestre" : "Año"}</button>
-              ))}
-            </div>
-          )}
+          </div>
           <button className="btn btn-ghost"><Icon name="down" size={16} /> Exportar</button>
           {onNew && <button className="btn btn-primary btn-lg" onClick={onNew}><Icon name="plus" size={18} /> Nuevo informe</button>}
         </div>
@@ -1854,13 +1753,11 @@ function Analytics({ activeProject, setActiveProject, setPage, onNew, copy }) {
         </div>
 
         {/* Fila ancha — programas (como Payment History) */}
-        {!activeProject && (
-          <div className="bento-wide">
-            <Panel title="Personas por programa" sub={`Total: ${fmt(a.base.impacted * mult)} · ${sc.label}`}>
-              <ProgBars data={a.programs} mult={mult} />
-            </Panel>
-          </div>
-        )}
+        <div className="bento-wide">
+          <Panel title="Personas por programa" sub={`Total: ${fmt(a.base.impacted * mult)} · ${sc.label}`}>
+            <ProgBars data={a.programs} mult={mult} />
+          </Panel>
+        </div>
 
         {/* Col 3 — voces + CTA */}
         <StatAccent
@@ -2334,7 +2231,7 @@ function App({ activeProject, setActiveProject }) {
               {page === "convos" && <Convos />}
               {page === "importar" && <Importar onGenerate={() => setFlow(true)} goDatos={() => setPage("inicio")} />}
               {page === "informes" && <Informes onNew={() => setFlow(true)} />}
-              {page === "datos" && <Analytics activeProject={activeProject} setActiveProject={setActiveProject} setPage={setPage} onNew={() => setFlow(true)} />}
+              {page === "datos" && <Analytics activeProject={activeProject} setActiveProject={setActiveProject} setPage={setPage} onNew={() => setFlow(true)} copy={copy} />}
               {page === "autom" && <Automatizaciones />}
               {page === "equipo" && <Equipo />}
             </>}
@@ -2345,6 +2242,5 @@ function App({ activeProject, setActiveProject }) {
 }
 
 
-
-export { DATA };
 export default App;
+export { DATA };

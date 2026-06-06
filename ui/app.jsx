@@ -225,7 +225,7 @@ const TONE_COPY = {
   directo: { greet: "Hola" },
 };
 
-function App() {
+function App({ activeProject, setActiveProject }) {
   const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
   const [onb, setOnb] = aUse(true);
   const [variant, setVariant] = aUse("wizard");
@@ -291,6 +291,7 @@ function App() {
               {page === "convos" && <Convos />}
               {page === "importar" && <Importar onGenerate={() => setFlow(true)} goDatos={() => setPage("inicio")} />}
               {page === "informes" && <Informes onNew={() => setFlow(true)} />}
+              {page === "datos" && <Analytics activeProject={activeProject} setActiveProject={setActiveProject} setPage={setPage} onNew={() => setFlow(true)} copy={copy} />}
               {page === "autom" && <Automatizaciones />}
               {page === "equipo" && <Equipo />}
             </>}

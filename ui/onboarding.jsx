@@ -46,7 +46,7 @@ function Illu({ label, h = 220, tone = "blue" }) {
 function VariantWizard({ onFinish }) {
   const [step, setStep] = oUse(0);
   const [progs, setProgs] = oUse(["salud"]);
-  const steps = ["Hola", "Conectar", "Temas", "Listo"];
+  const steps = ["Hola", "Conectar", "Temas", "Integraciones", "Listo"];
   const toggle = (id) => setProgs(p => p.includes(id) ? p.filter(x => x !== id) : [...p, id]);
   const programs = [
     { id: "salud", icon: "heart", t: "Salud comunitaria", d: "Postas, campañas, acceso" },
@@ -78,7 +78,7 @@ function VariantWizard({ onFinish }) {
             </div>
           </>}
           {step === 1 && <>
-            <div><Chip tone="blue" dot>Paso 1 de 3</Chip></div>
+            <div><Chip tone="blue" dot>Paso 1 de 4</Chip></div>
             <h2 style={{ fontSize: 27, fontWeight: 800, letterSpacing: "-.02em", margin: "16px 0 0", lineHeight: 1.15 }}>Conecta tu WhatsApp</h2>
             <p style={{ fontSize: 15, color: "var(--ink-soft)", lineHeight: 1.6, marginTop: 12 }}>En tu teléfono abre WhatsApp → <b>Dispositivos vinculados</b> → <b>Vincular dispositivo</b>, y apunta a este código.</p>
             <ul style={{ listStyle: "none", padding: 0, margin: "18px 0 0", display: "flex", flexDirection: "column", gap: 11 }}>
@@ -90,7 +90,7 @@ function VariantWizard({ onFinish }) {
             </ul>
           </>}
           {step === 2 && <>
-            <div><Chip tone="blue" dot>Paso 2 de 3</Chip></div>
+            <div><Chip tone="blue" dot>Paso 2 de 4</Chip></div>
             <h2 style={{ fontSize: 27, fontWeight: 800, letterSpacing: "-.02em", margin: "16px 0 0", lineHeight: 1.15 }}>¿Qué temas quieres recoger?</h2>
             <p style={{ fontSize: 15, color: "var(--ink-soft)", lineHeight: 1.6, marginTop: 12 }}>Solo para sugerirte mejor. <b>Tú siempre decides</b> qué entra en cada informe. Puedes cambiarlo después.</p>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginTop: 18 }}>
@@ -109,6 +109,22 @@ function VariantWizard({ onFinish }) {
             </div>
           </>}
           {step === 3 && <>
+            <div><Chip tone="blue" dot>Paso 3 de 4 (Opcional)</Chip></div>
+            <h2 style={{ fontSize: 27, fontWeight: 800, letterSpacing: "-.02em", margin: "16px 0 0", lineHeight: 1.15 }}>Vincula tus herramientas</h2>
+            <p style={{ fontSize: 15, color: "var(--ink-soft)", lineHeight: 1.6, marginTop: 12 }}>¿Tu ONG usa Drive o Notion? Conéctalos para que la IA extraiga contexto histórico de forma segura.</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 18 }}>
+              {["Google Workspace / Drive", "Notion", "OneDrive"].map(plat => (
+                <div key={plat} style={{ padding: "12px 14px", borderRadius: "var(--r-sm)", border: "1px solid var(--line)", background: "var(--surface)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <span style={{ color: "var(--muted)" }}><Icon name="doc" size={18} /></span>
+                    <span style={{ fontWeight: 600, fontSize: 14 }}>{plat}</span>
+                  </div>
+                  <button className="btn btn-soft btn-sm" disabled>Próximamente</button>
+                </div>
+              ))}
+            </div>
+          </>}
+          {step === 4 && <>
             <div><Chip tone="green" dot>¡Todo listo!</Chip></div>
             <h2 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-.02em", margin: "16px 0 0", lineHeight: 1.15 }}>Ya puedes empezar a escuchar.</h2>
             <p style={{ fontSize: 15, color: "var(--ink-soft)", lineHeight: 1.6, marginTop: 12 }}>Cuando lleguen notas de voz, las verás transcritas aquí. Cuando tengas suficientes, te ayudo a armar tu primer informe — y tú lo revisas antes de compartir.</p>
@@ -120,8 +136,8 @@ function VariantWizard({ onFinish }) {
           <div className="row" style={{ marginTop: "auto", paddingTop: 26, gap: 10 }}>
             {step > 0 && <button className="btn btn-ghost" onClick={() => setStep(s => s - 1)}><Icon name="back" size={17} /> Atrás</button>}
             <div className="grow" />
-            {step < 3
-              ? <button className="btn btn-primary btn-lg" onClick={() => setStep(s => s + 1)}>{step === 0 ? "Empezar" : "Continuar"} <Icon name="arrow" size={17} /></button>
+            {step < 4
+              ? <button className="btn btn-primary btn-lg" onClick={() => setStep(s => s + 1)}>{step === 0 ? "Empezar" : step === 3 ? "Omitir por ahora" : "Continuar"} <Icon name="arrow" size={17} /></button>
               : <button className="btn btn-primary btn-lg" onClick={onFinish}>Entrar a Voz <Icon name="arrow" size={17} /></button>}
           </div>
         </div>
@@ -141,7 +157,8 @@ function VariantWizard({ onFinish }) {
           </div>}
           {step === 1 && <FakeQR />}
           {step === 2 && <Illu label="ilustración · temas de tu ONG" h={240} />}
-          {step === 3 && <div style={{ textAlign: "center" }}>
+          {step === 3 && <Illu label="MCP Integrations" h={240} tone="blue" />}
+          {step === 4 && <div style={{ textAlign: "center" }}>
             <div style={{ width: 92, height: 92, borderRadius: 999, background: "var(--green-tint)", display: "grid", placeItems: "center", margin: "0 auto 16px", color: "var(--green)" }}><Icon name="check" size={46} /></div>
             <div style={{ fontWeight: 700, color: "var(--ink-soft)" }}>WhatsApp conectado</div>
           </div>}

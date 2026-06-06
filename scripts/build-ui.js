@@ -45,7 +45,7 @@ for (const file of files) {
   finalCode += `\n/* --- ${file} --- */\n` + content;
 }
 
-finalCode += `\nexport default App;\n`;
+finalCode += `\nexport default App;\nexport { DATA };\n`;
 
 // Replace window.DATA with module-level const (must run before window guards)
 finalCode = finalCode.replace(/window\.DATA\s*=\s*/g, 'const DATA = ');
@@ -54,6 +54,12 @@ finalCode = finalCode.replace(/window\.DATA/g, 'DATA');
 // Guard remaining top-level window assignments for SSR
 finalCode = finalCode.replace(/^Object\.assign\(window,/gm, 'if (typeof window !== "undefined") Object.assign(window,');
 finalCode = finalCode.replace(/^window\.(\w+)\s*=\s*/gm, 'if (typeof window !== "undefined") window.$1 = ');
+
+// Guard top-level document mutations for SSR
+finalCode = finalCode.replace(/^const __vp = document\.createElement/gm, 'let __vp; if (typeof document !== "undefined") { __vp = document.createElement');
+finalCode = finalCode.replace(/^document\.head\.appendChild\(__vp\);/gm, 'document.head.appendChild(__vp); }');
+finalCode = finalCode.replace(/^const __sp = document\.createElement/gm, 'let __sp; if (typeof document !== "undefined") { __sp = document.createElement');
+finalCode = finalCode.replace(/^document\.head\.appendChild\(__sp\);/gm, 'document.head.appendChild(__sp); }');
 
 // Safety net: strip any leftover ReactDOM mount line
 finalCode = finalCode.replace(/^ReactDOM\.createRoot[\s\S]*?\.render\(<App\s*\/>\);\s*$/gm, '');
