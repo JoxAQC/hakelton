@@ -2,8 +2,8 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "ONG RAG Explorer | LangGraph",
-  description: "Buscador inteligente RAG de organizaciones no gubernamentales usando LangGraph y Groq",
+  title: "Galo | Plataforma de Impacto",
+  description: "Plataforma inteligente para capturar voces, gestionar datos de impacto y generar informes",
 };
 
 export const viewport: Viewport = {

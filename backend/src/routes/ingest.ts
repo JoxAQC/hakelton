@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { supabase } from "../lib/supabase.js";
 import { generateEmbeddings } from "../lib/gemini.js";
+import * as pdfParseModule from "pdf-parse";
+const pdfParse = (pdfParseModule as any).default || pdfParseModule;
 
 export const ingestRouter = Router();
 
@@ -13,6 +15,49 @@ function chunkText(text: string, size = 1000, overlap = 200): string[] {
     start += size - overlap;
   }
   return chunks;
+}
+
+async function extractTextFromFile(
+  contentType: string,
+  fileBase64?: string,
+  storageUrl?: string
+): Promise<string> {
+  let buffer: Buffer | null = null;
+
+  if (fileBase64) {
+    buffer = Buffer.from(fileBase64, "base64");
+  } else if (storageUrl) {
+    try {
+      const resp = await fetch(storageUrl);
+      if (resp.ok) {
+        buffer = Buffer.from(await resp.arrayBuffer());
+      }
+    } catch (e) {
+      console.error("[ingest] Failed to download file:", e);
+    }
+  }
+
+  if (!buffer) return "";
+
+  if (contentType === "pdf") {
+    try {
+      const pdf = await pdfParse(buffer);
+      return pdf.text || "";
+    } catch (e) {
+      console.error("[ingest] PDF parse error:", e);
+      return "";
+    }
+  }
+
+  if (contentType === "text" || contentType === "docx") {
+    try {
+      return buffer.toString("utf-8");
+    } catch {
+      return "";
+    }
+  }
+
+  return "";
 }
 
 ingestRouter.post("/", async (req, res) => {
@@ -39,7 +84,15 @@ ingestRouter.post("/", async (req, res) => {
   }
 
   try {
-    const textToStore = preprocessed?.extracted_text || text_content || "";
+    let textToStore = preprocessed?.extracted_text || text_content || "";
+
+    if (!textToStore && content_type && (content_type !== "text" || file?.file_base64 || file?.storage_url)) {
+      textToStore = await extractTextFromFile(
+        content_type,
+        file?.file_base64,
+        file?.storage_url
+      );
+    }
 
     const { data: doc, error: docErr } = await supabase
       .from("documents")

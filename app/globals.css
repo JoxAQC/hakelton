@@ -1,28 +1,28 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --bg-color: #EBEAE6;
+  --bg-color: #FBFAF7;
   --panel-bg: #FFFFFF;
-  --panel-border: #E0DFDB;
-  
-  --primary-gradient: linear-gradient(135deg, #5D7A66 0%, #4A6352 100%);
-  --secondary-gradient: linear-gradient(135deg, #6B8875 0%, #5D7A66 100%);
+  --panel-border: #D7E0D8;
+
+  --primary-gradient: linear-gradient(135deg, #E7FE7B 0%, #D5F050 100%);
+  --secondary-gradient: linear-gradient(135deg, #D5F050 0%, #C0D930 100%);
   --accent-glow: none;
   --emerald-glow: none;
 
-  --text-primary: #1A1A1A;
-  --text-secondary: #666666;
-  --text-muted: #999999;
-  
-  --user-msg-bg: linear-gradient(135deg, #5D7A66 0%, #4A6352 100%);
-  --bot-msg-bg: #F7F7F5;
+  --text-primary: #3F4633;
+  --text-secondary: #637051;
+  --text-muted: #8A9178;
+
+  --user-msg-bg: linear-gradient(135deg, #3F4633 0%, #637051 100%);
+  --bot-msg-bg: #FBFAF7;
   --input-bg: #FFFFFF;
-  
-  --font-title: 'Outfit', sans-serif;
-  --font-body: 'Plus Jakarta Sans', sans-serif;
-  
+
+  --font-title: 'IBM Plex Sans', sans-serif;
+  --font-body: 'IBM Plex Sans', sans-serif;
+
   --shadow-lg: 0 4px 16px -4px rgba(26,26,26,.08), 0 2px 6px -2px rgba(26,26,26,.05);
-  --shadow-glow: 0 4px 12px -4px rgba(93,122,102,.35);
+  --shadow-glow: 0 4px 12px -4px rgba(63,70,51,.35);
 }
 
 * {
@@ -48,7 +48,7 @@ body {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--paper, #EBEAE6);
+  background: var(--paper, #FBFAF7);
 }
 ::-webkit-scrollbar-thumb {
   background: #E0DFDB;
@@ -91,7 +91,7 @@ body {
 .logo-icon {
   width: 40px;
   height: 40px;
-  background: var(--primary-gradient);
+  background: #3F4633;
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -109,7 +109,7 @@ body {
 
 .logo-text span {
   font-size: 0.75rem;
-  color: #5D7A66;
+  color: #637051;
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -121,7 +121,7 @@ body {
   display: inline-block;
   width: 6px;
   height: 6px;
-  background-color: #5D7A66;
+  background-color: #E7FE7B;
   border-radius: 50%;
   animation: pulse 1.5s infinite;
 }
@@ -134,11 +134,11 @@ body {
 }
 
 .meta-pill {
-  background: #E8F5E9;
-  border: 1px solid #D5E0D8;
+  background: #F9FFDB;
+  border: 1px solid #D7E0D8;
   padding: 0.35rem 0.75rem;
   border-radius: 9999px;
-  color: #3D6B47;
+  color: #3F4633;
   font-weight: 500;
 }
 
@@ -187,7 +187,7 @@ body {
 }
 
 .ngo-list-card {
-  background: #F7F7F5;
+  background: #FBFAF7;
   border: 1px solid var(--panel-border);
   border-radius: 10px;
   padding: 0.75rem 1rem;
@@ -197,8 +197,8 @@ body {
 }
 
 .ngo-list-card:hover {
-  background: #E8EDE9;
-  border-color: #D5E0D8;
+  background: #F4FEBA;
+  border-color: #D7E0D8;
   transform: translateY(-2px);
 }
 
@@ -211,7 +211,7 @@ body {
 
 .ngo-list-focus {
   font-size: 0.75rem;
-  color: #5D7A66;
+  color: #637051;
   font-weight: 500;
   margin-top: 0.2rem;
 }
@@ -220,7 +220,7 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  background: #F7F7F5;
+  background: #FBFAF7;
   border: 1px solid var(--panel-border);
   border-radius: 6px;
   padding: 0.4rem 0.6rem;
@@ -266,13 +266,13 @@ body {
 .empty-icon {
   width: 60px;
   height: 60px;
-  background: #E8EDE9;
-  border: 1px solid #D5E0D8;
+  background: #F9FFDB;
+  border: 1px solid #D7E0D8;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #5D7A66;
+  color: #3F4633;
 }
 
 .empty-state h3 {
@@ -330,7 +330,7 @@ body {
   font-family: var(--font-title);
   font-size: 1.05rem;
   margin: 0.75rem 0 0.4rem 0;
-  color: #4A6352;
+  color: #3F4633;
 }
 
 .message-bubble h3:first-child {
@@ -355,7 +355,7 @@ body {
 }
 
 .message-bubble strong {
-  color: #3D6B47;
+  color: #3F4633;
 }
 
 /* Suggestions chips */
@@ -364,7 +364,7 @@ body {
   flex-wrap: wrap;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
-  background: #F7F7F5;
+  background: #FBFAF7;
   border-top: 1px solid var(--panel-border);
 }
 
@@ -381,16 +381,16 @@ body {
 }
 
 .suggestion-chip:hover {
-  background: #E8EDE9;
-  border-color: #D5E0D8;
-  color: #4A6352;
+  background: #F4FEBA;
+  border-color: #D7E0D8;
+  color: #3F4633;
   transform: translateY(-1px);
 }
 
 /* Chat Input Bar */
 .chat-input-bar {
   padding: 1.25rem 1.5rem;
-  background: #F7F7F5;
+  background: #FBFAF7;
   border-top: 1px solid var(--panel-border);
   display: flex;
   gap: 0.75rem;
@@ -418,8 +418,8 @@ body {
 }
 
 .chat-input:focus {
-  border-color: #5D7A66;
-  box-shadow: 0 0 0 3px rgba(93,122,102,.15);
+  border-color: #E7FE7B;
+  box-shadow: 0 0 0 3px rgba(231,254,123,.25);
 }
 
 .send-button {
@@ -431,15 +431,15 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ffffff;
+  color: #3F4633;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 10px rgba(93,122,102,.25);
+  box-shadow: 0 4px 10px rgba(63,70,51,.25);
 }
 
 .send-button:hover {
   transform: scale(1.05);
-  box-shadow: 0 4px 14px rgba(93,122,102,.4);
+  box-shadow: 0 4px 14px rgba(63,70,51,.4);
 }
 
 .send-button:active {

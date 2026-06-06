@@ -152,13 +152,13 @@ export default function ChatSidebar({ isOpen, onClose, activeProject, setActiveP
     >
       <div className="app-container" style={{ width: '100%', height: '100%', overflow: 'hidden', position: 'relative' }}>
         {/* Header */}
-      <header className="app-header" style={{ background: '#2563EB', borderBottom: 'none' }}>
+      <header className="app-header" style={{ background: '#3F4633', borderBottom: 'none' }}>
         <div className="header-logo">
-          <div className="logo-icon" style={{ background: 'rgba(255,255,255,.2)', borderRadius: 10 }}>
-            <Sparkles size={18} color="#ffffff" />
+          <div className="logo-icon" style={{ background: '#E7FE7B', borderRadius: 10 }}>
+            <Sparkles size={18} color="#3F4633" />
           </div>
           <div className="logo-text">
-            <h1 style={{ color: '#fff', fontSize: '16px' }}>Eco</h1>
+            <h1 style={{ color: '#E7FE7B', fontSize: '16px' }}>Eco</h1>
             <span style={{ color: 'rgba(255,255,255,.7)', fontSize: '12px' }}>Pregúntame lo que necesites</span>
           </div>
         </div>
@@ -189,13 +189,13 @@ export default function ChatSidebar({ isOpen, onClose, activeProject, setActiveP
                     <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.4rem" }}>
                       {msg.role === "user" ? (
                         <>
-                          <span style={{ fontSize: "0.75rem", fontWeight: 600, color: "#4A6352" }}>Tú</span>
-                          <User size={12} color="#4A6352" />
+                          <span style={{ fontSize: "0.75rem", fontWeight: 600, color: "#3F4633" }}>Tú</span>
+                          <User size={12} color="#3F4633" />
                         </>
                       ) : (
                         <>
-                          <Bot size={12} color="#5D7A66" />
-                          <span style={{ fontSize: "0.75rem", fontWeight: 600, color: "#3D6B47" }}>
+                          <Bot size={12} color="#637051" />
+                          <span style={{ fontSize: "0.75rem", fontWeight: 600, color: "#3F4633" }}>
                             Voz
                           </span>
                         </>

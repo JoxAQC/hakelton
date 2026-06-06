@@ -71,21 +71,21 @@ export default function Home() {
         onClick={() => setIsChatOpen(true)}
         style={{
           position: "fixed", bottom: "28px", right: "28px",
-          backgroundColor: "#2563EB", color: "white", border: "none",
+          backgroundColor: "#E7FE7B", color: "#3F4633", border: "none",
           borderRadius: "50%", width: "52px", height: "52px", padding: "0",
           display: "flex", alignItems: "center", justifyContent: "center",
           cursor: "pointer",
-          boxShadow: "0 4px 24px rgba(37,99,235,.40), 0 2px 8px rgba(0,0,0,.10)",
+          boxShadow: "0 4px 24px rgba(231,254,123,.40), 0 2px 8px rgba(0,0,0,.10)",
           zIndex: 9998, fontFamily: "inherit", fontSize: "14px", fontWeight: 700,
           letterSpacing: "-.01em", transition: "all 0.2s ease",
         }}
         onMouseOver={(e) => {
           e.currentTarget.style.transform = "translateY(-2px)";
-          e.currentTarget.style.boxShadow = "0 8px 32px rgba(37,99,235,.50), 0 2px 8px rgba(0,0,0,.12)";
+          e.currentTarget.style.boxShadow = "0 8px 32px rgba(231,254,123,.50), 0 2px 8px rgba(0,0,0,.12)";
         }}
         onMouseOut={(e) => {
           e.currentTarget.style.transform = "translateY(0)";
-          e.currentTarget.style.boxShadow = "0 4px 24px rgba(37,99,235,.40), 0 2px 8px rgba(0,0,0,.10)";
+          e.currentTarget.style.boxShadow = "0 4px 24px rgba(231,254,123,.40), 0 2px 8px rgba(0,0,0,.10)";
         }}
       >
         <MessageCircle size={22} />

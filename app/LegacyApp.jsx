@@ -9,38 +9,38 @@ import { supabase } from "../lib/supabase/client";
 const DATA = (function () {
   const people = {
     // Comunidad
-    maria:   { id: "maria",   name: "María Elena Quispe",   role: "Vecina · Programa de salud", color: "#2563EB", initials: "MQ" },
-    roberto: { id: "roberto", name: "Don Roberto Mamani",   role: "Dirigente comunal",          color: "#7C3AED", initials: "RM" },
-    luz:     { id: "luz",     name: "Luz Carrasco",          role: "Madre · Comedor popular",    color: "#0891B2", initials: "LC" },
-    jowel:   { id: "jowel",   name: "Jowel Andrade",         role: "Joven · Taller ambiental",   color: "#0369A1", initials: "JA" },
+    maria:   { id: "maria",   name: "María Elena Quispe",   role: "Vecina · Programa de salud", color: "#3F4633", initials: "MQ" },
+    roberto: { id: "roberto", name: "Don Roberto Mamani",   role: "Dirigente comunal",          color: "#637051", initials: "RM" },
+    luz:     { id: "luz",     name: "Luz Carrasco",          role: "Madre · Comedor popular",    color: "#D6CDC3", initials: "LC" },
+    jowel:   { id: "jowel",   name: "Jowel Andrade",         role: "Joven · Taller ambiental",   color: "#D7E0D8", initials: "JA" },
     // Equipo / voluntariado
-    carlosH: { id: "carlosH", name: "Carlos Huamán",         role: "Voluntario · Equipo de campo", color: "#1D4ED8", initials: "CH", team: true },
-    anaR:    { id: "anaR",    name: "Ana Rivas",             role: "Coordinadora de jornada",      color: "#0369A1", initials: "AR", team: true },
+    carlosH: { id: "carlosH", name: "Carlos Huamán",         role: "Voluntario · Equipo de campo", color: "#3F4633", initials: "CH", team: true },
+    anaR:    { id: "anaR",    name: "Ana Rivas",             role: "Coordinadora de jornada",      color: "#637051", initials: "AR", team: true },
   };
 
   // Conversaciones de WhatsApp conectadas
   const conversations = [
     {
       id: "equipo", name: "Equipo de campo · Voluntariado", kind: "Grupo", role: "team",
-      members: 8, color: "#1D4ED8", initials: "EC",
+      members: 8, color: "#3F4633", initials: "EC",
       lastAt: "hace 30 min", unread: 2, voiceNotes: 6,
       summary: "Reportes de los voluntarios: qué se hizo, qué se desplegó y qué quedó pendiente.",
     },
     {
       id: "salud", name: "Salud Comunitaria — Villa El Sol", kind: "Grupo", role: "community",
-      members: 14, color: "#2563EB", initials: "SC",
+      members: 14, color: "#637051", initials: "SC",
       lastAt: "hace 12 min", unread: 3, voiceNotes: 8,
       summary: "Testimonios sobre la nueva posta médica y acceso a medicinas.",
     },
     {
       id: "ambiente", name: "Jóvenes por el río", kind: "Grupo", role: "community",
-      members: 21, color: "#0369A1", initials: "JR",
+      members: 21, color: "#D6CDC3", initials: "JR",
       lastAt: "ayer", unread: 0, voiceNotes: 11,
       summary: "Jornada de limpieza y voces sobre la contaminación del río.",
     },
     {
       id: "roberto", name: "Don Roberto Mamani", kind: "Directo", role: "community",
-      members: 1, color: "#7C3AED", initials: "RM",
+      members: 1, color: "#637051", initials: "RM",
       lastAt: "hace 3 h", unread: 1, voiceNotes: 2,
       summary: "Seguimiento al acuerdo con el municipio.",
     },
@@ -81,9 +81,9 @@ const DATA = (function () {
 
   // Informes existentes
   const reports = [
-    { id: "r1", title: "Impacto de la posta médica — Marzo 2026", program: "Salud Comunitaria", status: "Borrador en revisión", voices: 8, updated: "hoy", color: "#2563EB", impact: 120, impactLabel: "personas impactadas" },
-    { id: "r2", title: "Resultados jornada de limpieza del río", program: "Medio Ambiente", status: "Aprobado", voices: 11, updated: "hace 4 días", color: "#0EA5E9", impact: 340, impactLabel: "kg de residuos retirados" },
-    { id: "r3", title: "Comedor Las Manitos — Reporte trimestral", program: "Seguridad alimentaria", status: "Aprobado", voices: 6, updated: "hace 2 sem", color: "#0369A1", impact: 85, impactLabel: "familias atendidas" },
+    { id: "r1", title: "Impacto de la posta médica — Marzo 2026", program: "Salud Comunitaria", status: "Borrador en revisión", voices: 8, updated: "hoy", color: "#3F4633", impact: 120, impactLabel: "personas impactadas" },
+    { id: "r2", title: "Resultados jornada de limpieza del río", program: "Medio Ambiente", status: "Aprobado", voices: 11, updated: "hace 4 días", color: "#D6CDC3", impact: 340, impactLabel: "kg de residuos retirados" },
+    { id: "r3", title: "Comedor Las Manitos — Reporte trimestral", program: "Seguridad alimentaria", status: "Aprobado", voices: 6, updated: "hace 2 sem", color: "#637051", impact: 85, impactLabel: "familias atendidas" },
   ];
 
   // Bloques que la IA propone — mezcla testimonios de comunidad + reportes del equipo
@@ -140,19 +140,19 @@ const DATA = (function () {
     ],
     base: { impacted: 1240, events: 8, voices: 142, docs: 11 },
     gender: [
-      { label: "Femenino", value: 58, color: "#2563EB" },
-      { label: "Masculino", value: 39, color: "#0EA5E9" },
-      { label: "Otro / NS", value: 3, color: "#CBD5E1" },
+      { label: "Femenino", value: 58, color: "#E7FE7B" },
+      { label: "Masculino", value: 39, color: "#D6CDC3" },
+      { label: "Otro / NS", value: 3, color: "#D7E0D8" },
     ],
     age: [
       { label: "0–12", value: 14 }, { label: "13–17", value: 12 }, { label: "18–29", value: 26 },
       { label: "30–44", value: 23 }, { label: "45–64", value: 17 }, { label: "65+", value: 8 },
     ],
     programs: [
-      { name: "Aulas Conectadas", value: 480, color: "#2563EB" },
-      { name: "Tutorías Solidarias", value: 340, color: "#0EA5E9" },
-      { name: "Formación Docente", value: 260, color: "#7C3AED" },
-      { name: "Becas Futuro", value: 160, color: "#0369A1" },
+      { name: "Aulas Conectadas", value: 480, color: "#E7FE7B" },
+      { name: "Tutorías Solidarias", value: 340, color: "#D6CDC3" },
+      { name: "Formación Docente", value: 260, color: "#637051" },
+      { name: "Becas Futuro", value: 160, color: "#3F4633" },
     ],
     trend: [
       { m: "Oct", v: 520 }, { m: "Nov", v: 640 }, { m: "Dic", v: 710 },
@@ -169,10 +169,10 @@ const DATA = (function () {
 
   // Audios agrupados por proyecto (para la vista de bandeja de Informes)
   const projects = [
-    { id: "aulas",     label: "Aulas Conectadas",    color: "#2563EB", count: 4 },
-    { id: "tutorias",  label: "Tutorías Solidarias", color: "#0EA5E9", count: 3 },
-    { id: "formacion", label: "Formación Docente",   color: "#7C3AED", count: 2 },
-    { id: "becas",     label: "Becas Futuro",        color: "#0369A1", count: 1 },
+    { id: "aulas",     label: "Aulas Conectadas",    color: "#E7FE7B", count: 4 },
+    { id: "tutorias",  label: "Tutorías Solidarias", color: "#D6CDC3", count: 3 },
+    { id: "formacion", label: "Formación Docente",   color: "#637051", count: 2 },
+    { id: "becas",     label: "Becas Futuro",        color: "#3F4633", count: 1 },
   ];
 
   const audioInbox = [
@@ -256,7 +256,7 @@ export async function loadSupabaseData() {
         DATA.projects = org.programs.map((p, i) => ({
           id: p.id,
           label: p.name,
-          color: ["#2563EB", "#0EA5E9", "#7C3AED", "#0369A1"][i % 4],
+          color: ["#E7FE7B", "#D6CDC3", "#637051", "#3F4633"][i % 4],
           count: 0
         }));
         const idMap = {};
@@ -340,7 +340,7 @@ export async function loadSupabaseData() {
           status: r.status === "draft" ? "Borrador en revisión" : r.status === "published" ? "Aprobado" : r.status,
           voices: r.content?.blocks?.length || 0,
           updated: new Date(r.updated_at || r.created_at).toLocaleDateString("es-PE"),
-          color: ["#2563EB", "#0EA5E9", "#7C3AED", "#0369A1"][i % 4],
+          color: ["#E7FE7B", "#D6CDC3", "#637051", "#3F4633"][i % 4],
           impact: 0,
           impactLabel: "secciones",
         }));
@@ -1186,7 +1186,7 @@ function VariantWizard({ onFinish }) {
         <div style={{ padding: "44px 42px", display: "flex", flexDirection: "column" }}>
           {step === 0 && <>
             <div><Chip tone="warm" dot>Bienvenida</Chip></div>
-            <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-.025em", margin: "16px 0 0", lineHeight: 1.12 }}>Hola, soy <span style={{ color: "var(--blue)" }}>Voz</span>.<br />Convierto lo que tu gente dice en informes.</h2>
+            <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-.025em", margin: "16px 0 0", lineHeight: 1.12 }}>Hola, soy <span style={{ color: "var(--dark)" }}>Voz</span>.<br />Convierto lo que tu gente dice en informes.</h2>
             <p style={{ fontSize: 15.5, color: "var(--ink-soft)", lineHeight: 1.6, marginTop: 14 }}>Conecto tu WhatsApp, transcribo las notas de voz y mensajes de las personas con las que trabajas, y te ayudo a armar reportes. <b>Sin que pierdas tu voz ni la de ellas.</b></p>
             <div style={{ marginTop: "auto", paddingTop: 24, display: "flex", gap: 8, alignItems: "center", color: "var(--muted)", fontSize: 13 }}>
               <Icon name="shield" size={17} /> Toma 3 minutos. Nada se envía sin tu permiso.
@@ -1221,13 +1221,13 @@ function VariantWizard({ onFinish }) {
                     {/* Radio dot */}
                     <span style={{
                       width: 18, height: 18, borderRadius: "50%", flex: "none",
-                      border: "2px solid " + (on ? "var(--blue)" : "var(--line)"),
-                      background: on ? "var(--blue)" : "transparent",
+                      border: "2px solid " + (on ? "var(--dark)" : "var(--line)"),
+                      background: on ? "var(--dark)" : "transparent",
                       display: "grid", placeItems: "center",
                     }}>
                       {on && <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#fff" }} />}
                     </span>
-                    <span style={{ color: on ? "var(--blue)" : "var(--muted)", flex: "none" }}><Icon name={p.icon} size={17} /></span>
+                    <span style={{ color: on ? "var(--dark)" : "var(--muted)", flex: "none" }}><Icon name={p.icon} size={17} /></span>
                     <span>
                       <div style={{ fontWeight: 700, fontSize: 14, color: on ? "var(--blue-deep)" : "var(--ink)" }}>{p.t}</div>
                       <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 1 }}>{p.d}</div>
@@ -1458,7 +1458,7 @@ function VariantTour({ onFinish }) {
         {/* mockup atenuado de la app */}
         <div className="card" style={{ padding: 0, overflow: "hidden", boxShadow: "var(--sh-lg)" }}>
           <div style={{ padding: "16px 22px", borderBottom: "1px solid var(--line)", display: "flex", gap: 11, alignItems: "center", background: "var(--surface-2)" }}>
-            <Avatar p={{ color: "#2563EB", initials: "SC" }} size={34} />
+            <Avatar p={{ color: "#3F4633", initials: "SC" }} size={34} />
             <div><div style={{ fontWeight: 800, fontSize: 15 }}>Salud Comunitaria — Villa El Sol</div><div style={{ fontSize: 12, color: "var(--muted)" }}>3 voces nuevas · hoy</div></div>
           </div>
           <div style={{ padding: 22, display: "flex", flexDirection: "column", gap: 14 }}>
@@ -1551,7 +1551,7 @@ const rEff = useEffect;
 const rRef = useRef;
 
 /* ---- Gráficos SVG simples ---- */
-function BarChart({ data, color = "#2563EB", h = 72 }) {
+function BarChart({ data, color = "#3F4633", h = 72 }) {
   const max = Math.max(...data.map(d => d.value), 1);
   const w = 100 / data.length;
   return (
@@ -1644,7 +1644,7 @@ function PickSources({ picked, setPicked, docs, setDocs }) {
                 background: on ? "var(--blue-tint)" : "#fff",
                 borderRadius: "var(--r)", transition: "all .15s", cursor: "pointer",
               }}>
-                <div style={{ width: 22, height: 22, borderRadius: 6, border: "2px solid " + (on ? "var(--blue)" : "var(--line)"), background: on ? "var(--blue)" : "transparent", display: "grid", placeItems: "center", flex: "none", color: "#fff" }}>
+                <div style={{ width: 22, height: 22, borderRadius: 6, border: "2px solid " + (on ? "var(--dark)" : "var(--line)"), background: on ? "var(--dark)" : "transparent", display: "grid", placeItems: "center", flex: "none", color: "#fff" }}>
                   {on && <Icon name="check" size={13} />}
                 </div>
                 <Avatar p={{ color: c.color, initials: c.initials }} size={38} />
@@ -1758,7 +1758,7 @@ function Drafting({ done, setBlocks, setMetrics }) {
       <div className="col" style={{ gap: 10, textAlign: "left" }}>
         {phases.map((p, i) => (
           <div key={i} className="row" style={{ gap: 12, opacity: i <= phase ? 1 : .4, transition: "opacity .3s" }}>
-            <div style={{ width: 24, height: 24, borderRadius: 999, flex: "none", display: "grid", placeItems: "center", background: i < phase ? "var(--green)" : i === phase ? "var(--blue)" : "var(--line)", color: "#fff" }}>
+            <div style={{ width: 24, height: 24, borderRadius: 999, flex: "none", display: "grid", placeItems: "center", background: i < phase ? "var(--green)" : i === phase ? "var(--dark)" : "var(--line)", color: "#fff" }}>
               {i < phase ? <Icon name="check" size={14} /> : i === phase ? <span className="spin" style={{ width: 11, height: 11, border: "2px solid #fff", borderTopColor: "transparent", borderRadius: 999, display: "block" }} /> : <span style={{ width: 7, height: 7, borderRadius: 999, background: "#fff", opacity: .6 }} />}
             </div>
             <span style={{ fontSize: 14.5, fontWeight: 600, color: i <= phase ? "var(--ink)" : "var(--muted)" }}>{p}</span>
@@ -1782,10 +1782,10 @@ function ReportPreview({ blocks, metrics }) {
   const teamBlocks   = included.filter(b => b.kindTag === "reporte");
 
   return (
-    <div style={{ borderRadius: "var(--r-lg)", overflow: "hidden", background: "var(--blue)", boxShadow: "var(--sh-lg)", fontSize: 13 }}>
+    <div style={{ borderRadius: "var(--r-lg)", overflow: "hidden", background: "var(--dark)", boxShadow: "var(--sh-lg)", fontSize: 13 }}>
 
       {/* Encabezado */}
-      <div style={{ padding: "22px 24px 18px", background: "var(--blue)" }}>
+      <div style={{ padding: "22px 24px 18px", background: "var(--dark)" }}>
         <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: ".1em", textTransform: "uppercase", color: "rgba(255,255,255,.55)", marginBottom: 5 }}>
           Informe de Impacto · Fundación Raíces
         </div>
@@ -1803,7 +1803,7 @@ function ReportPreview({ blocks, metrics }) {
 
       {/* Métricas */}
       {mInc.length > 0 && (
-        <div style={{ display: "grid", gridTemplateColumns: `repeat(${Math.min(mInc.length, 4)}, 1fr)`, gap: 1, background: "var(--blue)" }}>
+        <div style={{ display: "grid", gridTemplateColumns: `repeat(${Math.min(mInc.length, 4)}, 1fr)`, gap: 1, background: "var(--dark)" }}>
           {mInc.slice(0, 4).map((m) => (
             <div key={m.id} style={{ background: "#fff", padding: "14px 16px" }}>
               <div style={{ fontSize: 9, fontWeight: 800, letterSpacing: ".06em", textTransform: "uppercase", color: "var(--muted)", marginBottom: 4 }}>{m.label}</div>
@@ -1899,7 +1899,7 @@ function ReportPreview({ blocks, metrics }) {
       </div>
 
       {/* Pie */}
-      <div style={{ background: "var(--blue)", padding: "10px 22px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div style={{ background: "var(--dark)", padding: "10px 22px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <span style={{ fontSize: 10.5, color: "rgba(255,255,255,.55)", fontWeight: 600 }}>Fundación Raíces · Generado con Voz</span>
         {hasEst && <span style={{ fontSize: 10, color: "rgba(255,255,255,.4)" }}>* Cifra estimada revisada por el equipo</span>}
         <span style={{ fontSize: 10.5, color: "rgba(255,255,255,.55)", fontWeight: 600 }}>Basado en {totalVoices} voces</span>
@@ -2012,9 +2012,9 @@ function Share({ blocks, metrics, onClose }) {
   const otherBlocks  = included.filter(b => b.kindTag !== "testimonio" && b.kindTag !== "reporte");
 
   // Colores del sistema
-  const BG = "var(--blue)";         // sage green — fondo principal
+  const BG = "var(--dark)";          // galo-dark — fondo principal
   const CARD = "#ffffff";
-  const ACCENT = "var(--warm)";     // tierra cálida — acento
+  const ACCENT = "var(--warm)";     // beige — acento
 
   return (
     <div className="float-in" style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: 26, alignItems: "start" }}>
@@ -2263,8 +2263,8 @@ function AgeBars({ data }) {
       {data.map(d => (
         <div key={d.label} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 5, height: "100%" }}>
           <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-end", width: "100%", alignItems: "center" }}>
-            <div style={{ fontSize: 11, fontWeight: 800, color: "var(--blue-deep)", marginBottom: 4 }}>{d.value}%</div>
-            <div style={{ width: "100%", maxWidth: 36, height: `${Math.round(d.value / max * 100)}%`, minHeight: 4, background: "var(--blue)", borderRadius: "6px 6px 2px 2px", opacity: 0.8 }} />
+            <div style={{ fontSize: 11, fontWeight: 800, color: "var(--blue-ink)", marginBottom: 4 }}>{d.value}%</div>
+            <div style={{ width: "100%", maxWidth: 36, height: `${Math.round(d.value / max * 100)}%`, minHeight: 4, background: "var(--dark)", borderRadius: "6px 6px 2px 2px", opacity: 0.8 }} />
           </div>
           <div style={{ fontSize: 11, color: "var(--muted)", fontWeight: 600, textAlign: "center", lineHeight: 1.2, whiteSpace: "nowrap" }}>{d.label}</div>
         </div>
@@ -2429,8 +2429,8 @@ function Analytics({ setPage, onNew, copy }) {
       <div style={{ display: "flex", gap: 6, marginBottom: 20, overflowX: "auto", paddingBottom: 2 }}>
         {Object.entries(PROJECT_DATA).map(([id, p]) => (
           <button key={id} onClick={() => setProject(id)} style={{
-            border: "1.5px solid " + (project === id ? "var(--blue)" : "var(--line)"),
-            background: project === id ? "var(--blue)" : "#fff",
+            border: "1.5px solid " + (project === id ? "var(--dark)" : "var(--line)"),
+            background: project === id ? "var(--dark)" : "#fff",
             color: project === id ? "#fff" : "var(--ink-soft)",
             borderRadius: 999, padding: "6px 16px", fontSize: 13, fontWeight: 600,
             cursor: "pointer", fontFamily: "inherit", whiteSpace: "nowrap",
@@ -2546,9 +2546,9 @@ const iUse = useState;
 const iRef = useRef;
 
 const TYPE_META = {
-  pdf: { label: "PDF", color: "#2563EB", tint: "#EFF6FF", detected: ["Testimonios", "Acuerdos", "Fechas"], note: (n) => `${n} páginas` },
-  xls: { label: "XLS", color: "#0369A1", tint: "#E0F2FE", detected: ["Tabla", "Edad", "Género", "Distrito"], note: (n) => `${n} registros` },
-  doc: { label: "DOC", color: "#1D4ED8", tint: "#DBEAFE", detected: ["Texto", "Secciones"], note: () => "documento de texto" },
+  pdf: { label: "PDF", color: "#3F4633", tint: "#F9FFDB", detected: ["Testimonios", "Acuerdos", "Fechas"], note: (n) => `${n} páginas` },
+  xls: { label: "XLS", color: "#637051", tint: "#F4FEBA", detected: ["Tabla", "Edad", "Género", "Distrito"], note: (n) => `${n} registros` },
+  doc: { label: "DOC", color: "#3F4633", tint: "#F9FFDB", detected: ["Texto", "Secciones"], note: () => "documento de texto" },
 };
 function extType(name) {
   const e = (name.split(".").pop() || "").toLowerCase();
@@ -2621,10 +2621,23 @@ function Importar({ onGenerate, goDatos }) {
         }
 
         let textContent = "";
+        let fileBase64 = null;
         const isTextFile = /\.(txt|csv|md)$/i.test(file.name);
         if (isTextFile) {
           try { textContent = await file.text(); } catch {}
+        } else {
+          try {
+            const buf = await file.arrayBuffer();
+            const bytes = new Uint8Array(buf);
+            let binary = "";
+            for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+            fileBase64 = btoa(binary);
+          } catch (e) {
+            console.warn("Could not read file as base64:", e);
+          }
         }
+
+        const detectedType = /pdf/i.test(file.type) ? "pdf" : /sheet|csv|excel/i.test(file.type || file.name) ? "excel" : /doc/i.test(file.type) ? "docx" : "text";
 
         const resp = await fetch(`${BACKEND_URL}/api/ingest`, {
           method: "POST",
@@ -2632,7 +2645,7 @@ function Importar({ onGenerate, goDatos }) {
           body: JSON.stringify({
             org_id: DATA.orgId,
             source: "web",
-            content_type: /pdf/i.test(file.type) ? "pdf" : /sheet|csv|excel/i.test(file.type || file.name) ? "excel" : /doc/i.test(file.type) ? "docx" : "text",
+            content_type: detectedType,
             text_content: textContent,
             file: {
               file_name: file.name,
@@ -2640,6 +2653,7 @@ function Importar({ onGenerate, goDatos }) {
               file_size: file.size,
               storage_url: storageUrl,
               storage_path: storagePath,
+              file_base64: fileBase64,
             },
             preprocessed: textContent ? { extracted_text: textContent } : undefined,
           }),
@@ -2836,7 +2850,7 @@ function Convos({ onNew }) {
   const [note, setNote] = aUse("");
 
   const audio = DATA.audioInbox.find(a => a.id === sel) || DATA.audioInbox[0];
-  const person = audio ? (DATA.people[audio.who] || { name: audio.subject || "Actividad", color: "#2563EB", initials: "AC", role: "Sistema" }) : null;
+  const person = audio ? (DATA.people[audio.who] || { name: audio.subject || "Actividad", color: "#3F4633", initials: "AC", role: "Sistema" }) : null;
   const project = audio ? DATA.projects.find(p => p.id === audio.project) : null;
   const unreadTotal = DATA.audioInbox.filter(a => a.unread).length;
 
@@ -2858,7 +2872,7 @@ function Convos({ onNew }) {
             style={{ background: activeProject === item.id ? "var(--blue-tint)" : "transparent", color: activeProject === item.id ? "var(--blue-deep)" : "var(--ink-soft)", fontWeight: activeProject === item.id ? 700 : 600, borderRadius: "var(--r-sm)", padding: "9px 12px" }}>
             <Icon name={item.icon} size={17} />
             <span style={{ flex: 1, textAlign: "left" }}>{item.label}</span>
-            {item.badge > 0 && <span className="badge" style={{ background: "var(--blue)", color: "#fff" }}>{item.badge}</span>}
+            {item.badge > 0 && <span className="badge" style={{ background: "var(--dark)", color: "#fff" }}>{item.badge}</span>}
           </button>
         ))}
 
@@ -2900,7 +2914,7 @@ function Convos({ onNew }) {
                 {proj.label}
               </div>
               {items.map(a => {
-                const p = DATA.people[a.who] || { name: a.subject || "Actividad", color: "#2563EB", initials: "AC", role: "Sistema" };
+                const p = DATA.people[a.who] || { name: a.subject || "Actividad", color: "#3F4633", initials: "AC", role: "Sistema" };
                 const isSel = sel === a.id;
                 return (
                   <button key={a.id} onClick={() => setSel(a.id)}
@@ -3013,10 +3027,10 @@ function Informes({ onNew }) {
           display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
           gap: 12, textAlign: "center", minHeight: 240, cursor: "pointer", transition: "all .15s", padding: 28,
         }}>
-          <div style={{ width: 56, height: 56, borderRadius: 16, background: "var(--blue)", color: "#fff", display: "grid", placeItems: "center" }}>
+          <div style={{ width: 56, height: 56, borderRadius: 16, background: "var(--dark)", color: "var(--blue)", display: "grid", placeItems: "center" }}>
             <Icon name="spark" size={28} />
           </div>
-          <div style={{ fontWeight: 800, fontSize: 17, color: "var(--blue-deep)" }}>Nuevo informe</div>
+          <div style={{ fontWeight: 800, fontSize: 17, color: "var(--blue-ink)" }}>Nuevo informe</div>
           <div style={{ fontSize: 13.5, color: "var(--blue-ink)", lineHeight: 1.5, maxWidth: 200 }}>Elige las voces, Eco arma un borrador y tú lo revisas.</div>
         </button>
 
@@ -3107,9 +3121,9 @@ function Automatizaciones() {
 /* ---------------- Equipo (simple) ---------------- */
 function Equipo() {
   const fallbackTeam = [
-    { p: { name: "Carla Vega", color: "var(--blue)", initials: "CV" }, role: "Coordinadora", perm: "Puede crear y aprobar informes" },
-    { p: { name: "Carlos Ruiz", color: "var(--blue)", initials: "CR" }, role: "Equipo de campo", perm: "Recoge y etiqueta voces" },
-    { p: { name: "Ana Soto", color: "var(--blue-deep)", initials: "AS" }, role: "Dirección", perm: "Solo lectura de informes finales" },
+    { p: { name: "Carla Vega", color: "var(--dark)", initials: "CV" }, role: "Coordinadora", perm: "Puede crear y aprobar informes" },
+    { p: { name: "Carlos Ruiz", color: "var(--dark)", initials: "CR" }, role: "Equipo de campo", perm: "Recoge y etiqueta voces" },
+    { p: { name: "Ana Soto", color: "var(--ink-soft)", initials: "AS" }, role: "Dirección", perm: "Solo lectura de informes finales" },
   ];
   const team = DATA.team && DATA.team.length > 0 ? DATA.team : fallbackTeam;
   return (
@@ -3130,8 +3144,8 @@ function Equipo() {
 
 /* ---------------- Root ---------------- */
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
-  "accent": "#3f6fb3",
-  "warm": "#0EA5E9",
+  "accent": "#E7FE7B",
+  "warm": "#D6CDC3",
   "density": "regular",
   "tone": "calido",
   "showOnboarding": true
@@ -3171,8 +3185,8 @@ function App({ activeProject, setActiveProject }) {
   const panel = (
     <TweaksPanel>
       <TweakSection label="Color" />
-      <TweakColor label="Azul confianza" value={t.accent} options={["#3f6fb3", "#2f6e8f", "#4a5fb0", "#1a7fc1"]} onChange={v => setTweak("accent", v)} />
-      <TweakColor label="Acento cálido (voces)" value={t.warm} options={["#0EA5E9", "#38BDF8", "#0284C7", "#06B6D4"]} onChange={v => setTweak("warm", v)} />
+      <TweakColor label="Lime primario" value={t.accent} options={["#E7FE7B", "#D5F050", "#C0D930", "#F4FEBA"]} onChange={v => setTweak("accent", v)} />
+      <TweakColor label="Acento cálido" value={t.warm} options={["#D6CDC3", "#C4B8AC", "#D7E0D8", "#EDE8E3"]} onChange={v => setTweak("warm", v)} />
       <TweakSection label="Interfaz" />
       <TweakRadio label="Densidad" value={t.density} options={["compact", "regular", "comfy"]} onChange={v => setTweak("density", v)} />
       <TweakRadio label="Tono de la copy" value={t.tone} options={["calido", "directo"]} onChange={v => setTweak("tone", v)} />
