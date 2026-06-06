@@ -24,32 +24,29 @@ export default function Home() {
       {/* Legacy Prototype UI */}
       <LegacyApp activeProject={activeProject} setActiveProject={setActiveProject} />
 
-      {/* Floating Action Button to open Chat Sidebar */}
-      <button 
+      {/* Floating Assistant Button */}
+      <button
         onClick={() => setIsChatOpen(true)}
         style={{
-          position: "fixed",
-          bottom: "2rem",
-          right: "2rem",
-          backgroundColor: "var(--blue, #5D7A66)",
-          color: "white",
-          border: "none",
-          borderRadius: "50%",
-          width: "60px",
-          height: "60px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          position: "fixed", bottom: "28px", right: "28px",
+          backgroundColor: "#2563EB", color: "white", border: "none",
+          borderRadius: "50%", width: "52px", height: "52px", padding: "0",
+          display: "flex", alignItems: "center", justifyContent: "center",
           cursor: "pointer",
-          boxShadow: "0 4px 12px rgba(93,122,102,.35)",
-          zIndex: 9998,
-          transition: "transform 0.2s ease"
+          boxShadow: "0 4px 24px rgba(37,99,235,.40), 0 2px 8px rgba(0,0,0,.10)",
+          zIndex: 9998, fontFamily: "inherit", fontSize: "14px", fontWeight: 700,
+          letterSpacing: "-.01em", transition: "all 0.2s ease",
         }}
-        onMouseOver={(e) => e.currentTarget.style.transform = "scale(1.1)"}
-        onMouseOut={(e) => e.currentTarget.style.transform = "scale(1)"}
-        title="Abrir Asistente / Ingesta"
+        onMouseOver={(e) => {
+          e.currentTarget.style.transform = "translateY(-2px)";
+          e.currentTarget.style.boxShadow = "0 8px 32px rgba(37,99,235,.50), 0 2px 8px rgba(0,0,0,.12)";
+        }}
+        onMouseOut={(e) => {
+          e.currentTarget.style.transform = "translateY(0)";
+          e.currentTarget.style.boxShadow = "0 4px 24px rgba(37,99,235,.40), 0 2px 8px rgba(0,0,0,.10)";
+        }}
       >
-        <MessageCircle size={28} />
+        <MessageCircle size={22} />
       </button>
 
       {/* Pop-up Chat Sidebar */}
