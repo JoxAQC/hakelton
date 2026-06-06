@@ -35,12 +35,14 @@ function Donut({ data, size = 150, thickness = 22 }) {
 function AgeBars({ data }) {
   const max = Math.max(...data.map(d => d.value));
   return (
-    <div style={{ display: "flex", alignItems: "stretch", gap: 12, height: 168 }}>
+    <div style={{ display: "flex", alignItems: "flex-end", gap: 8, height: 140, paddingBottom: 20, position: "relative" }}>
       {data.map(d => (
-        <div key={d.label} style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-end", alignItems: "center", gap: 8 }}>
-          <div style={{ fontSize: 12, fontWeight: 800, color: "var(--ink-soft)" }}>{d.value}%</div>
-          <div style={{ width: "100%", maxWidth: 46, height: `${d.value / max * 118}px`, background: "linear-gradient(180deg, var(--blue), var(--blue-deep))", borderRadius: "7px 7px 3px 3px" }} />
-          <div style={{ fontSize: 11.5, color: "var(--muted)", fontWeight: 600 }}>{d.label}</div>
+        <div key={d.label} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 5, height: "100%" }}>
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-end", width: "100%", alignItems: "center" }}>
+            <div style={{ fontSize: 11, fontWeight: 800, color: "var(--blue-deep)", marginBottom: 4 }}>{d.value}%</div>
+            <div style={{ width: "100%", maxWidth: 36, height: `${Math.round(d.value / max * 100)}%`, minHeight: 4, background: "var(--blue)", borderRadius: "6px 6px 2px 2px", opacity: 0.8 }} />
+          </div>
+          <div style={{ fontSize: 11, color: "var(--muted)", fontWeight: 600, textAlign: "center", lineHeight: 1.2, whiteSpace: "nowrap" }}>{d.label}</div>
         </div>
       ))}
     </div>
@@ -70,13 +72,16 @@ function ProgBars({ data, mult }) {
 function Trend({ data, mult }) {
   const max = Math.max(...data.map(d => d.v));
   return (
-    <div style={{ display: "flex", alignItems: "stretch", gap: 9, height: 150 }}>
+    <div style={{ display: "flex", alignItems: "flex-end", gap: 10, height: 140, paddingBottom: 20 }}>
       {data.map((d, i) => {
         const last = i === data.length - 1;
+        const h = Math.round(d.v / max * 100);
         return (
-          <div key={d.m} style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-end", alignItems: "center", gap: 7 }}>
-            <div style={{ fontSize: 10.5, fontWeight: 800, color: last ? "var(--warm-deep)" : "var(--faint)", whiteSpace: "nowrap" }}>{last ? fmt(d.v * mult) : ""}</div>
-            <div style={{ width: "100%", maxWidth: 34, height: `${d.v / max * 100}px`, background: last ? "var(--warm)" : "var(--blue-tint2)", borderRadius: "6px 6px 3px 3px" }} />
+          <div key={d.m} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 5, height: "100%" }}>
+            <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-end", width: "100%", alignItems: "center" }}>
+              {last && <div style={{ fontSize: 10.5, fontWeight: 800, color: "var(--warm-deep)", marginBottom: 4 }}>{fmt(d.v * mult)}</div>}
+              <div style={{ width: "100%", maxWidth: 32, height: `${h}%`, minHeight: 4, background: last ? "var(--warm)" : "var(--blue-tint2)", borderRadius: "6px 6px 2px 2px" }} />
+            </div>
             <div style={{ fontSize: 11, color: "var(--muted)", fontWeight: 600 }}>{d.m}</div>
           </div>
         );
@@ -151,122 +156,135 @@ function Analytics({ setPage, onNew, copy }) {
   const [scope, setScope] = dUse("mes");
   const sc = a.scopes.find(s => s.id === scope);
   const mult = sc.mult;
-  const recentVoices = [DATA.teamReports[0], ...DATA.transcript].slice(0, 2);
 
   return (
     <div className="page float-in">
-      <div className="inicio-header">
-        <div className="inicio-header-main">
-          <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-.025em", margin: 0 }}>{copy?.greet ?? "Buenos días"}, Carla 👋</h2>
-          <p style={{ color: "var(--muted)", fontSize: 14.5, margin: "4px 0 0" }}>Datos fusionados de tus eventos, voces y documentos · <b style={{ color: "var(--ink-soft)" }}>{sc.label}</b></p>
+      {/* Cabecera */}
+      <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 24, flexWrap: "wrap" }}>
+        <div style={{ flex: 1 }}>
+          <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-.025em", margin: "0 0 3px" }}>
+            {copy?.greet ?? "Buenos días"}, Carla 👋
+          </h2>
+          <p style={{ color: "var(--muted)", fontSize: 14, margin: 0 }}>
+            Resumen de impacto · <b style={{ color: "var(--ink-soft)" }}>{sc.label}</b>
+          </p>
         </div>
-        <div className="inicio-header-actions">
-          <div className="scope-toggle">
+        <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+          <div style={{ display: "flex", background: "var(--surface-2)", borderRadius: 999, padding: 3, border: "1px solid var(--line-soft)" }}>
             {a.scopes.map(s => (
               <button key={s.id} onClick={() => setScope(s.id)} style={{
-                border: "none", padding: "7px 14px", borderRadius: 999, fontWeight: 700, fontSize: 13,
-                background: scope === s.id ? "var(--surface)" : "transparent",
+                border: "none", padding: "6px 14px", borderRadius: 999, fontWeight: 700, fontSize: 13,
+                background: scope === s.id ? "#fff" : "transparent",
                 color: scope === s.id ? "var(--blue-deep)" : "var(--muted)",
                 boxShadow: scope === s.id ? "var(--sh-sm)" : "none",
-              }}>{s.id === "mes" ? "Mes" : s.id === "tri" ? "Trimestre" : "Año"}</button>
+                transition: "all .15s", cursor: "pointer", fontFamily: "inherit",
+              }}>{s.id === "mes" ? "Este mes" : s.id === "tri" ? "Trimestre" : "Este año"}</button>
             ))}
           </div>
-          <button className="btn btn-ghost"><Icon name="down" size={16} /> Exportar</button>
-          {onNew && <button className="btn btn-primary btn-lg" onClick={onNew}><Icon name="plus" size={18} /> Nuevo informe</button>}
+          <button className="btn btn-ghost" style={{ fontSize: 13 }}><Icon name="down" size={15} /> Exportar</button>
+          {onNew && <button className="btn btn-primary" onClick={onNew}><Icon name="plus" size={16} /> Nuevo informe</button>}
         </div>
       </div>
 
-      <div style={{ marginBottom: 16 }}>
-        <AINote>Estos indicadores <b>fusionan</b> tus eventos, los testimonios de la comunidad, los reportes del equipo y los documentos que subiste. Los datos demográficos son <b>auto-declarados</b> por las personas — trátalos como aproximados, no como censo.</AINote>
-      </div>
-
-      <div className="inicio-bento">
-        {/* Col 1 — caja destacada + mini stats */}
-        <HeroStat
-          value={fmt(a.base.impacted * mult)}
-          label="Personas impactadas"
-          sub="Suma de todos los eventos"
-          period={sc.label.toLowerCase()}
-        />
-        <div className="bento-minis">
-          <StatMini value={fmt(a.base.events * mult)} label="Eventos / jornadas" />
-          <StatMini value={fmt(a.base.docs * mult)} label="Documentos" />
-        </div>
-
-        {/* Col 2 — gráfico principal + demografía */}
-        <div className="bento-trend">
-          <Panel title="Tendencia de impacto" sub="Personas alcanzadas por mes">
-            <Trend data={a.trend} mult={mult} />
-          </Panel>
-        </div>
-        <div className="bento-demo">
-          <Panel title="Género" sub="Distribución" foot="Auto-declarado · 3% sin dato">
-            <div className="donut-row">
-              <Donut data={a.gender} size={120} thickness={18} />
-              <div className="col" style={{ gap: 8, flex: 1, minWidth: 100 }}>
-                {a.gender.map(g => (
-                  <div key={g.label} className="row" style={{ gap: 8 }}>
-                    <span style={{ width: 10, height: 10, borderRadius: 3, background: g.color, flex: "none" }} />
-                    <span style={{ fontSize: 12.5, fontWeight: 600, color: "var(--ink-soft)" }}>{g.label}</span>
-                    <div className="grow" />
-                    <span style={{ fontSize: 13, fontWeight: 800 }}>{g.value}%</span>
-                  </div>
-                ))}
-              </div>
+      {/* Fila de métricas clave — 4 tarjetas */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14, marginBottom: 20 }}>
+        {[
+          { val: fmt(a.base.impacted * mult), label: "Personas alcanzadas", icon: "users", color: "var(--blue)", bg: "var(--blue-tint)" },
+          { val: fmt(a.base.voices * mult), label: "Voces recogidas", icon: "mic", color: "var(--warm-deep)", bg: "var(--warm-tint)" },
+          { val: fmt(a.base.events * mult), label: "Eventos realizados", icon: "check", color: "var(--green-deep)", bg: "var(--green-tint)" },
+          { val: fmt(a.base.docs * mult), label: "Documentos subidos", icon: "doc", color: "var(--ink-soft)", bg: "var(--surface-2)" },
+        ].map((m, i) => (
+          <div key={i} style={{ background: "#fff", borderRadius: "var(--r)", padding: "18px 20px", border: "1px solid var(--line-soft)", boxShadow: "var(--sh-sm)" }}>
+            <div style={{ width: 36, height: 36, borderRadius: 10, background: m.bg, display: "grid", placeItems: "center", marginBottom: 12, color: m.color }}>
+              <Icon name={m.icon} size={18} />
             </div>
-          </Panel>
-          <Panel title="Rango de edad" sub="% alcanzadas">
-            <AgeBars data={a.age} />
-          </Panel>
-        </div>
-
-        {/* Fila ancha — programas (como Payment History) */}
-        <div className="bento-wide">
-          <Panel title="Personas por programa" sub={`Total: ${fmt(a.base.impacted * mult)} · ${sc.label}`}>
-            <ProgBars data={a.programs} mult={mult} />
-          </Panel>
-        </div>
-
-        {/* Col 3 — voces + CTA */}
-        <StatAccent
-          value={fmt(a.base.voices * mult)}
-          label="Voces recogidas"
-          sub="Testimonios + reportes"
-        />
-        <div className="bento-voices card voices-card">
-          <div className="voices-card-head">
-            <h3>Voces recientes</h3>
-            <div className="grow" />
-            {setPage && <button className="btn btn-soft btn-sm" onClick={() => setPage("convos")}>Ver todas <Icon name="arrow" size={14} /></button>}
+            <div style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-.03em", color: "var(--ink)", lineHeight: 1 }}>{m.val}</div>
+            <div style={{ fontSize: 12.5, color: "var(--muted)", fontWeight: 600, marginTop: 5 }}>{m.label}</div>
           </div>
-          {recentVoices.map((t, i) => {
-            const p = DATA.people[t.who];
-            return (
-              <div key={i} className="voice-item">
-                <div className="voice-item-head">
-                  <Avatar p={p} size={34} />
-                  <div className="voice-item-meta">
-                    <span className="voice-item-name">{p.name}</span>
-                    <span className="voice-item-time">{t.at}</span>
-                  </div>
-                </div>
-                <p className="voice-item-text">{t.text}</p>
-                <VoicePlayer dur={t.dur} color={p.color} compact />
-              </div>
-            );
-          })}
-        </div>
-        {onNew && (
-          <div className="bento-cta card card-pad">
-            <div style={{ color: "var(--blue)", marginBottom: 8 }}><Icon name="spark" size={22} /></div>
-            <h3 style={{ fontSize: 15, fontWeight: 800, margin: "0 0 6px" }}>8 voces sobre salud</h3>
-            <p style={{ fontSize: 12.5, color: "var(--ink-soft)", lineHeight: 1.5, margin: "0 0 12px" }}>Listas para un informe sólido.</p>
-            <button className="btn btn-primary" style={{ width: "100%" }} onClick={onNew}>Crear informe</button>
-          </div>
-        )}
+        ))}
       </div>
 
-      <div style={{ marginTop: 14, fontSize: 12, color: "var(--muted)" }}>* Cifra que combina conteos exactos y estimaciones revisadas por el equipo.</div>
+      {/* Fila principal — gráfico + programas */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: 16, marginBottom: 16 }}>
+        {/* Tendencia */}
+        <div style={{ background: "#fff", borderRadius: "var(--r)", padding: "20px 22px", border: "1px solid var(--line-soft)", boxShadow: "var(--sh-sm)" }}>
+          <div style={{ fontWeight: 800, fontSize: 15, marginBottom: 4 }}>Tendencia de personas alcanzadas</div>
+          <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 18 }}>Últimos 6 meses</div>
+          <Trend data={a.trend} mult={mult} />
+        </div>
+
+        {/* Programas */}
+        <div style={{ background: "#fff", borderRadius: "var(--r)", padding: "20px 22px", border: "1px solid var(--line-soft)", boxShadow: "var(--sh-sm)" }}>
+          <div style={{ fontWeight: 800, fontSize: 15, marginBottom: 4 }}>Personas por programa</div>
+          <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 18 }}>Total {sc.label}</div>
+          <ProgBars data={a.programs} mult={mult} />
+        </div>
+      </div>
+
+      {/* Fila inferior — género + edad + voces recientes */}
+      <div style={{ display: "grid", gridTemplateColumns: "220px 1fr 1fr", gap: 16 }}>
+        {/* Género */}
+        <div style={{ background: "#fff", borderRadius: "var(--r)", padding: "20px 22px", border: "1px solid var(--line-soft)", boxShadow: "var(--sh-sm)" }}>
+          <div style={{ fontWeight: 800, fontSize: 15, marginBottom: 4 }}>Género</div>
+          <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 16 }}>Autoreportado</div>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 14 }}>
+            <Donut data={a.gender} size={110} thickness={16} />
+            <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: 7 }}>
+              {a.gender.map(g => (
+                <div key={g.label} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ width: 10, height: 10, borderRadius: 3, background: g.color, flex: "none" }} />
+                  <span style={{ fontSize: 12.5, fontWeight: 600, color: "var(--ink-soft)", flex: 1 }}>{g.label}</span>
+                  <span style={{ fontSize: 13, fontWeight: 800 }}>{g.value}%</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Edad */}
+        <div style={{ background: "#fff", borderRadius: "var(--r)", padding: "20px 22px", border: "1px solid var(--line-soft)", boxShadow: "var(--sh-sm)" }}>
+          <div style={{ fontWeight: 800, fontSize: 15, marginBottom: 4 }}>Rango de edad</div>
+          <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 16 }}>% de personas alcanzadas</div>
+          <AgeBars data={a.age} />
+        </div>
+
+        {/* Voces recientes */}
+        <div style={{ background: "#fff", borderRadius: "var(--r)", padding: "20px 22px", border: "1px solid var(--line-soft)", boxShadow: "var(--sh-sm)" }}>
+          <div style={{ display: "flex", alignItems: "center", marginBottom: 16 }}>
+            <div style={{ fontWeight: 800, fontSize: 15, flex: 1 }}>Voces recientes</div>
+            {setPage && (
+              <button onClick={() => setPage("convos")} style={{ border: "none", background: "none", color: "var(--blue)", fontWeight: 700, fontSize: 12.5, cursor: "pointer", fontFamily: "inherit", display: "flex", alignItems: "center", gap: 4 }}>
+                Ver todas <Icon name="arrow" size={13} />
+              </button>
+            )}
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            {[DATA.teamReports[0], ...DATA.transcript].slice(0, 2).map((t, i) => {
+              const p = DATA.people[t.who];
+              return (
+                <div key={i} style={{ paddingBottom: i === 0 ? 14 : 0, borderBottom: i === 0 ? "1px solid var(--line-soft)" : "none" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+                    <Avatar p={p} size={30} />
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontWeight: 700, fontSize: 13 }}>{p.name}</div>
+                      <div style={{ fontSize: 11.5, color: "var(--muted)" }}>{t.at}</div>
+                    </div>
+                  </div>
+                  <p style={{ margin: "0 0 8px", fontSize: 12.5, color: "var(--ink-soft)", lineHeight: 1.5, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{t.text}</p>
+                  <VoicePlayer dur={t.dur} color={p.color} compact />
+                </div>
+              );
+            })}
+          </div>
+          {onNew && (
+            <button onClick={onNew} className="btn btn-primary" style={{ width: "100%", marginTop: 14, justifyContent: "center" }}>
+              <Icon name="spark" size={15} /> Crear informe con estas voces
+            </button>
+          )}
+        </div>
+      </div>
+
+      <div style={{ marginTop: 12, fontSize: 11.5, color: "var(--faint)" }}>* Las cifras combinan datos exactos y estimaciones del equipo.</div>
     </div>
   );
 }
