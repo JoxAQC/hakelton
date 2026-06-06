@@ -1,14 +1,18 @@
+import OpenAI from "openai";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-let _genAI: GoogleGenerativeAI | null = null;
+let _client: OpenAI | null = null;
 
-export function getGenAI(): GoogleGenerativeAI {
-  if (!_genAI) {
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) throw new Error("Missing GEMINI_API_KEY");
-    _genAI = new GoogleGenerativeAI(apiKey);
+function getClient(): OpenAI {
+  if (!_client) {
+    const apiKey = process.env.OPENROUTER_API_KEY;
+    if (!apiKey) throw new Error("Missing OPENROUTER_API_KEY");
+    _client = new OpenAI({
+      baseURL: "https://openrouter.ai/api/v1",
+      apiKey,
+    });
   }
-  return _genAI;
+  return _client;
 }
 
 export interface ChatMessage {
@@ -16,36 +20,38 @@ export interface ChatMessage {
   content: string;
 }
 
-export function toGeminiContents(messages: ChatMessage[]) {
-  const contents: { role: string; parts: { text: string }[] }[] = [];
-
-  for (const msg of messages) {
-    if (msg.role === "system") continue;
-    const role = msg.role === "assistant" ? "model" : "user";
-    const last = contents[contents.length - 1];
-    if (last && last.role === role) {
-      last.parts.push({ text: msg.content });
-    } else {
-      contents.push({ role, parts: [{ text: msg.content }] });
-    }
-  }
-
-  if (contents.length > 0 && contents[0].role !== "user") {
-    contents.unshift({ role: "user", parts: [{ text: "." }] });
-  }
-
-  return contents;
+export async function generateText(
+  messages: ChatMessage[],
+  systemPrompt: string,
+  config?: { temperature?: number; maxTokens?: number; jsonMode?: boolean }
+): Promise<string> {
+  const client = getClient();
+  const response = await client.chat.completions.create({
+    model: "google/gemini-3.5-flash",
+    messages: [
+      { role: "system", content: systemPrompt },
+      ...messages.filter((m) => m.role !== "system"),
+    ],
+    temperature: config?.temperature ?? 0.5,
+    max_tokens: config?.maxTokens ?? 800,
+    ...(config?.jsonMode && { response_format: { type: "json_object" } }),
+  });
+  return response.choices[0]?.message?.content || "";
 }
 
 export async function generateEmbedding(text: string): Promise<number[]> {
-  const genAI = getGenAI();
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) throw new Error("Missing GEMINI_API_KEY for embeddings");
+  const genAI = new GoogleGenerativeAI(apiKey);
   const model = genAI.getGenerativeModel({ model: "text-embedding-004" });
   const result = await model.embedContent(text);
   return result.embedding.values;
 }
 
 export async function generateEmbeddings(texts: string[]): Promise<number[][]> {
-  const genAI = getGenAI();
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) throw new Error("Missing GEMINI_API_KEY for embeddings");
+  const genAI = new GoogleGenerativeAI(apiKey);
   const model = genAI.getGenerativeModel({ model: "text-embedding-004" });
   const result = await model.batchEmbedContents({
     requests: texts.map((text) => ({

@@ -1,5 +1,5 @@
 import { StateGraph, Annotation, START, END } from "@langchain/langgraph";
-import { getGenAI, toGeminiContents } from "../gemini.js";
+import { generateText } from "../gemini.js";
 import { supabase } from "../supabase.js";
 import type { ChatMessage } from "../gemini.js";
 
@@ -144,19 +144,11 @@ async function routerNode(state: typeof AgentState.State) {
   }
 
   try {
-    const genAI = getGenAI();
-    const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash",
-      systemInstruction: ROUTER_PROMPT,
-      generationConfig: {
-        temperature: 0,
-        responseMimeType: "application/json",
-      },
+    const text = await generateText(messages, ROUTER_PROMPT, {
+      temperature: 0,
+      jsonMode: true,
     });
-
-    const contents = toGeminiContents(messages);
-    const result = await model.generateContent({ contents });
-    const parsed = JSON.parse(result.response.text());
+    const parsed = JSON.parse(text);
     const nextStep = parsed.nextStep as "retrieve" | "generate" | "clarify";
 
     if (nextStep === "retrieve") {
@@ -215,19 +207,11 @@ async function generateNode(state: typeof AgentState.State) {
   const { messages, context } = state;
 
   try {
-    const genAI = getGenAI();
-    const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash",
-      systemInstruction: `${SYSTEM_PROMPT_GENERATOR}\n\n[CONTEXTO DE PROYECTOS RELEVANTES]\n${context || "No se cargó contexto adicional de proyectos."}`,
-      generationConfig: {
-        temperature: 0.5,
-        maxOutputTokens: 800,
-      },
+    const systemPrompt = `${SYSTEM_PROMPT_GENERATOR}\n\n[CONTEXTO DE PROYECTOS RELEVANTES]\n${context || "No se cargó contexto adicional de proyectos."}`;
+    const reply = await generateText(messages, systemPrompt, {
+      temperature: 0.5,
+      maxTokens: 2048,
     });
-
-    const contents = toGeminiContents(messages);
-    const result = await model.generateContent({ contents });
-    const reply = result.response.text();
 
     return {
       messages: [{ role: "assistant" as const, content: reply }],
@@ -259,19 +243,10 @@ async function clarifyNode(state: typeof AgentState.State) {
   const { messages } = state;
 
   try {
-    const genAI = getGenAI();
-    const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash",
-      systemInstruction: CLARIFY_PROMPT,
-      generationConfig: {
-        temperature: 0.5,
-        maxOutputTokens: 400,
-      },
+    const reply = await generateText(messages, CLARIFY_PROMPT, {
+      temperature: 0.5,
+      maxTokens: 1024,
     });
-
-    const contents = toGeminiContents(messages);
-    const result = await model.generateContent({ contents });
-    const reply = result.response.text();
 
     return {
       messages: [{ role: "assistant" as const, content: reply }],

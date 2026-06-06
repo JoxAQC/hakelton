@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { supabase } from "../lib/supabase.js";
-import { getGenAI, generateEmbedding, toGeminiContents } from "../lib/gemini.js";
+import { generateText, generateEmbedding } from "../lib/gemini.js";
 
 export const queryRouter = Router();
 
@@ -92,19 +92,13 @@ queryRouter.post("/", async (req, res) => {
 
     const fullContext = [orgContext, docContext].filter(Boolean).join("\n---\n");
 
-    const genAI = getGenAI();
-    const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash",
-      systemInstruction: `Eres un asistente de la ONG. Responde basándote en el contexto proporcionado. Si no tienes información suficiente, dilo claramente. Usa formato markdown para estructurar la respuesta.\n\nContexto:\n${fullContext || "No hay contexto disponible."}`,
-      generationConfig: {
-        temperature: 0.5,
-        maxOutputTokens: 800,
-      },
-    });
+    const systemPrompt = `Eres un asistente de la ONG. Responde basándote en el contexto proporcionado. Si no tienes información suficiente, dilo claramente. Usa formato markdown para estructurar la respuesta.\n\nContexto:\n${fullContext || "No hay contexto disponible."}`;
 
-    const contents = toGeminiContents([{ role: "user", content: message }]);
-    const result = await model.generateContent({ contents });
-    const reply = result.response.text();
+    const reply = await generateText(
+      [{ role: "user", content: message }],
+      systemPrompt,
+      { temperature: 0.5, maxTokens: 800 }
+    );
 
     res.json({
       status: "ok" as const,
