@@ -3,13 +3,13 @@
 window.DATA = (function () {
   const people = {
     // Comunidad
-    maria:   { id: "maria",   name: "María Elena Quispe",   role: "Vecina · Programa de salud", color: "#6B8875",  initials: "MQ" },
-    roberto: { id: "roberto", name: "Don Roberto Mamani",   role: "Dirigente comunal",          color: "#5D7A66", initials: "RM" },
-    luz:     { id: "luz",     name: "Luz Carrasco",          role: "Madre · Comedor popular",    color: "#7A9480", initials: "LC" },
-    jowel:   { id: "jowel",   name: "Jowel Andrade",         role: "Joven · Taller ambiental",   color: "#4A6352", initials: "JA" },
+    maria:   { id: "maria",   name: "María Elena Quispe",   role: "Vecina · Programa de salud", color: "#2563EB", initials: "MQ" },
+    roberto: { id: "roberto", name: "Don Roberto Mamani",   role: "Dirigente comunal",          color: "#7C3AED", initials: "RM" },
+    luz:     { id: "luz",     name: "Luz Carrasco",          role: "Madre · Comedor popular",    color: "#0891B2", initials: "LC" },
+    jowel:   { id: "jowel",   name: "Jowel Andrade",         role: "Joven · Taller ambiental",   color: "#059669", initials: "JA" },
     // Equipo / voluntariado
-    carlosH: { id: "carlosH", name: "Carlos Huamán",         role: "Voluntario · Equipo de campo", color: "#8B7355", initials: "CH", team: true },
-    anaR:    { id: "anaR",    name: "Ana Rivas",             role: "Coordinadora de jornada",      color: "#3D5244", initials: "AR", team: true },
+    carlosH: { id: "carlosH", name: "Carlos Huamán",         role: "Voluntario · Equipo de campo", color: "#1D4ED8", initials: "CH", team: true },
+    anaR:    { id: "anaR",    name: "Ana Rivas",             role: "Coordinadora de jornada",      color: "#0369A1", initials: "AR", team: true },
   };
 
   // Conversaciones de WhatsApp conectadas
@@ -75,9 +75,9 @@ window.DATA = (function () {
 
   // Informes existentes
   const reports = [
-    { id: "r1", title: "Impacto de la posta médica — Marzo 2026", program: "Salud Comunitaria", status: "Borrador en revisión", voices: 8, updated: "hoy", color: "#6B8875", impact: 120, impactLabel: "personas impactadas" },
-    { id: "r2", title: "Resultados jornada de limpieza del río", program: "Medio Ambiente", status: "Aprobado", voices: 11, updated: "hace 4 días", color: "#4A6352", impact: 340, impactLabel: "kg de residuos retirados" },
-    { id: "r3", title: "Comedor Las Manitos — Reporte trimestral", program: "Seguridad alimentaria", status: "Aprobado", voices: 6, updated: "hace 2 sem", color: "#7A9480", impact: 85, impactLabel: "familias atendidas" },
+    { id: "r1", title: "Impacto de la posta médica — Marzo 2026", program: "Salud Comunitaria", status: "Borrador en revisión", voices: 8, updated: "hoy", color: "#2563EB", impact: 120, impactLabel: "personas impactadas" },
+    { id: "r2", title: "Resultados jornada de limpieza del río", program: "Medio Ambiente", status: "Aprobado", voices: 11, updated: "hace 4 días", color: "#0EA5E9", impact: 340, impactLabel: "kg de residuos retirados" },
+    { id: "r3", title: "Comedor Las Manitos — Reporte trimestral", program: "Seguridad alimentaria", status: "Aprobado", voices: 6, updated: "hace 2 sem", color: "#059669", impact: 85, impactLabel: "familias atendidas" },
   ];
 
   // Bloques que la IA propone — mezcla testimonios de comunidad + reportes del equipo
@@ -134,19 +134,19 @@ window.DATA = (function () {
     ],
     base: { impacted: 1240, events: 8, voices: 142, docs: 11 },
     gender: [
-      { label: "Femenino", value: 58, color: "#5D7A66" },
-      { label: "Masculino", value: 39, color: "#6B8875" },
-      { label: "Otro / NS", value: 3, color: "#999999" },
+      { label: "Femenino", value: 58, color: "#2563EB" },
+      { label: "Masculino", value: 39, color: "#0EA5E9" },
+      { label: "Otro / NS", value: 3, color: "#CBD5E1" },
     ],
     age: [
       { label: "0–12", value: 14 }, { label: "13–17", value: 12 }, { label: "18–29", value: 26 },
       { label: "30–44", value: 23 }, { label: "45–64", value: 17 }, { label: "65+", value: 8 },
     ],
     programs: [
-      { name: "Salud comunitaria", value: 480, color: "#5D7A66" },
-      { name: "Medio ambiente", value: 340, color: "#4A6352" },
-      { name: "Educación", value: 260, color: "#6B8875" },
-      { name: "Seguridad alimentaria", value: 160, color: "#7A9480" },
+      { name: "Salud comunitaria", value: 480, color: "#2563EB" },
+      { name: "Medio ambiente", value: 340, color: "#0EA5E9" },
+      { name: "Educación", value: 260, color: "#7C3AED" },
+      { name: "Seguridad alimentaria", value: 160, color: "#059669" },
     ],
     trend: [
       { m: "Oct", v: 520 }, { m: "Nov", v: 640 }, { m: "Dic", v: 710 },
@@ -163,10 +163,10 @@ window.DATA = (function () {
 
   // Audios agrupados por proyecto (para la vista de bandeja de Informes)
   const projects = [
-    { id: "salud",     label: "Salud Comunitaria",    color: "#6B8875", count: 4 },
-    { id: "ambiente",  label: "Medio Ambiente",        color: "#4A6352", count: 3 },
-    { id: "alimenta",  label: "Seguridad Alimentaria", color: "#7A9480", count: 2 },
-    { id: "educacion", label: "Educación",             color: "#8B7355", count: 1 },
+    { id: "salud",     label: "Salud Comunitaria",    color: "#2563EB", count: 4 },
+    { id: "ambiente",  label: "Medio Ambiente",        color: "#0EA5E9", count: 3 },
+    { id: "alimenta",  label: "Seguridad Alimentaria", color: "#059669", count: 2 },
+    { id: "educacion", label: "Educación",             color: "#7C3AED", count: 1 },
   ];
 
   const audioInbox = [

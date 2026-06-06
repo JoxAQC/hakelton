@@ -621,7 +621,7 @@ function ReportFlow({ onClose, tone }) {
         <div style={{ width: 90 }} />
       </div>
 
-      <div className="page" style={{ maxWidth: step === 3 ? 1180 : 900 }}>
+      <div className="page" style={{ maxWidth: step === 3 ? 1180 : step === 2 ? 1100 : 700, margin: "0 auto" }}>
         {step === 0 && <PickSources picked={picked} setPicked={setPicked} docs={docs} setDocs={setDocs} />}
         {step === 1 && <Drafting done={() => setStep(2)} />}
         {step === 2 && <ReviewDraft blocks={blocks} setBlocks={setBlocks} metrics={metrics} setMetrics={setMetrics} tone={tone} />}

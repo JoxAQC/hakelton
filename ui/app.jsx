@@ -4,6 +4,7 @@ const { useState: aUse } = React;
 /* ---------------- Sidebar ---------------- */
 function Sidebar({ page, setPage, open, onNavigate }) {
   const go = (id) => { setPage(id); onNavigate?.(); };
+  const [collapsed, setCollapsed] = aUse(false);
   const mainNav = [
     { id: "inicio", icon: "home", label: "Inicio" },
     { id: "convos", icon: "chat", label: "Mensajes", badge: "5" },
@@ -14,56 +15,65 @@ function Sidebar({ page, setPage, open, onNavigate }) {
     { id: "autom", icon: "wand", label: "Automatizaciones" },
   ];
 
+  const w = collapsed ? 64 : 220;
+
   return (
-    <aside className={"sidebar" + (open ? " open" : "")}>
-      {/* Logo */}
-      <div className="sidebar-logo">
-        <div className="sidebar-logo-icon">
-          <Icon name="mic" size={18} />
+    <aside className={"sidebar" + (open ? " open" : "")} style={{ width: w, transition: "width 0.22s cubic-bezier(.4,0,.2,1)", overflow: "hidden" }}>
+      {/* Logo + toggle */}
+      <div className="sidebar-logo" style={{ justifyContent: collapsed ? "center" : "flex-start", gap: collapsed ? 0 : 10 }}>
+        <div className="sidebar-logo-icon" style={{ flexShrink: 0 }}>
+          <Icon name="mic" size={17} />
         </div>
-        <span className="sidebar-logo-name">Voz</span>
+        {!collapsed && <span className="sidebar-logo-name" style={{ opacity: 1 }}>Voz</span>}
+        {!collapsed && <div style={{ flex: 1 }} />}
+        <button onClick={() => setCollapsed(c => !c)} style={{ border: "none", background: "none", cursor: "pointer", color: "var(--muted)", display: "flex", alignItems: "center", padding: 4, borderRadius: 6, flexShrink: 0 }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            {collapsed ? <path d="M9 18l6-6-6-6"/> : <path d="M15 18l-6-6 6-6"/>}
+          </svg>
+        </button>
       </div>
 
       {/* Nav principal */}
       <nav className="nav-group" aria-label="Principal">
         {mainNav.map(n => (
-          <button
-            key={n.id}
-            type="button"
+          <button key={n.id} type="button"
             className={"nav-item-row" + (page === n.id ? " active" : "")}
             onClick={() => go(n.id)}
+            title={collapsed ? n.label : undefined}
             aria-current={page === n.id ? "page" : undefined}
+            style={{ justifyContent: collapsed ? "center" : "flex-start", padding: collapsed ? "10px" : "9px 10px" }}
           >
             <span className="nav-icon-wrap"><Icon name={n.icon} size={19} /></span>
-            <span className="nav-item-label">{n.label}</span>
-            {n.badge && <span className="nav-badge">{n.badge}</span>}
+            {!collapsed && <span className="nav-item-label" style={{ opacity: 1 }}>{n.label}</span>}
+            {!collapsed && n.badge && <span className="nav-badge">{n.badge}</span>}
           </button>
         ))}
       </nav>
 
-      {/* Nav organización */}
-      <div className="nav-group-label" style={{ padding: "14px 14px 4px" }}>Organización</div>
+      {!collapsed && <div className="nav-group-label" style={{ padding: "14px 14px 4px" }}>Organización</div>}
       <nav className="nav-group" aria-label="Organización">
         {orgNav.map(n => (
-          <button
-            key={n.id}
-            type="button"
+          <button key={n.id} type="button"
             className={"nav-item-row" + (page === n.id ? " active" : "")}
             onClick={() => go(n.id)}
+            title={collapsed ? n.label : undefined}
+            style={{ justifyContent: collapsed ? "center" : "flex-start", padding: collapsed ? "10px" : "9px 10px" }}
           >
             <span className="nav-icon-wrap"><Icon name={n.icon} size={19} /></span>
-            <span className="nav-item-label">{n.label}</span>
+            {!collapsed && <span className="nav-item-label" style={{ opacity: 1 }}>{n.label}</span>}
           </button>
         ))}
       </nav>
 
       <div className="nav-spacer" />
 
-      {/* Config */}
       <nav className="nav-group" aria-label="Sistema">
-        <button type="button" className="nav-item-row">
+        <button type="button" className="nav-item-row"
+          title={collapsed ? "Configuración" : undefined}
+          style={{ justifyContent: collapsed ? "center" : "flex-start", padding: collapsed ? "10px" : "9px 10px" }}
+        >
           <span className="nav-icon-wrap"><Icon name="gear" size={19} /></span>
-          <span className="nav-item-label">Configuración</span>
+          {!collapsed && <span className="nav-item-label" style={{ opacity: 1 }}>Configuración</span>}
         </button>
       </nav>
     </aside>

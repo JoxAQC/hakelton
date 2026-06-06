@@ -90,7 +90,7 @@ export default function ChatSidebar({ isOpen, onClose, activeProject, setActiveP
         ...prev,
         {
           role: "assistant",
-          content: "Ocurrió un error de red o de servidor al comunicarse con LangGraph.",
+          content: "Ocurrió un error de red o de servidor al conectarse con el asistente.",
         },
       ]);
     } finally {
@@ -150,39 +150,27 @@ export default function ChatSidebar({ isOpen, onClose, activeProject, setActiveP
   };
 
   return (
-    <div 
+    <div
       style={{
-        position: 'fixed', top: 0, right: 0, width: '45vw', minWidth: '400px', height: '100vh', 
-        backgroundColor: '#EBEAE6', borderLeft: '1px solid #E0DFDB',
-        transform: isOpen ? 'translateX(0)' : 'translateX(100%)', transition: 'transform 0.3s ease-in-out',
-        zIndex: 9999, display: 'flex', flexDirection: 'column', boxShadow: '-4px 0 20px rgba(26,26,26,.08)'
+        position: 'fixed', top: 0, right: 0, width: '420px', height: '100vh',
+        backgroundColor: '#fff', borderLeft: '1px solid #E2E8F0',
+        transform: isOpen ? 'translateX(0)' : 'translateX(100%)', transition: 'transform 0.3s cubic-bezier(.4,0,.2,1)',
+        zIndex: 9999, display: 'flex', flexDirection: 'column', boxShadow: '-8px 0 32px rgba(15,23,42,.10)'
       }}
     >
-      <button onClick={onClose} style={{ position: 'absolute', top: '1rem', right: '1rem', background: '#222222', color: 'white', border: 'none', width: '32px', height: '32px', borderRadius: '50%', cursor: 'pointer', zIndex: 10000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
       <div className="app-container" style={{ width: '100%', height: '100%', overflow: 'hidden', position: 'relative' }}>
         {/* Header */}
-      <header className="app-header">
+      <header className="app-header" style={{ background: '#2563EB', borderBottom: 'none' }}>
         <div className="header-logo">
-          <div className="logo-icon">
-            <Heart size={20} color="#ffffff" fill="#ffffff" />
+          <div className="logo-icon" style={{ background: 'rgba(255,255,255,.2)', borderRadius: 10 }}>
+            <Sparkles size={18} color="#ffffff" />
           </div>
           <div className="logo-text">
-            <h1>ONG RAG Explorer</h1>
-            <span>Agente LangGraph Activo</span>
+            <h1 style={{ color: '#fff', fontSize: '16px' }}>Asistente Voz</h1>
+            <span style={{ color: 'rgba(255,255,255,.7)', fontSize: '12px' }}>Pregúntame lo que necesites</span>
           </div>
         </div>
-        <div className="header-meta">
-          <div className="tech-tag">
-            <Cpu size={12} />
-            <span>Llama 3.3 & Groq</span>
-          </div>
-          {activeProject && (
-            <div className="meta-pill" style={{ background: "var(--blue-tint)", color: "var(--blue-deep)", border: "1px solid var(--blue)" }}>
-              Proyecto: {activeProject.nombre}
-            </div>
-          )}
-          <div className="meta-pill">Mock DB Mode</div>
-        </div>
+        <button onClick={onClose} style={{ background: 'rgba(255,255,255,.2)', color: '#fff', border: 'none', width: '32px', height: '32px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px', flexShrink: 0 }}>✕</button>
       </header>
 
       {/* Main Layout */}
@@ -197,14 +185,10 @@ export default function ChatSidebar({ isOpen, onClose, activeProject, setActiveP
                 <div className="empty-icon">
                   <Bot size={32} />
                 </div>
-                <h3>¡Hola! Soy tu asistente RAG</h3>
+                <h3>¡Hola! Soy tu asistente</h3>
                 <p>
-                  Pregúntame sobre los proyectos, presupuestos o impacto de nuestra ONG.
-                  {activeProject && <span><br /><br />Actualmente estamos analizando el proyecto <strong>{activeProject.nombre}</strong>. Puedes preguntarme detalles sobre este proyecto.</span>}
+                  Puedo ayudarte a encontrar voces, entender tus datos de impacto o preparar información para tus informes.
                 </p>
-                <div style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
-                  Utilizo LangGraph para orquestar la búsqueda y Groq con Llama 3 para responder.
-                </div>
               </div>
             ) : (
               messages.map((msg, index) => (
@@ -220,7 +204,7 @@ export default function ChatSidebar({ isOpen, onClose, activeProject, setActiveP
                         <>
                           <Bot size={12} color="#5D7A66" />
                           <span style={{ fontSize: "0.75rem", fontWeight: 600, color: "#3D6B47" }}>
-                            Asistente RAG
+                            Voz
                           </span>
                         </>
                       )}
@@ -240,7 +224,7 @@ export default function ChatSidebar({ isOpen, onClose, activeProject, setActiveP
                     <div className="typing-dot"></div>
                   </div>
                   <span style={{ fontSize: "0.85rem", color: "var(--text-secondary)" }}>
-                    Ejecutando LangGraph RAG...
+                    Buscando respuesta...
                   </span>
                 </div>
               </div>

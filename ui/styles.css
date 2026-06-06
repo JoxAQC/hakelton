@@ -1,49 +1,49 @@
 /* ============================================================
    Voz — sistema de diseño
-   Minimal · sage green · fondo cálido
+   Minimal · azul + blanco
    ============================================================ */
 
 :root {
   /* Fondo / superficies */
-  --paper:      #EBEAE6;
-  --paper-2:    #E5E4E0;
+  --paper:      #F1F5F9;
+  --paper-2:    #E8EDF4;
   --surface:    #FFFFFF;
-  --surface-2:  #F7F7F5;
+  --surface-2:  #F8FAFC;
 
   /* Tipografía */
-  --ink:        #1A1A1A;
-  --ink-soft:   #666666;
-  --muted:      #666666;
-  --faint:      #999999;
+  --ink:        #0F172A;
+  --ink-soft:   #475569;
+  --muted:      #64748B;
+  --faint:      #94A3B8;
 
   /* Líneas */
-  --line:       #E0DFDB;
-  --line-soft:  #EBEAE6;
+  --line:       #E2E8F0;
+  --line-soft:  #F1F5F9;
 
-  /* Acento principal — sage green */
-  --blue:       #5D7A66;
-  --blue-deep:  #4A6352;
-  --blue-ink:   #3D5244;
-  --blue-tint:  #E8EDE9;
-  --blue-tint2: #D5E0D8;
+  /* Acento principal — azul */
+  --blue:       #2563EB;
+  --blue-deep:  #1D4ED8;
+  --blue-ink:   #1E3A8A;
+  --blue-tint:  #EFF6FF;
+  --blue-tint2: #DBEAFE;
 
-  /* Acento secundario — tierra cálida */
-  --warm:       #8B7355;
-  --warm-deep:  #6E5A44;
-  --warm-tint:  #F0EBE4;
-  --warm-tint2: #E5DDD2;
+  /* Acento secundario — celeste */
+  --warm:       #0EA5E9;
+  --warm-deep:  #0284C7;
+  --warm-tint:  #F0F9FF;
+  --warm-tint2: #E0F2FE;
 
   /* Estados */
-  --green:      #5D7A66;
-  --green-deep: #3D6B47;
-  --green-tint: #E8F5E9;
-  --red:        #B85C5C;
-  --red-tint:   #FDECEA;
-  --amber:      #C4A35A;
-  --amber-tint: #FDF6E8;
+  --green:      #10B981;
+  --green-deep: #059669;
+  --green-tint: #ECFDF5;
+  --red:        #EF4444;
+  --red-tint:   #FEF2F2;
+  --amber:      #F59E0B;
+  --amber-tint: #FFFBEB;
 
-  /* Oscuro — sidebar activo, botones de acción */
-  --dark:       #222222;
+  /* Oscuro */
+  --dark:       #0F172A;
 
   /* Sombras suaves */
   --sh-sm: 0 1px 3px rgba(26,26,26,.04), 0 1px 2px rgba(26,26,26,.03);
@@ -86,38 +86,31 @@ button { font-family: inherit; cursor: pointer; }
   background: var(--paper);
 }
 
-/* ---- Sidebar expandible ------------------------------------------ */
+/* ---- Sidebar siempre expandido ----------------------------------- */
 .sidebar {
   display: flex;
   flex-direction: column;
-  width: 64px;
+  width: 220px;
   min-height: 100vh;
   background: var(--surface);
-  border-right: 1px solid var(--line-soft);
-  padding: 16px 0;
-  gap: 2px;
-  transition: width 0.22s cubic-bezier(.4,0,.2,1);
-  overflow: hidden;
-  position: relative;
-  z-index: 10;
+  border-right: 1px solid var(--line);
+  padding: 0;
+  gap: 0;
+  flex: none;
 }
-.sidebar:hover { width: 220px; }
 
 .sidebar-logo {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 8px 14px 20px;
-  border-bottom: 1px solid var(--line-soft);
-  margin-bottom: 8px;
+  gap: 10px;
+  padding: 20px 16px 18px;
+  border-bottom: 1px solid var(--line);
   flex: none;
-  overflow: hidden;
-  white-space: nowrap;
 }
 .sidebar-logo-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
   background: var(--blue);
   color: #fff;
   display: grid;
@@ -125,92 +118,72 @@ button { font-family: inherit; cursor: pointer; }
   flex: none;
 }
 .sidebar-logo-name {
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 800;
   color: var(--ink);
   letter-spacing: -.02em;
-  opacity: 0;
-  transition: opacity 0.15s 0.05s;
 }
-.sidebar:hover .sidebar-logo-name { opacity: 1; }
 
 .nav-group {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  padding: 0 8px;
+  gap: 1px;
+  padding: 8px 10px;
 }
 .nav-group-label {
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: .07em;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .06em;
   text-transform: uppercase;
   color: var(--faint);
-  padding: 10px 6px 4px;
-  white-space: nowrap;
-  opacity: 0;
-  transition: opacity 0.15s;
+  padding: 12px 6px 5px;
 }
-.sidebar:hover .nav-group-label { opacity: 1; }
 
 .nav-item-row {
   display: flex;
   align-items: center;
-  gap: 11px;
+  gap: 10px;
   padding: 9px 10px;
-  border-radius: 10px;
+  border-radius: 8px;
   border: none;
   background: transparent;
-  color: var(--ink-soft);
+  color: var(--muted);
   font-family: inherit;
   font-size: 13.5px;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
   transition: background .12s, color .12s;
-  white-space: nowrap;
-  overflow: hidden;
   width: 100%;
   text-align: left;
-  position: relative;
 }
-.nav-item-row:hover { background: var(--surface-2); color: var(--ink); }
+.nav-item-row:hover { background: var(--blue-tint); color: var(--blue-deep); }
 .nav-item-row.active {
   background: var(--blue-tint);
-  color: var(--blue-deep);
+  color: var(--blue);
   font-weight: 700;
 }
 .nav-item-row .nav-icon-wrap {
-  width: 28px;
-  height: 28px;
+  width: 20px;
+  height: 20px;
   display: grid;
   place-items: center;
   flex: none;
-  border-radius: 8px;
 }
-.nav-item-row.active .nav-icon-wrap { color: var(--blue); }
-.nav-item-label {
-  opacity: 0;
-  transition: opacity 0.15s 0.06s;
-  flex: 1;
-}
-.sidebar:hover .nav-item-label { opacity: 1; }
+.nav-item-label { flex: 1; }
 
 .nav-badge {
   min-width: 18px;
   height: 18px;
   padding: 0 5px;
   border-radius: 999px;
-  background: var(--warm);
+  background: var(--blue);
   color: #fff;
   font-size: 10px;
   font-weight: 800;
   line-height: 18px;
   text-align: center;
-  opacity: 0;
-  transition: opacity 0.15s;
   flex: none;
 }
-.sidebar:hover .nav-badge { opacity: 1; }
 
 .nav-spacer { flex: 1; }
 
@@ -233,14 +206,14 @@ button { font-family: inherit; cursor: pointer; }
 }
 
 /* ---- Main column -------------------------------------------------- */
-.main { overflow-y: auto; position: relative; }
+.main { overflow-y: auto; position: relative; background: var(--paper); }
 .topbar {
   position: sticky; top: 0; z-index: 20;
   display: flex; align-items: center; gap: 16px;
-  padding: 17px 34px;
-  background: rgba(235,234,230,.85);
+  padding: 16px 32px;
+  background: rgba(255,255,255,.9);
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--line);
 }
 .topbar h1 { font-size: 21px; font-weight: 800; letter-spacing: -.02em; margin: 0; }
 .topbar .sub { font-size: 13px; color: var(--muted); margin-top: 1px; }
