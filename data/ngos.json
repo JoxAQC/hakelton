@@ -1,0 +1,132 @@
+[
+  {
+    "id": "ngo-1",
+    "name": "EcoVida",
+    "focus_area": "Medio Ambiente",
+    "mission": "Preservar la biodiversidad en Latinoamérica mediante la reforestación, el cuidado de fuentes hídricas y la educación ecológica comunitaria.",
+    "annual_budget_usd": 280000,
+    "headquarters": "Lima, Perú",
+    "contact_email": "contacto@ecovida.org",
+    "projects": [
+      {
+        "name": "Sembrando Futuro",
+        "description": "Reforestación de 15,000 hectáreas de bosques de neblina andinos nativos para recuperar la cuenca del río Rímac.",
+        "budget_usd": 150000,
+        "status": "En Progreso",
+        "impact": "12,000 árboles plantados y 50 familias locales empleadas."
+      },
+      {
+        "name": "Ríos Limpios",
+        "description": "Campaña de concientización e instalación de filtros artesanales de agua en comunidades rurales de la selva central.",
+        "budget_usd": 80000,
+        "status": "Completado",
+        "impact": "Acceso a agua potable para 3,500 personas en Satipo."
+      }
+    ],
+    "highlights": "EcoVida ha sido premiada por la ONU en 2025 por su modelo de reforestación comunitaria sostenible."
+  },
+  {
+    "id": "ngo-2",
+    "name": "EducaYa",
+    "focus_area": "Educación",
+    "mission": "Cerrar la brecha educativa digital en escuelas públicas de zonas vulnerables de Latinoamérica proveyendo infraestructura y capacitación docente.",
+    "annual_budget_usd": 420000,
+    "headquarters": "Santiago, Chile",
+    "contact_email": "info@educaya.cl",
+    "projects": [
+      {
+        "name": "Aulas Digitales",
+        "description": "Implementación de laboratorios móviles con tablets y conexión a internet satelital en escuelas rurales de Coquimbo y La Araucanía.",
+        "budget_usd": 220000,
+        "status": "En Progreso",
+        "impact": "35 escuelas equipadas y más de 4,500 estudiantes beneficiados."
+      },
+      {
+        "name": "Docentes del Futuro",
+        "description": "Capacitación continua en metodologías ágiles y herramientas digitales para profesores de escuelas rurales.",
+        "budget_usd": 120000,
+        "status": "Completado",
+        "impact": "380 docentes certificados en habilidades digitales."
+      }
+    ],
+    "highlights": "Alianza estratégica establecida en 2026 con Starlink para proveer conectividad en zonas de difícil acceso."
+  },
+  {
+    "id": "ngo-3",
+    "name": "SaludParaTodos",
+    "focus_area": "Salud",
+    "mission": "Brindar atención médica primaria de alta calidad y caravanas de especialidades a comunidades andinas y amazónicas aisladas que carecen de centros de salud.",
+    "annual_budget_usd": 350000,
+    "headquarters": "La Paz, Bolivia",
+    "contact_email": "consultas@saludparatodos.org.bo",
+    "projects": [
+      {
+        "name": "Caravana Médica Andina",
+        "description": "Despliegue trimestral de clínicas móviles que ofrecen odontología, oftalmología y medicina general en el altiplano.",
+        "budget_usd": 180000,
+        "status": "En Progreso",
+        "impact": "8,200 consultas realizadas y distribución gratuita de medicamentos básicos."
+      },
+      {
+        "name": "Telemedicina Rural",
+        "description": "Instalación de cabinas de teleconsulta asistida en puestos médicos rurales en el Chaco boliviano.",
+        "budget_usd": 95000,
+        "status": "Planificado",
+        "impact": "Conectará a 15 puestos médicos rurales con especialistas en hospitales metropolitanos."
+      }
+    ],
+    "highlights": "SaludParaTodos cuenta con un voluntariado activo de más de 120 profesionales de la salud anualmente."
+  },
+  {
+    "id": "ngo-4",
+    "name": "Derechos Digitales",
+    "focus_area": "Derechos Humanos",
+    "mission": "Defender los derechos fundamentales en el entorno digital en América Latina, promoviendo la privacidad, la libertad de expresión y el acceso equitativo a la tecnología.",
+    "annual_budget_usd": 190000,
+    "headquarters": "Buenos Aires, Argentina",
+    "contact_email": "contacto@derechosdigitales.org.ar",
+    "projects": [
+      {
+        "name": "Vigilancia Ciudadana",
+        "description": "Monitoreo del uso de tecnologías de reconocimiento facial y biometría por parte de los gobiernos de la región.",
+        "budget_usd": 90000,
+        "status": "En Progreso",
+        "impact": "Publicación de 3 informes de fiscalización y representación legal en un caso de abuso de datos."
+      },
+      {
+        "name": "Internet Libre",
+        "description": "Talleres de seguridad digital dirigidos a defensores de derechos humanos, activistas y periodistas independientes.",
+        "budget_usd": 60000,
+        "status": "Completado",
+        "impact": "Más de 450 activistas capacitados en el uso seguro de comunicaciones cifradas."
+      }
+    ],
+    "highlights": "Ganadores del Premio de Libertad Digital de las Américas en 2024."
+  },
+  {
+    "id": "ngo-5",
+    "name": "Alianza Femenina",
+    "focus_area": "Desarrollo Económico",
+    "mission": "Promover la independencia económica de mujeres cabeza de hogar en zonas periurbanas de Colombia a través de microcréditos y mentorías de negocios.",
+    "annual_budget_usd": 310000,
+    "headquarters": "Medellín, Colombia",
+    "contact_email": "alianza@femenina.org.co",
+    "projects": [
+      {
+        "name": "Semilla de Negocio",
+        "description": "Fondo de microcréditos blandos con tasas de interés del 0% para el desarrollo de emprendimientos textiles y de alimentos.",
+        "budget_usd": 190000,
+        "status": "En Progreso",
+        "impact": "340 microempresas lideradas por mujeres financiadas con tasa de retorno del 98%."
+      },
+      {
+        "name": "Mentoría Emprendedora",
+        "description": "Red de mentoras ejecutivas voluntarias que acompañan a las beneficiarias en finanzas, marketing y formalización de negocios.",
+        "budget_usd": 70000,
+        "status": "Completado",
+        "impact": "280 emprendedoras graduadas de un programa de mentoría de 6 meses."
+      }
+    ],
+    "highlights": "El 85% de las familias beneficiarias reportan un aumento superior al 40% en sus ingresos mensuales en el primer año."
+  }
+]
