@@ -1807,7 +1807,6 @@ function Analytics({ activeProject, setActiveProject, setPage, onNew, copy }) {
           <button className="btn btn-ghost"><Icon name="down" size={16} /> Exportar</button>
           {onNew && <button className="btn btn-primary btn-lg" onClick={onNew}><Icon name="plus" size={18} /> Nuevo informe</button>}
         </div>
-        </div>
       </div>
 
       <div style={{ marginBottom: 16 }}>
