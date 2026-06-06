@@ -25,12 +25,16 @@ const QUICK_SUGGESTIONS = [
   "Detalles del proyecto Semilla de Negocio",
 ];
 
+import { DATA } from "./LegacyApp";
+
 interface ChatSidebarProps {
   isOpen: boolean;
   onClose: () => void;
+  activeProject?: any;
+  setActiveProject?: (project: any) => void;
 }
 
-export default function ChatSidebar({ isOpen, onClose }: ChatSidebarProps) {
+export default function ChatSidebar({ isOpen, onClose, activeProject, setActiveProject }: ChatSidebarProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -52,13 +56,18 @@ export default function ChatSidebar({ isOpen, onClose }: ChatSidebarProps) {
     setInput("");
     setIsLoading(true);
 
+    // Inject system context just for the payload, don't show it in UI
+    const payloadMessages = activeProject 
+      ? [{ role: "system", content: `El usuario está actualmente visualizando el proyecto: "${activeProject.nombre}". Asume que cualquier pregunta sobre "este proyecto" o "aquí" se refiere a este.` }, ...updatedMessages]
+      : updatedMessages;
+
     try {
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ messages: updatedMessages }),
+        body: JSON.stringify({ messages: payloadMessages }),
       });
 
       if (!response.ok) {
@@ -167,6 +176,11 @@ export default function ChatSidebar({ isOpen, onClose }: ChatSidebarProps) {
             <Cpu size={12} />
             <span>Llama 3.3 & Groq</span>
           </div>
+          {activeProject && (
+            <div className="meta-pill" style={{ background: "var(--blue-tint)", color: "var(--blue-deep)", border: "1px solid var(--blue)" }}>
+              Proyecto: {activeProject.nombre}
+            </div>
+          )}
           <div className="meta-pill">Mock DB Mode</div>
         </div>
       </header>
@@ -185,8 +199,8 @@ export default function ChatSidebar({ isOpen, onClose }: ChatSidebarProps) {
                 </div>
                 <h3>¡Hola! Soy tu asistente RAG</h3>
                 <p>
-                  Pregúntame sobre proyectos, presupuestos, enfoques de impacto o información general de
-                  las ONGs en nuestra base de datos.
+                  Pregúntame sobre los proyectos, presupuestos o impacto de nuestra ONG.
+                  {activeProject && <span><br /><br />Actualmente estamos analizando el proyecto <strong>{activeProject.nombre}</strong>. Puedes preguntarme detalles sobre este proyecto.</span>}
                 </p>
                 <div style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
                   Utilizo LangGraph para orquestar la búsqueda y Groq con Llama 3 para responder.

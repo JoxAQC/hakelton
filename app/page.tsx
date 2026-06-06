@@ -8,11 +8,12 @@ import { MessageCircle } from "lucide-react";
 
 export default function Home() {
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [activeProject, setActiveProject] = useState(null);
 
   return (
     <>
       {/* Legacy Prototype UI */}
-      <LegacyApp />
+      <LegacyApp activeProject={activeProject} setActiveProject={setActiveProject} />
 
       {/* Floating Action Button to open Chat Sidebar */}
       <button 
@@ -43,7 +44,7 @@ export default function Home() {
       </button>
 
       {/* Pop-up Chat Sidebar */}
-      <ChatSidebar isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
+      <ChatSidebar isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} activeProject={activeProject} setActiveProject={setActiveProject} />
     </>
   );
 }

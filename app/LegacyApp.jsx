@@ -172,7 +172,102 @@ const DATA = (function () {
     { id: "d3", name: "Encuesta_satisfaccion.xlsx", type: "xls", size: "77 KB", status: "done", note: "120 respuestas", detected: ["Edad", "Género", "Valoración 1–5"] },
   ];
 
-  return { people, conversations, transcript, teamReports, reports, draftBlocks, analytics, documents };
+  const proyectos = [
+    {
+      id: "aulas-conectadas",
+      nombre: "Aulas Conectadas",
+      dashboard_data: {
+        base: { impacted: 1500, events: 12, voices: 85, docs: 6 },
+        gender: [
+          { label: "Femenino", value: 52, color: "oklch(0.64 0.13 18)" },
+          { label: "Masculino", value: 46, color: "oklch(0.55 0.11 250)" },
+          { label: "Otro / NS", value: 2, color: "oklch(0.70 0.03 258)" },
+        ],
+        age: [
+          { label: "0–12", value: 60 }, { label: "13–17", value: 35 }, { label: "18–29", value: 5 },
+          { label: "30–44", value: 0 }, { label: "45–64", value: 0 }, { label: "65+", value: 0 },
+        ],
+        trend: [
+          { m: "Oct", v: 300 }, { m: "Nov", v: 600 }, { m: "Dic", v: 850 },
+          { m: "Ene", v: 1100 }, { m: "Feb", v: 1350 }, { m: "Mar", v: 1500 },
+        ]
+      },
+      rag_documents_mock: [
+        { text: "El proyecto Aulas Conectadas equipó 12 laboratorios de computación en escuelas rurales, beneficiando a 1500 estudiantes.", metadata: { proyecto: "Aulas Conectadas", año: 2026 } }
+      ]
+    },
+    {
+      id: "tutorias-solidarias",
+      nombre: "Tutorías Solidarias",
+      dashboard_data: {
+        base: { impacted: 320, events: 45, voices: 120, docs: 12 },
+        gender: [
+          { label: "Femenino", value: 55, color: "oklch(0.64 0.13 18)" },
+          { label: "Masculino", value: 43, color: "oklch(0.55 0.11 250)" },
+          { label: "Otro / NS", value: 2, color: "oklch(0.70 0.03 258)" },
+        ],
+        age: [
+          { label: "0–12", value: 40 }, { label: "13–17", value: 50 }, { label: "18–29", value: 10 },
+          { label: "30–44", value: 0 }, { label: "45–64", value: 0 }, { label: "65+", value: 0 },
+        ],
+        trend: [
+          { m: "Oct", v: 80 }, { m: "Nov", v: 150 }, { m: "Dic", v: 220 },
+          { m: "Ene", v: 280 }, { m: "Feb", v: 300 }, { m: "Mar", v: 320 },
+        ]
+      },
+      rag_documents_mock: [
+        { text: "El proyecto Tutorías Solidarias ha brindado acompañamiento a 320 estudiantes para prevenir la deserción escolar.", metadata: { proyecto: "Tutorías Solidarias", año: 2026 } }
+      ]
+    },
+    {
+      id: "formacion-docente",
+      nombre: "Formación Docente",
+      dashboard_data: {
+        base: { impacted: 150, events: 5, voices: 40, docs: 3 },
+        gender: [
+          { label: "Femenino", value: 70, color: "oklch(0.64 0.13 18)" },
+          { label: "Masculino", value: 28, color: "oklch(0.55 0.11 250)" },
+          { label: "Otro / NS", value: 2, color: "oklch(0.70 0.03 258)" },
+        ],
+        age: [
+          { label: "0–12", value: 0 }, { label: "13–17", value: 0 }, { label: "18–29", value: 30 },
+          { label: "30–44", value: 50 }, { label: "45–64", value: 15 }, { label: "65+", value: 5 },
+        ],
+        trend: [
+          { m: "Oct", v: 0 }, { m: "Nov", v: 40 }, { m: "Dic", v: 80 },
+          { m: "Ene", v: 120 }, { m: "Feb", v: 150 }, { m: "Mar", v: 150 },
+        ]
+      },
+      rag_documents_mock: [
+        { text: "150 maestros de escuelas públicas se certificaron en herramientas pedagógicas digitales a través de este proyecto.", metadata: { proyecto: "Formación Docente", año: 2026 } }
+      ]
+    },
+    {
+      id: "becas-futuro",
+      nombre: "Becas Futuro",
+      dashboard_data: {
+        base: { impacted: 50, events: 2, voices: 15, docs: 10 },
+        gender: [
+          { label: "Femenino", value: 60, color: "oklch(0.64 0.13 18)" },
+          { label: "Masculino", value: 40, color: "oklch(0.55 0.11 250)" },
+          { label: "Otro / NS", value: 0, color: "oklch(0.70 0.03 258)" },
+        ],
+        age: [
+          { label: "0–12", value: 0 }, { label: "13–17", value: 90 }, { label: "18–29", value: 10 },
+          { label: "30–44", value: 0 }, { label: "45–64", value: 0 }, { label: "65+", value: 0 },
+        ],
+        trend: [
+          { m: "Oct", v: 10 }, { m: "Nov", v: 20 }, { m: "Dic", v: 30 },
+          { m: "Ene", v: 40 }, { m: "Feb", v: 50 }, { m: "Mar", v: 50 },
+        ]
+      },
+      rag_documents_mock: [
+        { text: "El proyecto otorgó becas de sostenimiento a 50 estudiantes de secundaria con excelencia académica.", metadata: { proyecto: "Becas Futuro", año: 2026 } }
+      ]
+    }
+  ];
+
+  return { people, conversations, transcript, teamReports, reports, draftBlocks, analytics, documents, proyectos };
 })();
 
 /* --- tweaks-panel.jsx --- */
@@ -1637,10 +1732,12 @@ function Panel({ title, sub, children, foot }) {
   );
 }
 
-function Analytics() {
-  const a = DATA.analytics;
+function Analytics({ activeProject, setActiveProject }) {
   const [scope, setScope] = dUse("mes");
-  const sc = a.scopes.find(s => s.id === scope);
+  const a = activeProject ? activeProject.dashboard_data : DATA.analytics;
+  
+  // If a project is selected, force mult to 1 (all-time) and hide scopes
+  const sc = activeProject ? { id: "all", label: "Histórico del Proyecto", mult: 1 } : DATA.analytics.scopes.find(s => s.id === scope);
   const mult = sc.mult;
 
   return (
@@ -1651,15 +1748,35 @@ function Analytics() {
           <p style={{ color: "var(--muted)", fontSize: 14.5, margin: "4px 0 0" }}>Datos fusionados de tus eventos, voces y documentos · <b style={{ color: "var(--ink-soft)" }}>{sc.label}</b></p>
         </div>
         <div className="grow" />
-        <div className="row" style={{ gap: 5, background: "var(--surface-2)", padding: 4, borderRadius: 999, border: "1px solid var(--line)" }}>
-          {a.scopes.map(s => (
-            <button key={s.id} onClick={() => setScope(s.id)} style={{
-              border: "none", padding: "7px 14px", borderRadius: 999, fontWeight: 700, fontSize: 13,
-              background: scope === s.id ? "var(--surface)" : "transparent",
-              color: scope === s.id ? "var(--blue-deep)" : "var(--muted)",
-              boxShadow: scope === s.id ? "var(--sh-sm)" : "none",
-            }}>{s.id === "mes" ? "Mes" : s.id === "tri" ? "Trimestre" : "Año"}</button>
-          ))}
+        <div className="row" style={{ gap: 10 }}>
+          {/* Project Selector */}
+          <select 
+            value={activeProject ? activeProject.id : "general"} 
+            onChange={(e) => {
+              if (e.target.value === "general") setActiveProject(null);
+              else setActiveProject(DATA.proyectos.find(p => p.id === e.target.value));
+            }}
+            style={{ padding: "8px 12px", borderRadius: "8px", border: "1px solid var(--line)", background: "var(--surface)", fontWeight: 600, fontSize: 13, outline: "none", cursor: "pointer" }}
+          >
+            <option value="general">Visión General (Todos)</option>
+            {DATA.proyectos.map(p => (
+              <option key={p.id} value={p.id}>{p.nombre}</option>
+            ))}
+          </select>
+
+          {/* Scopes (only show if no project is selected) */}
+          {!activeProject && (
+            <div className="row" style={{ gap: 5, background: "var(--surface-2)", padding: 4, borderRadius: 999, border: "1px solid var(--line)" }}>
+              {DATA.analytics.scopes.map(s => (
+                <button key={s.id} onClick={() => setScope(s.id)} style={{
+                  border: "none", padding: "7px 14px", borderRadius: 999, fontWeight: 700, fontSize: 13,
+                  background: scope === s.id ? "var(--surface)" : "transparent",
+                  color: scope === s.id ? "var(--blue-deep)" : "var(--muted)",
+                  boxShadow: scope === s.id ? "var(--sh-sm)" : "none",
+                }}>{s.id === "mes" ? "Mes" : s.id === "tri" ? "Trimestre" : "Año"}</button>
+              ))}
+            </div>
+          )}
         </div>
         <button className="btn btn-ghost"><Icon name="down" size={16} /> Exportar</button>
       </div>
@@ -1698,10 +1815,12 @@ function Analytics() {
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-        <Panel title="Personas por programa" sub={`Total: ${fmt(a.base.impacted * mult)}`}>
-          <ProgBars data={a.programs} mult={mult} />
-        </Panel>
-        <Panel title="Tendencia de impacto" sub="Personas alcanzadas por mes">
+        {!activeProject && (
+          <Panel title="Personas por programa" sub={`Total: ${fmt(a.base.impacted * mult)}`}>
+            <ProgBars data={a.programs} mult={mult} />
+          </Panel>
+        )}
+        <Panel title="Tendencia de impacto" sub={activeProject ? "Personas alcanzadas por mes en este proyecto" : "Personas alcanzadas por mes"}>
           <Trend data={a.trend} mult={mult} />
         </Panel>
       </div>
@@ -2145,7 +2264,7 @@ const TONE_COPY = {
   directo: { greet: "Hola" },
 };
 
-function App() {
+function App({ activeProject, setActiveProject }) {
   const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
   const [onb, setOnb] = aUse(true);
   const [variant, setVariant] = aUse("wizard");
@@ -2195,7 +2314,7 @@ function App() {
               {page === "convos" && <Convos />}
               {page === "importar" && <Importar onGenerate={() => setFlow(true)} goDatos={() => setPage("datos")} />}
               {page === "informes" && <Informes onNew={() => setFlow(true)} />}
-              {page === "datos" && <Analytics />}
+              {page === "datos" && <Analytics activeProject={activeProject} setActiveProject={setActiveProject} />}
               {page === "autom" && <Automatizaciones />}
               {page === "equipo" && <Equipo />}
             </>}
@@ -2207,4 +2326,5 @@ function App() {
 
 
 
+export { DATA };
 export default App;
