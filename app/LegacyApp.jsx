@@ -9,7 +9,7 @@ import { supabase } from "../lib/supabase/client";
 const DATA = (function () {
   const people = {
     // Comunidad
-    maria:   { id: "maria",   name: "María Elena Quispe",   role: "Vecina · Programa de salud", color: "#2563EB",  initials: "MQ" },
+    maria:   { id: "maria",   name: "María Elena Quispe",   role: "Vecina · Programa de salud", color: "#2563EB", initials: "MQ" },
     roberto: { id: "roberto", name: "Don Roberto Mamani",   role: "Dirigente comunal",          color: "#7C3AED", initials: "RM" },
     luz:     { id: "luz",     name: "Luz Carrasco",          role: "Madre · Comedor popular",    color: "#0891B2", initials: "LC" },
     jowel:   { id: "jowel",   name: "Jowel Andrade",         role: "Joven · Taller ambiental",   color: "#0369A1", initials: "JA" },
@@ -149,10 +149,10 @@ const DATA = (function () {
       { label: "30–44", value: 23 }, { label: "45–64", value: 17 }, { label: "65+", value: 8 },
     ],
     programs: [
-      { name: "Salud comunitaria", value: 480, color: "#2563EB" },
-      { name: "Medio ambiente", value: 340, color: "#0EA5E9" },
-      { name: "Educación", value: 260, color: "#7C3AED" },
-      { name: "Seguridad alimentaria", value: 160, color: "#0369A1" },
+      { name: "Aulas Conectadas", value: 480, color: "#2563EB" },
+      { name: "Tutorías Solidarias", value: 340, color: "#0EA5E9" },
+      { name: "Formación Docente", value: 260, color: "#7C3AED" },
+      { name: "Becas Futuro", value: 160, color: "#0369A1" },
     ],
     trend: [
       { m: "Oct", v: 520 }, { m: "Nov", v: 640 }, { m: "Dic", v: 710 },
@@ -169,66 +169,66 @@ const DATA = (function () {
 
   // Audios agrupados por proyecto (para la vista de bandeja de Informes)
   const projects = [
-    { id: "salud",     label: "Salud Comunitaria",    color: "#2563EB", count: 4 },
-    { id: "ambiente",  label: "Medio Ambiente",        color: "#0EA5E9", count: 3 },
-    { id: "alimenta",  label: "Seguridad Alimentaria", color: "#0369A1", count: 2 },
-    { id: "educacion", label: "Educación",             color: "#7C3AED", count: 1 },
+    { id: "aulas",     label: "Aulas Conectadas",    color: "#2563EB", count: 4 },
+    { id: "tutorias",  label: "Tutorías Solidarias", color: "#0EA5E9", count: 3 },
+    { id: "formacion", label: "Formación Docente",   color: "#7C3AED", count: 2 },
+    { id: "becas",     label: "Becas Futuro",        color: "#0369A1", count: 1 },
   ];
 
   const audioInbox = [
     // --- Salud Comunitaria ---
-    { id: "a1", project: "salud", who: "maria",   at: "Hoy · 09:14", dur: "0:48", unread: true,
+    { id: "a1", project: "aulas", who: "maria",   at: "Hoy · 09:14", dur: "0:48", unread: true,
       subject: "Testimonio: acceso a la posta",
       preview: "Desde que abrieron la posta, ya no tengo que viajar dos horas…",
       text: "Buenos días señorita. Le quería contar que desde que abrieron la posta, ya no tengo que viajar dos horas hasta el hospital. Mi hija pudo vacunarse aquí mismo. Pero todavía faltan medicinas, a veces vamos y no hay nada.",
       tags: ["acceso a salud", "vacunación", "falta de insumos"] },
-    { id: "a2", project: "salud", who: "roberto", at: "Hoy · 09:31", dur: "1:12", unread: true,
+    { id: "a2", project: "aulas", who: "roberto", at: "Hoy · 09:31", dur: "1:12", unread: true,
       subject: "Demanda: atención de fin de semana",
       preview: "Como dirigente le digo: la comunidad está agradecida pero necesitamos…",
       text: "Como dirigente le digo: la comunidad está agradecida pero necesitamos que el puesto tenga atención los fines de semana. La gente se enferma cualquier día, no solo de lunes a viernes.",
       tags: ["horario de atención", "demanda comunal"] },
-    { id: "a3", project: "salud", who: "luz",     at: "Hoy · 10:02", dur: "0:35", unread: false,
+    { id: "a3", project: "aulas", who: "luz",     at: "Hoy · 10:02", dur: "0:35", unread: false,
       subject: "Impacto económico en las familias",
       preview: "Yo soy mamá de tres. Antes gastaba en pasajes lo que no tenía…",
       text: "Yo soy mamá de tres. Antes gastaba en pasajes lo que no tenía. Ahora camino diez minutos. Eso para nosotras es muchísimo, de verdad.",
       tags: ["impacto económico", "cercanía"] },
-    { id: "a4", project: "salud", who: "carlosH", at: "Ayer · 08:50", dur: "1:05", unread: false,
+    { id: "a4", project: "aulas", who: "carlosH", at: "Ayer · 08:50", dur: "1:05", unread: false,
       subject: "Reporte de campo: jornada de salud",
       preview: "Cerramos la jornada de salud en Villa El Sol. Atendimos unas 80 personas…",
       text: "Listo compañeros, cerramos la jornada de salud en Villa El Sol. Atendimos a unas 80 personas y desplegamos dos carpas de triaje, con apoyo de una enfermera de la posta. Lo que no pudimos hacer fue la toma de presión: no llegó el tensiómetro, lo dejamos pendiente para la próxima.",
       tags: ["jornada de salud", "80 atendidos", "pendiente: tensiómetro"] },
 
     // --- Medio Ambiente ---
-    { id: "a5", project: "ambiente", who: "jowel", at: "Hoy · 11:20", dur: "0:52", unread: true,
+    { id: "a5", project: "tutorias", who: "jowel", at: "Hoy · 11:20", dur: "0:52", unread: true,
       subject: "Contaminación del río: voz de joven",
       preview: "El río está muy mal, señorita. Ya no se puede pescar como antes…",
       text: "El río está muy mal, señorita. Ya no se puede pescar como antes. Los jóvenes de aquí crecimos bañándonos ahí y ahora da miedo entrar. Queremos que alguien haga algo de verdad.",
       tags: ["contaminación", "juventud", "pesca"] },
-    { id: "a6", project: "ambiente", who: "anaR", at: "Ayer · 16:05", dur: "0:52", unread: false,
+    { id: "a6", project: "tutorias", who: "anaR", at: "Ayer · 16:05", dur: "0:52", unread: false,
       subject: "Reporte: taller ambiental con jóvenes",
       preview: "El taller ambiental salió bien, vinieron 25 jóvenes y recogimos…",
       text: "El taller ambiental salió bien, vinieron 25 jóvenes y recogimos como 12 sacos de basura del río. Faltaron guantes para todos, anótenlo para la próxima compra.",
       tags: ["taller ambiental", "25 participantes", "faltaron guantes"] },
-    { id: "a7", project: "ambiente", who: "roberto", at: "Hace 3 días", dur: "0:40", unread: false,
+    { id: "a7", project: "tutorias", who: "roberto", at: "Hace 3 días", dur: "0:40", unread: false,
       subject: "Acuerdo con el municipio sobre el río",
       preview: "Estuvimos reunidos con el municipio y prometieron revisar las empresas…",
       text: "Estuvimos reunidos con el municipio y prometieron revisar las empresas que están tirando residuos al río. Quedamos en un seguimiento para el próximo mes. Hay buena voluntad pero necesitamos ver hechos.",
       tags: ["municipio", "empresas", "seguimiento"] },
 
     // --- Seguridad Alimentaria ---
-    { id: "a8", project: "alimenta", who: "luz", at: "Hace 2 días · 14:30", dur: "0:44", unread: true,
+    { id: "a8", project: "formacion", who: "luz", at: "Hace 2 días · 14:30", dur: "0:44", unread: true,
       subject: "Comedor popular: situación de insumos",
       preview: "Ayer nos quedamos sin aceite y sin harina. Las donaciones bajaron mucho…",
       text: "Ayer nos quedamos sin aceite y sin harina. Las donaciones bajaron mucho este mes. Seguimos atendiendo a 85 familias pero necesitamos apoyo urgente en insumos básicos.",
       tags: ["comedor", "insumos", "urgente"] },
-    { id: "a9", project: "alimenta", who: "maria", at: "Hace 1 sem", dur: "0:30", unread: false,
+    { id: "a9", project: "formacion", who: "maria", at: "Hace 1 sem", dur: "0:30", unread: false,
       subject: "Familias nuevas que se suman al comedor",
       preview: "Han llegado cuatro familias nuevas del asentamiento de arriba…",
       text: "Han llegado cuatro familias nuevas del asentamiento de arriba. Tienen niños pequeños. Les estamos dando un lugar pero ya estamos al límite de capacidad.",
       tags: ["nuevas familias", "capacidad", "niños"] },
 
     // --- Educación ---
-    { id: "a10", project: "educacion", who: "carlosH", at: "Hace 5 días", dur: "1:00", unread: false,
+    { id: "a10", project: "becas", who: "carlosH", at: "Hace 5 días", dur: "1:00", unread: false,
       subject: "Reporte: talleres de refuerzo escolar",
       preview: "Los talleres de refuerzo van bien. Tenemos 18 niños inscritos esta semana…",
       text: "Los talleres de refuerzo van bien. Tenemos 18 niños inscritos esta semana, subió desde 12. Los profes voluntarios están comprometidos. Solo falta conseguir más cuadernos y lápices para los que no tienen.",
@@ -1040,7 +1040,7 @@ function VariantWizard({ onFinish }) {
         <div style={{ padding: "44px 42px", display: "flex", flexDirection: "column" }}>
           {step === 0 && <>
             <div><Chip tone="warm" dot>Bienvenida</Chip></div>
-            <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-.025em", margin: "16px 0 0", lineHeight: 1.12 }}>Hola, soy <span style={{ color: "var(--blue)" }}>Eco</span>.<br />Convierto lo que tu gente dice en informes.</h2>
+            <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-.025em", margin: "16px 0 0", lineHeight: 1.12 }}>Hola, soy <span style={{ color: "var(--blue)" }}>Voz</span>.<br />Convierto lo que tu gente dice en informes.</h2>
             <p style={{ fontSize: 15.5, color: "var(--ink-soft)", lineHeight: 1.6, marginTop: 14 }}>Conecto tu WhatsApp, transcribo las notas de voz y mensajes de las personas con las que trabajas, y te ayudo a armar reportes. <b>Sin que pierdas tu voz ni la de ellas.</b></p>
             <div style={{ marginTop: "auto", paddingTop: 24, display: "flex", gap: 8, alignItems: "center", color: "var(--muted)", fontSize: 13 }}>
               <Icon name="shield" size={17} /> Toma 3 minutos. Nada se envía sin tu permiso.
@@ -1061,7 +1061,7 @@ function VariantWizard({ onFinish }) {
           {step === 2 && <>
             <div><Chip tone="blue" dot>Paso 2 de 4</Chip></div>
             <h2 style={{ fontSize: 27, fontWeight: 800, letterSpacing: "-.02em", margin: "16px 0 0", lineHeight: 1.15 }}>¿Cuál es el rubro de tu organización?</h2>
-            <p style={{ fontSize: 14, color: "var(--ink-soft)", lineHeight: 1.55, marginTop: 10 }}>Selecciona uno. Esto le ayudará a Eco a sugerirte las métricas correctas para tus informes.</p>
+            <p style={{ fontSize: 14, color: "var(--ink-soft)", lineHeight: 1.55, marginTop: 10 }}>Selecciona uno. Esto le ayudará a Voz a sugerirte las métricas correctas para tus informes.</p>
             <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 16 }}>
               {programs.map(p => {
                 const on = prog === p.id;
@@ -1097,9 +1097,18 @@ function VariantWizard({ onFinish }) {
             <p style={{ fontSize: 15, color: "var(--ink-soft)", lineHeight: 1.6, marginTop: 12 }}>¿Tu ONG usa Drive o Notion? Conéctalos para que la IA extraiga contexto histórico de forma segura.</p>
             <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 18 }}>
               {[
-                { name: "Google Workspace / Drive", icon: <svg width="20" height="20" viewBox="0 0 87.3 78" xmlns="http://www.w3.org/2000/svg"><path d="m6.6 66.85 3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8h-27.5c0 1.55.4 3.1 1.2 4.5z" fill="#0066da"/><path d="m43.65 25-13.75-23.8c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44a9.06 9.06 0 0 0-1.2 4.5h27.5z" fill="#00ac47"/><path d="m73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5h-27.502l5.852 11.5z" fill="#ea4335"/><path d="m43.65 25 13.75-23.8c-1.35-.8-2.9-1.2-4.5-1.2h-18.5c-1.6 0-3.15.45-4.5 1.2z" fill="#00832d"/><path d="m59.8 53h-32.3l-13.75 23.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z" fill="#2684fc"/><path d="m73.4 26.5-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3l-13.75 23.8 16.15 28h27.45c0-1.55-.4-3.1-1.2-4.5z" fill="#ffba00"/></svg> },
-                { name: "Notion", icon: <svg width="20" height="20" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M6 7.3C8.1 9 9 9.2 12.9 8.9l67-4c.8 0 .1-.8-.2-1L68.4.5C67.1-.4 65.3-.1 63.7 0L8.9 4.3C6.9 4.5 6.5 5.5 6 7.3zm2.8 10.3v67.5c0 3.7 1.8 5 6 4.8l73.5-4.3c4.2-.2 4.7-2.8 4.7-5.8V12.8c0-3-.1-4.4-2.3-6.1-2.3-1.7-3.4-1.5-5.3-1.3L11.1 9.7C8.7 9.9 8.8 11.3 8.8 17.6zm66.5 3.6c.4 1.7 0 3.4-1.7 3.6l-2.7.5v40.3c-2.4 1.3-4.6 2-6.4 2-3 0-3.8-.9-6.1-3.6L40.1 38.4v25.4l5.7 1.3s0 3.4-4.7 3.4L28 68.9c-.4-1-.1-3.4 1.5-3.8l3.9-1.1V29l-5.4-.4c-.4-1.7.6-4.1 3.2-4.3l13.6-.9 19.7 30.2V25.8L60 24.9c-.4-2.1 1.2-3.6 3.2-3.8z" fill="#37352f"/></svg> },
-                { name: "OneDrive / Microsoft 365", icon: <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14.13 9.37A6.21 6.21 0 0 1 20.27 15c0 .11 0 .22-.01.33A4.5 4.5 0 0 1 19.5 24H5a5 5 0 0 1-.88-9.92A6.2 6.2 0 0 1 4 13a6.21 6.21 0 0 1 10.13-3.63z" fill="#0078D4"/><path d="M14.13 9.37A6.21 6.21 0 0 0 8.5 7a6.18 6.18 0 0 0-4.38 1.81A4.5 4.5 0 0 1 5 24h14.5a4.5 4.5 0 0 0 .77-8.67 6.21 6.21 0 0 0-6.14-5.96z" fill="#0078D4" opacity=".7"/></svg> },
+                {
+                  name: "Google Workspace / Drive",
+                  icon: <svg width="20" height="20" viewBox="0 0 87.3 78" xmlns="http://www.w3.org/2000/svg"><path d="m6.6 66.85 3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8h-27.5c0 1.55.4 3.1 1.2 4.5z" fill="#0066da"/><path d="m43.65 25-13.75-23.8c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44a9.06 9.06 0 0 0 -1.2 4.5h27.5z" fill="#00ac47"/><path d="m73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5h-27.502l5.852 11.5z" fill="#ea4335"/><path d="m43.65 25 13.75-23.8c-1.35-.8-2.9-1.2-4.5-1.2h-18.5c-1.6 0-3.15.45-4.5 1.2z" fill="#00832d"/><path d="m59.8 53h-32.3l-13.75 23.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z" fill="#2684fc"/><path d="m73.4 26.5-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3l-13.75 23.8 16.15 28h27.45c0-1.55-.4-3.1-1.2-4.5z" fill="#ffba00"/></svg>
+                },
+                {
+                  name: "Notion",
+                  icon: <svg width="20" height="20" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M6 7.3C8.1 9 9 9.2 12.9 8.9l67-4c.8 0 .1-.8-.2-1L68.4.5C67.1-.4 65.3-.1 63.7 0L8.9 4.3C6.9 4.5 6.5 5.5 6 7.3zm2.8 10.3v67.5c0 3.7 1.8 5 6 4.8l73.5-4.3c4.2-.2 4.7-2.8 4.7-5.8V12.8c0-3-.1-4.4-2.3-6.1-2.3-1.7-3.4-1.5-5.3-1.3L11.1 9.7C8.7 9.9 8.8 11.3 8.8 17.6zm66.5 3.6c.4 1.7 0 3.4-1.7 3.6l-2.7.5v40.3c-2.4 1.3-4.6 2-6.4 2-3 0-3.8-.9-6.1-3.6L40.1 38.4v25.4l5.7 1.3s0 3.4-4.7 3.4L28 68.9c-.4-1-.1-3.4 1.5-3.8l3.9-1.1V29l-5.4-.4c-.4-1.7.6-4.1 3.2-4.3l13.6-.9 19.7 30.2V25.8L60 24.9c-.4-2.1 1.2-3.6 3.2-3.8z" fill="#37352f"/></svg>
+                },
+                {
+                  name: "OneDrive / Microsoft 365",
+                  icon: <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14.13 9.37A6.21 6.21 0 0 1 20.27 15c0 .11 0 .22-.01.33A4.5 4.5 0 0 1 19.5 24H5a5 5 0 0 1-.88-9.92A6.2 6.2 0 0 1 4 13a6.21 6.21 0 0 1 10.13-3.63z" fill="#0078D4"/><path d="M14.13 9.37A6.21 6.21 0 0 0 8.5 7a6.18 6.18 0 0 0-4.38 1.81A4.5 4.5 0 0 1 5 24h14.5a4.5 4.5 0 0 0 .77-8.67 6.21 6.21 0 0 0-6.14-5.96z" fill="#0078D4" opacity=".7"/></svg>
+                },
               ].map(plat => (
                 <div key={plat.name} style={{ padding: "12px 14px", borderRadius: "var(--r-sm)", border: "1px solid var(--line)", background: "var(--surface)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -1118,7 +1127,7 @@ function VariantWizard({ onFinish }) {
             <h2 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-.02em", margin: "16px 0 0", lineHeight: 1.15 }}>Ya puedes empezar a escuchar.</h2>
             <p style={{ fontSize: 15, color: "var(--ink-soft)", lineHeight: 1.6, marginTop: 12 }}>Cuando lleguen notas de voz, las verás transcritas aquí. Cuando tengas suficientes, te ayudo a armar tu primer informe — y tú lo revisas antes de compartir.</p>
             <div style={{ margintop: 18, marginTop: 18, padding: 14, background: "var(--warm-tint)", borderRadius: "var(--r-sm)", display: "flex", gap: 11, fontSize: 13.5, color: "var(--warm-deep)", lineHeight: 1.5 }}>
-              <Icon name="heart" size={18} /><span><b>Recuerda:</b> Eco nunca responde por ti ni envía mensajes sin que tú lo apruebes.</span>
+              <Icon name="heart" size={18} /><span><b>Recuerda:</b> Voz nunca responde por ti ni envía mensajes sin que tú lo apruebes.</span>
             </div>
           </>}
 
@@ -1127,12 +1136,12 @@ function VariantWizard({ onFinish }) {
             <div className="grow" />
             {step < 4
               ? <button className="btn btn-primary btn-lg" onClick={() => setStep(s => s + 1)}>{step === 0 ? "Empezar" : step === 3 ? "Omitir por ahora" : "Continuar"} <Icon name="arrow" size={17} /></button>
-              : <button className="btn btn-primary btn-lg" onClick={onFinish}>Entrar a Eco <Icon name="arrow" size={17} /></button>}
+              : <button className="btn btn-primary btn-lg" onClick={onFinish}>Entrar a Voz <Icon name="arrow" size={17} /></button>}
           </div>
         </div>
 
         {/* derecha: visual */}
-        <div style={{ background: "linear-gradient(160deg, var(--blue-tint), var(--green-tint))", display: "grid", placeItems: "center", padding: 36, borderLeft: "1px solid var(--line)" }}>
+        <div style={{ background: "linear-gradient(160deg, var(--blue-tint), var(--blue-tint2))", display: "grid", placeItems: "center", padding: 36, borderLeft: "1px solid var(--line)" }}>
           {step === 0 && <div style={{ textAlign: "center" }}>
             <div style={{ position: "relative", width: 230 }}>
               {DATA.transcript.slice(0, 2).map((t, i) => {
@@ -1152,7 +1161,7 @@ function VariantWizard({ onFinish }) {
                 <div style={{ background: "#fff", borderRadius: "var(--r)", padding: "20px 22px", boxShadow: "var(--sh)" }}>
                   <div style={{ fontSize: 22, marginBottom: 6 }}>{m.emoji}</div>
                   <div style={{ fontWeight: 800, fontSize: 14.5, color: "var(--ink)", marginBottom: 12 }}>
-                    Métricas que Eco tracked para <span style={{ color: "var(--blue)" }}>{m.label}</span>
+                    Métricas que Voz tracked para <span style={{ color: "var(--blue)" }}>{m.label}</span>
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                     {m.metrics.map((metric, i) => (
@@ -1171,13 +1180,29 @@ function VariantWizard({ onFinish }) {
           })()}
           {step === 3 && (
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, width: "100%", maxWidth: 300 }}>
+              {/* Tarjetas de app con logo real */}
               {[
-                { name: "Google Drive", desc: "Reportes anteriores y documentos históricos", logo: <svg width="28" height="28" viewBox="0 0 87.3 78" xmlns="http://www.w3.org/2000/svg"><path d="m6.6 66.85 3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8h-27.5c0 1.55.4 3.1 1.2 4.5z" fill="#0066da"/><path d="m43.65 25-13.75-23.8c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44a9.06 9.06 0 0 0-1.2 4.5h27.5z" fill="#00ac47"/><path d="m73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5h-27.502l5.852 11.5z" fill="#ea4335"/><path d="m43.65 25 13.75-23.8c-1.35-.8-2.9-1.2-4.5-1.2h-18.5c-1.6 0-3.15.45-4.5 1.2z" fill="#00832d"/><path d="m59.8 53h-32.3l-13.75 23.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z" fill="#2684fc"/><path d="m73.4 26.5-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3l-13.75 23.8 16.15 28h27.45c0-1.55-.4-3.1-1.2-4.5z" fill="#ffba00"/></svg> },
-                { name: "Notion", desc: "Notas, acuerdos y bases de conocimiento", logo: <svg width="22" height="22" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M6 7.3C8.1 9 9 9.2 12.9 8.9l67-4c.8 0 .1-.8-.2-1L68.4.5C67.1-.4 65.3-.1 63.7 0L8.9 4.3C6.9 4.5 6.5 5.5 6 7.3zm2.8 10.3v67.5c0 3.7 1.8 5 6 4.8l73.5-4.3c4.2-.2 4.7-2.8 4.7-5.8V12.8c0-3-.1-4.4-2.3-6.1-2.3-1.7-3.4-1.5-5.3-1.3L11.1 9.7C8.7 9.9 8.8 11.3 8.8 17.6zm66.5 3.6c.4 1.7 0 3.4-1.7 3.6l-2.7.5v40.3c-2.4 1.3-4.6 2-6.4 2-3 0-3.8-.9-6.1-3.6L40.1 38.4v25.4l5.7 1.3s0 3.4-4.7 3.4L28 68.9c-.4-1-.1-3.4 1.5-3.8l3.9-1.1V29l-5.4-.4c-.4-1.7.6-4.1 3.2-4.3l13.6-.9 19.7 30.2V25.8L60 24.9c-.4-2.1 1.2-3.6 3.2-3.8z" fill="#37352f"/></svg> },
-                { name: "OneDrive", desc: "Planillas Excel y archivos Microsoft 365", logo: <svg width="26" height="20" viewBox="0 0 24 18" xmlns="http://www.w3.org/2000/svg"><path d="M10.6 3.8A6 6 0 0 1 21 8.5l.1.5A4 4 0 0 1 20 17H5a4 4 0 0 1-.5-8A6 6 0 0 1 10.6 3.8z" fill="#0078D4"/><path d="M6.5 8.3A5 5 0 0 1 15 5.5a6 6 0 0 0-4.4 2.3A4 4 0 0 0 5 13.5a4 4 0 0 1 1.5-5.2z" fill="#28A8E0"/></svg> },
+                {
+                  name: "Google Drive",
+                  desc: "Reportes anteriores y documentos históricos",
+                  logo: <svg width="28" height="28" viewBox="0 0 87.3 78" xmlns="http://www.w3.org/2000/svg"><path d="m6.6 66.85 3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8h-27.5c0 1.55.4 3.1 1.2 4.5z" fill="#0066da"/><path d="m43.65 25-13.75-23.8c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44a9.06 9.06 0 0 0 -1.2 4.5h27.5z" fill="#00ac47"/><path d="m73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5h-27.502l5.852 11.5z" fill="#ea4335"/><path d="m43.65 25 13.75-23.8c-1.35-.8-2.9-1.2-4.5-1.2h-18.5c-1.6 0-3.15.45-4.5 1.2z" fill="#00832d"/><path d="m59.8 53h-32.3l-13.75 23.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z" fill="#2684fc"/><path d="m73.4 26.5-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3l-13.75 23.8 16.15 28h27.45c0-1.55-.4-3.1-1.2-4.5z" fill="#ffba00"/></svg>,
+                  bg: "#fff",
+                },
+                {
+                  name: "Notion",
+                  desc: "Notas, acuerdos y bases de conocimiento",
+                  logo: <svg width="24" height="24" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M6 7.3C8.1 9 9 9.2 12.9 8.9l67-4c.8 0 .1-.8-.2-1L68.4.5C67.1-.4 65.3-.1 63.7 0L8.9 4.3C6.9 4.5 6.5 5.5 6 7.3zm2.8 10.3v67.5c0 3.7 1.8 5 6 4.8l73.5-4.3c4.2-.2 4.7-2.8 4.7-5.8V12.8c0-3-.1-4.4-2.3-6.1-2.3-1.7-3.4-1.5-5.3-1.3L11.1 9.7C8.7 9.9 8.8 11.3 8.8 17.6zm66.5 3.6c.4 1.7 0 3.4-1.7 3.6l-2.7.5v40.3c-2.4 1.3-4.6 2-6.4 2-3 0-3.8-.9-6.1-3.6L40.1 38.4v25.4l5.7 1.3s0 3.4-4.7 3.4L28 68.9c-.4-1-.1-3.4 1.5-3.8l3.9-1.1V29l-5.4-.4c-.4-1.7.6-4.1 3.2-4.3l13.6-.9 19.7 30.2V25.8L60 24.9c-.4-2.1 1.2-3.6 3.2-3.8z" fill="#37352f"/></svg>,
+                  bg: "#fff",
+                },
+                {
+                  name: "OneDrive",
+                  desc: "Planillas Excel y archivos Microsoft 365",
+                  logo: <svg width="28" height="22" viewBox="0 0 24 18" xmlns="http://www.w3.org/2000/svg"><path d="M10.6 3.8A6 6 0 0 1 21 8.5l.1.5A4 4 0 0 1 20 17H5a4 4 0 0 1-.5-8A6 6 0 0 1 10.6 3.8z" fill="#0078D4"/><path d="M6.5 8.3A5 5 0 0 1 15 5.5a6 6 0 0 0-4.4 2.3A4 4 0 0 0 5 13.5a4 4 0 0 1 1.5-5.2z" fill="#28A8E0"/></svg>,
+                  bg: "#fff",
+                },
               ].map((app, i) => (
                 <div key={i} style={{ width: "100%", background: "#fff", borderRadius: "var(--r-sm)", padding: "12px 14px", boxShadow: "var(--sh)", display: "flex", alignItems: "center", gap: 12 }}>
-                  <div style={{ width: 44, height: 44, borderRadius: 10, background: "#fff", border: "1px solid var(--line)", display: "grid", placeItems: "center", flexShrink: 0, boxShadow: "var(--sh-sm)" }}>
+                  <div style={{ width: 42, height: 42, borderRadius: 10, background: app.bg, border: "1px solid var(--line)", display: "grid", placeItems: "center", flexShrink: 0, boxShadow: "var(--sh-sm)" }}>
                     {app.logo}
                   </div>
                   <div>
@@ -1218,7 +1243,7 @@ function VariantChecklist({ onFinish }) {
       <div className="row" style={{ gap: 14, marginBottom: 6 }}>
         <div className="brand-mark" style={{ width: 46, height: 46, borderRadius: 14 }}><Icon name="mic" size={24} /></div>
         <div>
-          <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-.02em", margin: 0 }}>Bienvenida a , Fundación Raíces 👋</h2>
+          <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-.02em", margin: 0 }}>Bienvenida a Voz, Fundación Raíces 👋</h2>
           <p style={{ margin: "2px 0 0", color: "var(--muted)", fontSize: 14.5 }}>Tres pasos para empezar a escuchar a tu comunidad.</p>
         </div>
       </div>
@@ -1271,7 +1296,7 @@ function VariantTour({ onFinish }) {
   const [i, setI] = oUse(0);
   const marks = [
     { t: "Esto es una voz real, ya transcrita", d: "Cada nota de voz que llega de WhatsApp aparece aquí en texto, con el nombre de quien la dijo. Nada se pierde.", pos: { top: 64, left: 24 }, tone: "warm" },
-    { t: "La IA propone, tú decides", d: "Eco agrupa los testimonios y sugiere un borrador. Pero verás siempre las palabras originales al lado — y editas lo que quieras.", pos: { top: 188, left: 24 }, tone: "blue" },
+    { t: "La IA propone, tú decides", d: "Voz agrupa los testimonios y sugiere un borrador. Pero verás siempre las palabras originales al lado — y editas lo que quieras.", pos: { top: 188, left: 24 }, tone: "blue" },
     { t: "Tú apruebas antes de compartir", d: "Ningún informe sale sin tu visto bueno. Así el reporte sigue sonando como tu organización, no como un robot.", pos: { top: 312, left: 24 }, tone: "blue" },
   ];
   const m = marks[i];
@@ -1305,7 +1330,7 @@ function VariantTour({ onFinish }) {
               );
             })}
             <div style={{ outline: i === 2 ? "2px solid var(--blue)" : "none", outlineOffset: 6, borderRadius: 12 }}>
-              <AINote><b>Borrador sugerido por Eco.</b> 2 secciones a partir de estas 3 voces. <u>Tú lo revisas antes de compartir.</u></AINote>
+              <AINote><b>Borrador sugerido por Voz.</b> 2 secciones a partir de estas 3 voces. <u>Tú lo revisas antes de compartir.</u></AINote>
             </div>
           </div>
         </div>
@@ -1946,7 +1971,7 @@ function Share({ blocks, metrics, onClose }) {
       <div className="col" style={{ gap: 16, position: "sticky", top: 90 }}>
         <div className="card card-pad">
           <div className="row" style={{ gap: 10, marginBottom: 12 }}><span style={{ color: "var(--warm)" }}><Icon name="shield" size={20} /></span><span style={{ fontWeight: 800, fontSize: 16 }}>El último paso es tuyo</span></div>
-          <p style={{ fontSize: 13.5, color: "var(--ink-soft)", lineHeight: 1.55, margin: "0 0 14px" }}>Revisa que el informe suene como tu organización. Eco no comparte nada hasta que tú lo apruebes.</p>
+          <p style={{ fontSize: 13.5, color: "var(--ink-soft)", lineHeight: 1.55, margin: "0 0 14px" }}>Revisa que el informe suene como tu organización. Voz no comparte nada hasta que tú lo apruebes.</p>
           <label className="row" style={{ gap: 11, padding: 12, borderRadius: "var(--r-sm)", background: approved ? "var(--green-tint)" : "var(--surface-2)", border: "1px solid " + (approved ? "var(--green)" : "var(--line)"), cursor: "pointer", transition: "all .15s" }}>
             <Switch on={approved} warm onClick={() => setApproved(a => !a)} />
             <span style={{ fontSize: 13.5, fontWeight: 700, color: approved ? "var(--green-deep)" : "var(--ink)" }}>{approved ? "Revisado y aprobado por mí" : "Confirmo que lo revisé"}</span>
@@ -2096,88 +2121,23 @@ function ProgBars({ data, mult }) {
   );
 }
 
-function Trend({ data, mult, project }) {
-  const [hovered, setHovered] = React.useState(null);
-  const max = Math.max(...data.map(d => d.v)) * 1.15;
-  const W = 600, H = 140, PAD = { t: 12, b: 28, l: 8, r: 8 };
-  const iW = W - PAD.l - PAD.r;
-  const iH = H - PAD.t - PAD.b;
-  const n = data.length;
-
-  const px = i => PAD.l + (i / (n - 1)) * iW;
-  const py = v => PAD.t + iH - (v / max) * iH;
-
-  // Polyline points
-  const pts = data.map((d, i) => `${px(i)},${py(d.v)}`).join(" ");
-  // Area path
-  const area = `M${px(0)},${py(data[0].v)} ` +
-    data.map((d, i) => `L${px(i)},${py(d.v)}`).join(" ") +
-    ` L${px(n-1)},${PAD.t + iH} L${px(0)},${PAD.t + iH} Z`;
-
-  const pct = data.length > 1
-    ? Math.round(((data[n-1].v - data[0].v) / data[0].v) * 100)
-    : 0;
-
+function Trend({ data, mult }) {
+  const max = Math.max(...data.map(d => d.v));
   return (
-    <div style={{ position: "relative" }}>
-      {/* Badge de crecimiento */}
-      <div style={{ position: "absolute", top: 0, right: 0, display: "flex", alignItems: "center", gap: 5 }}>
-        <span style={{ fontSize: 11, fontWeight: 700, padding: "3px 8px", borderRadius: 999,
-          background: pct >= 0 ? "var(--blue-tint)" : "var(--red-tint)",
-          color: pct >= 0 ? "var(--blue-deep)" : "var(--red)" }}>
-          {pct >= 0 ? "↑" : "↓"} {Math.abs(pct)}% vs inicio
-        </span>
-      </div>
-
-      <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", height: H, overflow: "visible" }}>
-        <defs>
-          <linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="var(--blue)" stopOpacity="0.18" />
-            <stop offset="100%" stopColor="var(--blue)" stopOpacity="0.01" />
-          </linearGradient>
-        </defs>
-
-        {/* Grid lines */}
-        {[0.25, 0.5, 0.75, 1].map(f => (
-          <line key={f}
-            x1={PAD.l} y1={PAD.t + iH * (1 - f)}
-            x2={PAD.l + iW} y2={PAD.t + iH * (1 - f)}
-            stroke="var(--line)" strokeWidth="1" strokeDasharray="4 4" />
-        ))}
-
-        {/* Area fill */}
-        <path d={area} fill="url(#trendGrad)" />
-
-        {/* Line */}
-        <polyline points={pts} fill="none" stroke="var(--blue)" strokeWidth="2.5"
-          strokeLinejoin="round" strokeLinecap="round" />
-
-        {/* Points + hover zones */}
-        {data.map((d, i) => (
-          <g key={i} onMouseEnter={() => setHovered(i)} onMouseLeave={() => setHovered(null)}>
-            {/* Invisible hit area */}
-            <rect x={px(i) - (iW / n / 2)} y={PAD.t} width={iW / n} height={iH + PAD.b}
-              fill="transparent" style={{ cursor: "crosshair" }} />
-            {/* Dot */}
-            <circle cx={px(i)} cy={py(d.v)} r={hovered === i ? 5 : 3.5}
-              fill={hovered === i ? "var(--blue)" : "#fff"}
-              stroke="var(--blue)" strokeWidth="2"
-              style={{ transition: "r .12s" }} />
-            {/* X label */}
-            <text x={px(i)} y={H - 4} textAnchor="middle"
-              fontSize="11" fontWeight="600" fill="var(--muted)">{d.m}</text>
-            {/* Tooltip */}
-            {hovered === i && (
-              <g>
-                <rect x={px(i) - 36} y={py(d.v) - 30} width={72} height={22}
-                  rx="6" fill="var(--ink)" opacity=".92" />
-                <text x={px(i)} y={py(d.v) - 15} textAnchor="middle"
-                  fontSize="11.5" fontWeight="800" fill="#fff">{fmt(d.v * mult)}</text>
-              </g>
-            )}
-          </g>
-        ))}
-      </svg>
+    <div style={{ display: "flex", alignItems: "flex-end", gap: 10, height: 140, paddingBottom: 20 }}>
+      {data.map((d, i) => {
+        const last = i === data.length - 1;
+        const h = Math.round(d.v / max * 100);
+        return (
+          <div key={d.m} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 5, height: "100%" }}>
+            <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-end", width: "100%", alignItems: "center" }}>
+              {last && <div style={{ fontSize: 10.5, fontWeight: 800, color: "var(--warm-deep)", marginBottom: 4 }}>{fmt(d.v * mult)}</div>}
+              <div style={{ width: "100%", maxWidth: 32, height: `${h}%`, minHeight: 4, background: last ? "var(--warm)" : "var(--blue-tint2)", borderRadius: "6px 6px 2px 2px" }} />
+            </div>
+            <div style={{ fontSize: 11, color: "var(--muted)", fontWeight: 600 }}>{d.m}</div>
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -2245,40 +2205,11 @@ function Panel({ title, sub, children, foot }) {
 
 /* Datos por proyecto */
 const PROJECT_DATA = {
-  todos:    { label: "Todos",               impacted: 1240, voices: 142, events: 8, docs: 11 },
-  salud:    { label: "Salud Comunitaria",   impacted: 480,  voices: 48,  events: 3, docs: 4  },
-  ambiente: { label: "Medio Ambiente",      impacted: 340,  voices: 36,  events: 2, docs: 3  },
-  educacion:{ label: "Educación",           impacted: 260,  voices: 32,  events: 2, docs: 2  },
-  alimenta: { label: "Seg. Alimentaria",    impacted: 160,  voices: 26,  events: 1, docs: 2  },
-};
-
-/* Tendencia por proyecto y scope */
-const TREND_DATA = {
-  todos: {
-    mes:  [{ m:"Oct",v:520},{ m:"Nov",v:640},{ m:"Dic",v:710},{ m:"Ene",v:880},{ m:"Feb",v:1020},{ m:"Mar",v:1240}],
-    tri:  [{ m:"T2 2025",v:1640},{ m:"T3 2025",v:2180},{ m:"T4 2025",v:2890},{ m:"T1 2026",v:3340}],
-    anio: [{ m:"2023",v:3200},{ m:"2024",v:5800},{ m:"2026",v:8400}],
-  },
-  salud: {
-    mes:  [{ m:"Oct",v:200},{ m:"Nov",v:250},{ m:"Dic",v:280},{ m:"Ene",v:340},{ m:"Feb",v:400},{ m:"Mar",v:480}],
-    tri:  [{ m:"T2 2025",v:620},{ m:"T3 2025",v:810},{ m:"T4 2025",v:1060},{ m:"T1 2026",v:1296}],
-    anio: [{ m:"2023",v:1200},{ m:"2024",v:2100},{ m:"2026",v:3000}],
-  },
-  ambiente: {
-    mes:  [{ m:"Oct",v:140},{ m:"Nov",v:160},{ m:"Dic",v:175},{ m:"Ene",v:220},{ m:"Feb",v:285},{ m:"Mar",v:340}],
-    tri:  [{ m:"T2 2025",v:420},{ m:"T3 2025",v:570},{ m:"T4 2025",v:748},{ m:"T1 2026",v:918}],
-    anio: [{ m:"2023",v:800},{ m:"2024",v:1500},{ m:"2026",v:2200}],
-  },
-  educacion: {
-    mes:  [{ m:"Oct",v:100},{ m:"Nov",v:120},{ m:"Dic",v:130},{ m:"Ene",v:160},{ m:"Feb",v:210},{ m:"Mar",v:260}],
-    tri:  [{ m:"T2 2025",v:310},{ m:"T3 2025",v:420},{ m:"T4 2025",v:560},{ m:"T1 2026",v:702}],
-    anio: [{ m:"2023",v:600},{ m:"2024",v:1100},{ m:"2026",v:1700}],
-  },
-  alimenta: {
-    mes:  [{ m:"Oct",v:80},{ m:"Nov",v:110},{ m:"Dic",v:125},{ m:"Ene",v:140},{ m:"Feb",v:150},{ m:"Mar",v:160}],
-    tri:  [{ m:"T2 2025",v:290},{ m:"T3 2025",v:380},{ m:"T4 2025",v:520},{ m:"T1 2026",v:432}],
-    anio: [{ m:"2023",v:600},{ m:"2024",v:1100},{ m:"2026",v:1600}],
-  },
+  todos:    { label: "Todos",                    impacted: 1240, voices: 142, events: 8, docs: 11 },
+  aulas:    { label: "Aulas Conectadas",         impacted: 480,  voices: 48,  events: 3, docs: 4  },
+  tutorias: { label: "Tutorías Solidarias",      impacted: 340,  voices: 36,  events: 2, docs: 3  },
+  formacion:{ label: "Formación Docente",        impacted: 260,  voices: 32,  events: 2, docs: 2  },
+  becas:    { label: "Becas Futuro",             impacted: 160,  voices: 26,  events: 1, docs: 2  },
 };
 
 function Analytics({ setPage, onNew, copy }) {
@@ -2359,16 +2290,9 @@ function Analytics({ setPage, onNew, copy }) {
       {/* ── Fila central: tendencia + programas ── */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 300px", gap: 16, marginBottom: 16 }}>
         <div style={CARD_STYLE}>
-          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 3 }}>
-            <div style={{ fontWeight: 700, fontSize: 14.5 }}>Personas alcanzadas</div>
-            <div style={{ fontSize: 22, fontWeight: 900, letterSpacing: "-.03em", color: "var(--blue)" }}>
-              {fmt(pd.impacted * mult)}
-            </div>
-          </div>
-          <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 14 }}>
-            {sc.label} · {pd.label}
-          </div>
-          <Trend data={TREND_DATA[project][scope]} mult={mult} project={project} />
+          <div style={{ fontWeight: 700, fontSize: 14.5, marginBottom: 3 }}>Personas alcanzadas</div>
+          <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 16 }}>Últimos 6 meses · {pd.label}</div>
+          <Trend data={a.trend} mult={mult} />
         </div>
         <div style={CARD_STYLE}>
           <div style={{ fontWeight: 700, fontSize: 14.5, marginBottom: 3 }}>Por programa</div>
@@ -2522,7 +2446,7 @@ function Importar({ onGenerate, goDatos }) {
   return (
     <div className="page float-in" style={{ maxWidth: 920 }}>
       <h2 style={{ fontSize: 25, fontWeight: 800, letterSpacing: "-.025em", margin: 0 }}>Importar documentos</h2>
-      <p style={{ color: "var(--ink-soft)", fontSize: 15, margin: "5px 0 0", lineHeight: 1.55, maxWidth: 620 }}>Sube actas, listas de asistencia o encuestas en <b>PDF, Excel o Word</b>. Voz los lee, extrae los datos y prepara un borrador de informe — que <b>tú revisas</b> antes de compartir.</p>
+      <p style={{ color: "var(--ink-soft)", fontSize: 15, margin: "5px 0 0", lineHeight: 1.55, maxWidth: 620 }}>Sube actas, listas de asistencia o encuestas en <b>PDF, Excel o Word</b>. Eco los lee, extrae los datos y prepara un borrador de informe — que <b>tú revisas</b> antes de compartir.</p>
 
       {/* dropzone */}
       <div
@@ -2553,7 +2477,7 @@ function Importar({ onGenerate, goDatos }) {
 
       {/* resumen + generar */}
       <div className="card" style={{ marginTop: 20, padding: 0, overflow: "hidden", border: "1px solid var(--blue-tint2)" }}>
-        <div style={{ padding: 20, background: "linear-gradient(165deg, var(--blue-tint), var(--green-tint))" }}>
+        <div style={{ padding: 20, background: "linear-gradient(165deg, var(--blue-tint), var(--blue-tint2))" }}>
           <div className="row" style={{ gap: 11, marginBottom: 10 }}>
             <span style={{ color: "var(--blue)" }}><Icon name="spark" size={22} /></span>
             <span style={{ fontWeight: 800, fontSize: 17 }}>Voz leyó {done.length} documento{done.length !== 1 ? "s" : ""}</span>
@@ -2583,6 +2507,7 @@ const aUse = useState;
 /* ---------------- Sidebar ---------------- */
 function Sidebar({ page, setPage, open, onNavigate }) {
   const go = (id) => { setPage(id); onNavigate?.(); };
+  const [collapsed, setCollapsed] = aUse(false);
   const mainNav = [
     { id: "inicio", icon: "home", label: "Inicio" },
     { id: "convos", icon: "chat", label: "Mensajes", badge: "5" },
@@ -2590,59 +2515,68 @@ function Sidebar({ page, setPage, open, onNavigate }) {
   ];
   const orgNav = [
     { id: "equipo", icon: "users", label: "Equipo" },
-
+    { id: "autom", icon: "wand", label: "Automatizaciones" },
   ];
 
+  const w = collapsed ? 64 : 220;
+
   return (
-    <aside className={"sidebar" + (open ? " open" : "")}>
-      {/* Logo */}
-      <div className="sidebar-logo">
-        <div className="sidebar-logo-icon">
-          <Icon name="mic" size={18} />
+    <aside className={"sidebar" + (open ? " open" : "")} style={{ width: w, transition: "width 0.22s cubic-bezier(.4,0,.2,1)", overflow: "hidden" }}>
+      {/* Logo + toggle */}
+      <div className="sidebar-logo" style={{ justifyContent: collapsed ? "center" : "flex-start", gap: collapsed ? 0 : 10 }}>
+        <div className="sidebar-logo-icon" style={{ flexShrink: 0 }}>
+          <Icon name="mic" size={17} />
         </div>
-        <span className="sidebar-logo-name">Eco</span>
+        {!collapsed && <span className="sidebar-logo-name" style={{ opacity: 1 }}>Eco</span>}
+        {!collapsed && <div style={{ flex: 1 }} />}
+        <button onClick={() => setCollapsed(c => !c)} style={{ border: "none", background: "none", cursor: "pointer", color: "var(--muted)", display: "flex", alignItems: "center", padding: 4, borderRadius: 6, flexShrink: 0 }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            {collapsed ? <path d="M9 18l6-6-6-6" /> : <path d="M15 18l-6-6 6-6" />}
+          </svg>
+        </button>
       </div>
 
       {/* Nav principal */}
       <nav className="nav-group" aria-label="Principal">
         {mainNav.map(n => (
-          <button
-            key={n.id}
-            type="button"
+          <button key={n.id} type="button"
             className={"nav-item-row" + (page === n.id ? " active" : "")}
             onClick={() => go(n.id)}
+            title={collapsed ? n.label : undefined}
             aria-current={page === n.id ? "page" : undefined}
+            style={{ justifyContent: collapsed ? "center" : "flex-start", padding: collapsed ? "10px" : "9px 10px" }}
           >
             <span className="nav-icon-wrap"><Icon name={n.icon} size={19} /></span>
-            <span className="nav-item-label">{n.label}</span>
-            {n.badge && <span className="nav-badge">{n.badge}</span>}
+            {!collapsed && <span className="nav-item-label" style={{ opacity: 1 }}>{n.label}</span>}
+            {!collapsed && n.badge && <span className="nav-badge">{n.badge}</span>}
           </button>
         ))}
       </nav>
 
-      {/* Nav organización */}
-      <div className="nav-group-label" style={{ padding: "14px 14px 4px" }}>Organización</div>
+      {!collapsed && <div className="nav-group-label" style={{ padding: "14px 14px 4px" }}>Organización</div>}
       <nav className="nav-group" aria-label="Organización">
         {orgNav.map(n => (
-          <button
-            key={n.id}
-            type="button"
+          <button key={n.id} type="button"
             className={"nav-item-row" + (page === n.id ? " active" : "")}
             onClick={() => go(n.id)}
+            title={collapsed ? n.label : undefined}
+            style={{ justifyContent: collapsed ? "center" : "flex-start", padding: collapsed ? "10px" : "9px 10px" }}
           >
             <span className="nav-icon-wrap"><Icon name={n.icon} size={19} /></span>
-            <span className="nav-item-label">{n.label}</span>
+            {!collapsed && <span className="nav-item-label" style={{ opacity: 1 }}>{n.label}</span>}
           </button>
         ))}
       </nav>
 
       <div className="nav-spacer" />
 
-      {/* Config */}
       <nav className="nav-group" aria-label="Sistema">
-        <button type="button" className="nav-item-row">
+        <button type="button" className="nav-item-row"
+          title={collapsed ? "Configuración" : undefined}
+          style={{ justifyContent: collapsed ? "center" : "flex-start", padding: collapsed ? "10px" : "9px 10px" }}
+        >
           <span className="nav-icon-wrap"><Icon name="gear" size={19} /></span>
-          <span className="nav-item-label">Configuración</span>
+          {!collapsed && <span className="nav-item-label" style={{ opacity: 1 }}>Configuración</span>}
         </button>
       </nav>
     </aside>
@@ -2908,7 +2842,7 @@ function Automatizaciones() {
   return (
     <div className="page float-in" style={{ maxWidth: 800 }}>
       <h2 style={{ fontSize: 24, fontWeight: 800, letterSpacing: "-.02em", margin: 0 }}>Automatizaciones</h2>
-      <p style={{ color: "var(--ink-soft)", fontSize: 15, margin: "6px 0 0", lineHeight: 1.55, maxWidth: 620 }}>Eco puede ayudarte con el trabajo repetitivo. Pero todo lo que tenga que ver con <b>hablar por tu organización</b> queda apagado — y bajo tu control.</p>
+      <p style={{ color: "var(--ink-soft)", fontSize: 15, margin: "6px 0 0", lineHeight: 1.55, maxWidth: 620 }}>Voz puede ayudarte con el trabajo repetitivo. Pero todo lo que tenga que ver con <b>hablar por tu organización</b> queda apagado — y bajo tu control.</p>
 
       <div className="card" style={{ marginTop: 22, overflow: "hidden" }}>
         {items.map((it, i) => (
@@ -2923,6 +2857,7 @@ function Automatizaciones() {
         ))}
       </div>
 
+      {/* la línea roja: responder por WhatsApp */}
       
     </div>
   );
@@ -2954,7 +2889,7 @@ function Equipo() {
 /* ---------------- Root ---------------- */
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "accent": "#3f6fb3",
-  "warm": "#c97a4e",
+  "warm": "#0EA5E9",
   "density": "regular",
   "tone": "calido",
   "showOnboarding": true
@@ -2994,8 +2929,8 @@ function App({ activeProject, setActiveProject }) {
   const panel = (
     <TweaksPanel>
       <TweakSection label="Color" />
-      <TweakColor label="Azul confianza" value={t.accent} options={["#3f6fb3", "#2f6e8f", "#4a5fb0", "#2f7d6b"]} onChange={v => setTweak("accent", v)} />
-      <TweakColor label="Acento cálido (voces)" value={t.warm} options={["#c97a4e", "#cc6a52", "#c98a3a", "#b56a8a"]} onChange={v => setTweak("warm", v)} />
+      <TweakColor label="Azul confianza" value={t.accent} options={["#3f6fb3", "#2f6e8f", "#4a5fb0", "#1a7fc1"]} onChange={v => setTweak("accent", v)} />
+      <TweakColor label="Acento cálido (voces)" value={t.warm} options={["#0EA5E9", "#38BDF8", "#0284C7", "#06B6D4"]} onChange={v => setTweak("warm", v)} />
       <TweakSection label="Interfaz" />
       <TweakRadio label="Densidad" value={t.density} options={["compact", "regular", "comfy"]} onChange={v => setTweak("density", v)} />
       <TweakRadio label="Tono de la copy" value={t.tone} options={["calido", "directo"]} onChange={v => setTweak("tone", v)} />
@@ -3022,18 +2957,18 @@ function App({ activeProject, setActiveProject }) {
             <Icon name="menu" size={20} />
           </button>
           <div className="mobile-brand"><Icon name="mic" size={18} /></div>
-          <span className="mobile-bar-title">Eco</span>
+          <span className="mobile-bar-title">Voz</span>
         </div>
         {flow
           ? <ReportFlow onClose={() => setFlow(false)} tone={t} />
           : <>
-              {page === "inicio" && <Inicio onNew={() => setFlow(true)} setPage={setPage} copy={copy} />}
-              {page === "convos" && <div style={{ height: "100vh", overflow: "hidden" }}><Convos onNew={() => setFlow(true)} /></div>}
-              {page === "informes" && <Informes onNew={() => setFlow(true)} />}
-              {page === "datos" && <Analytics activeProject={activeProject} setActiveProject={setActiveProject} setPage={setPage} onNew={() => setFlow(true)} copy={copy} />}
-              {page === "autom" && <Automatizaciones />}
-              {page === "equipo" && <Equipo />}
-            </>}
+            {page === "inicio" && <Inicio onNew={() => setFlow(true)} setPage={setPage} copy={copy} />}
+            {page === "convos" && <div style={{ height: "100vh", overflow: "hidden" }}><Convos onNew={() => setFlow(true)} /></div>}
+            {page === "informes" && <Informes onNew={() => setFlow(true)} />}
+            {page === "datos" && <Analytics activeProject={activeProject} setActiveProject={setActiveProject} setPage={setPage} onNew={() => setFlow(true)} copy={copy} />}
+            {page === "autom" && <Automatizaciones />}
+            {page === "equipo" && <Equipo />}
+          </>}
       </div>
       {panel}
     </div>
