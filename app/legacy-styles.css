@@ -34,13 +34,13 @@
   --warm-tint2: #E0F2FE;
 
   /* Estados */
-  --green:      #10B981;
-  --green-deep: #059669;
-  --green-tint: #ECFDF5;
+  --green:      #0EA5E9;
+  --green-deep: #0284C7;
+  --green-tint: #E0F2FE;
   --red:        #EF4444;
   --red-tint:   #FEF2F2;
-  --amber:      #F59E0B;
-  --amber-tint: #FFFBEB;
+  --amber:      #38BDF8;
+  --amber-tint: #F0F9FF;
 
   /* Oscuro */
   --dark:       #0F172A;
@@ -75,7 +75,7 @@ body {
   text-rendering: optimizeLegibility;
 }
 button { font-family: inherit; cursor: pointer; }
-::selection { background: var(--green-tint); color: var(--green-deep); }
+::selection { background: var(--blue-tint); color: var(--blue-deep); }
 
 /* ---- App shell ---------------------------------------------------- */
 .app {
@@ -86,17 +86,17 @@ button { font-family: inherit; cursor: pointer; }
   background: var(--paper);
 }
 
-/* ---- Sidebar siempre expandido ----------------------------------- */
+/* ---- Sidebar ----------------------------------- */
 .sidebar {
   display: flex;
   flex-direction: column;
-  width: 220px;
   min-height: 100vh;
   background: var(--surface);
   border-right: 1px solid var(--line);
   padding: 0;
   gap: 0;
   flex: none;
+  overflow: hidden;
 }
 
 .sidebar-logo {
@@ -201,7 +201,7 @@ button { font-family: inherit; cursor: pointer; }
 /* legacy badge chip */
 .badge {
   margin-left: auto; font-size: 11px; font-weight: 700;
-  background: var(--green-tint); color: var(--green-deep);
+  background: var(--blue-tint); color: var(--blue-deep);
   padding: 1px 8px; border-radius: 999px;
 }
 
@@ -271,7 +271,7 @@ button { font-family: inherit; cursor: pointer; }
 /* ---- AI banner ---------------------------------------------------- */
 .ai-note {
   display: flex; align-items: flex-start; gap: 11px;
-  background: linear-gradient(180deg, var(--blue-tint), var(--green-tint));
+  background: linear-gradient(180deg, var(--blue-tint), var(--blue-tint2));
   border: 1px solid var(--blue-tint2);
   border-radius: var(--r); padding: 13px 15px;
   font-size: 13.5px; color: var(--blue-ink); line-height: 1.5;
@@ -473,15 +473,15 @@ button { font-family: inherit; cursor: pointer; }
 .bento-wide { grid-area: wide; min-width: 0; }
 .bento-accent { grid-area: accent; }
 .bento-voices { grid-area: voices; min-width: 0; }
-.bento-cta { grid-area: cta; background: linear-gradient(165deg, var(--blue-tint), var(--green-tint)); border-color: var(--blue-tint2); }
+.bento-cta { grid-area: cta; background: linear-gradient(165deg, var(--blue-tint), var(--blue-tint2)); border-color: var(--blue-tint2); }
 
 /* Hero card — estilo tarjeta destacada */
 .bento-hero {
   padding: 20px;
-  background: linear-gradient(145deg, var(--blue-deep) 0%, var(--blue) 55%, #6B8875 100%);
+  background: linear-gradient(145deg, var(--blue-deep) 0%, var(--blue) 55%, #1a8fc1 100%);
   color: #fff;
   border: none;
-  box-shadow: 0 8px 24px -8px rgba(74, 99, 82, .45);
+  box-shadow: 0 8px 24px -8px rgba(37, 99, 235, .40);
   display: flex;
   flex-direction: column;
   justify-content: space-between;

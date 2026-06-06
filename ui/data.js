@@ -6,7 +6,7 @@ window.DATA = (function () {
     maria:   { id: "maria",   name: "María Elena Quispe",   role: "Vecina · Programa de salud", color: "#2563EB", initials: "MQ" },
     roberto: { id: "roberto", name: "Don Roberto Mamani",   role: "Dirigente comunal",          color: "#7C3AED", initials: "RM" },
     luz:     { id: "luz",     name: "Luz Carrasco",          role: "Madre · Comedor popular",    color: "#0891B2", initials: "LC" },
-    jowel:   { id: "jowel",   name: "Jowel Andrade",         role: "Joven · Taller ambiental",   color: "#059669", initials: "JA" },
+    jowel:   { id: "jowel",   name: "Jowel Andrade",         role: "Joven · Taller ambiental",   color: "#0369A1", initials: "JA" },
     // Equipo / voluntariado
     carlosH: { id: "carlosH", name: "Carlos Huamán",         role: "Voluntario · Equipo de campo", color: "#1D4ED8", initials: "CH", team: true },
     anaR:    { id: "anaR",    name: "Ana Rivas",             role: "Coordinadora de jornada",      color: "#0369A1", initials: "AR", team: true },
@@ -16,25 +16,25 @@ window.DATA = (function () {
   const conversations = [
     {
       id: "equipo", name: "Equipo de campo · Voluntariado", kind: "Grupo", role: "team",
-      members: 8, color: "#5D7A66", initials: "EC",
+      members: 8, color: "#1D4ED8", initials: "EC",
       lastAt: "hace 30 min", unread: 2, voiceNotes: 6,
       summary: "Reportes de los voluntarios: qué se hizo, qué se desplegó y qué quedó pendiente.",
     },
     {
       id: "salud", name: "Salud Comunitaria — Villa El Sol", kind: "Grupo", role: "community",
-      members: 14, color: "#6B8875", initials: "SC",
+      members: 14, color: "#2563EB", initials: "SC",
       lastAt: "hace 12 min", unread: 3, voiceNotes: 8,
       summary: "Testimonios sobre la nueva posta médica y acceso a medicinas.",
     },
     {
       id: "ambiente", name: "Jóvenes por el río", kind: "Grupo", role: "community",
-      members: 21, color: "#4A6352", initials: "JR",
+      members: 21, color: "#0369A1", initials: "JR",
       lastAt: "ayer", unread: 0, voiceNotes: 11,
       summary: "Jornada de limpieza y voces sobre la contaminación del río.",
     },
     {
       id: "roberto", name: "Don Roberto Mamani", kind: "Directo", role: "community",
-      members: 1, color: "#7A9480", initials: "RM",
+      members: 1, color: "#7C3AED", initials: "RM",
       lastAt: "hace 3 h", unread: 1, voiceNotes: 2,
       summary: "Seguimiento al acuerdo con el municipio.",
     },
@@ -77,7 +77,7 @@ window.DATA = (function () {
   const reports = [
     { id: "r1", title: "Impacto de la posta médica — Marzo 2026", program: "Salud Comunitaria", status: "Borrador en revisión", voices: 8, updated: "hoy", color: "#2563EB", impact: 120, impactLabel: "personas impactadas" },
     { id: "r2", title: "Resultados jornada de limpieza del río", program: "Medio Ambiente", status: "Aprobado", voices: 11, updated: "hace 4 días", color: "#0EA5E9", impact: 340, impactLabel: "kg de residuos retirados" },
-    { id: "r3", title: "Comedor Las Manitos — Reporte trimestral", program: "Seguridad alimentaria", status: "Aprobado", voices: 6, updated: "hace 2 sem", color: "#059669", impact: 85, impactLabel: "familias atendidas" },
+    { id: "r3", title: "Comedor Las Manitos — Reporte trimestral", program: "Seguridad alimentaria", status: "Aprobado", voices: 6, updated: "hace 2 sem", color: "#0369A1", impact: 85, impactLabel: "familias atendidas" },
   ];
 
   // Bloques que la IA propone — mezcla testimonios de comunidad + reportes del equipo
@@ -146,7 +146,7 @@ window.DATA = (function () {
       { name: "Salud comunitaria", value: 480, color: "#2563EB" },
       { name: "Medio ambiente", value: 340, color: "#0EA5E9" },
       { name: "Educación", value: 260, color: "#7C3AED" },
-      { name: "Seguridad alimentaria", value: 160, color: "#059669" },
+      { name: "Seguridad alimentaria", value: 160, color: "#0369A1" },
     ],
     trend: [
       { m: "Oct", v: 520 }, { m: "Nov", v: 640 }, { m: "Dic", v: 710 },
@@ -165,7 +165,7 @@ window.DATA = (function () {
   const projects = [
     { id: "salud",     label: "Salud Comunitaria",    color: "#2563EB", count: 4 },
     { id: "ambiente",  label: "Medio Ambiente",        color: "#0EA5E9", count: 3 },
-    { id: "alimenta",  label: "Seguridad Alimentaria", color: "#059669", count: 2 },
+    { id: "alimenta",  label: "Seguridad Alimentaria", color: "#0369A1", count: 2 },
     { id: "educacion", label: "Educación",             color: "#7C3AED", count: 1 },
   ];
 

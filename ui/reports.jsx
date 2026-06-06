@@ -2,7 +2,7 @@
 const { useState: rUse, useEffect: rEff } = React;
 
 /* ---- Gráficos SVG simples ---- */
-function BarChart({ data, color = "#5D7A66", h = 72 }) {
+function BarChart({ data, color = "#2563EB", h = 72 }) {
   const max = Math.max(...data.map(d => d.value), 1);
   const w = 100 / data.length;
   return (
@@ -180,7 +180,7 @@ function Drafting({ done }) {
       <div style={{ width: 76, height: 76, borderRadius: 22, background: "var(--blue-tint)", display: "grid", placeItems: "center", margin: "0 auto 22px", color: "var(--blue)" }}>
         <Icon name="spark" size={38} />
       </div>
-      <h2 style={{ fontSize: 22, fontWeight: 800, letterSpacing: "-.02em", margin: "0 0 22px" }}>Voz está preparando un borrador…</h2>
+      <h2 style={{ fontSize: 22, fontWeight: 800, letterSpacing: "-.02em", margin: "0 0 22px" }}>Eco está preparando un borrador…</h2>
       <div className="col" style={{ gap: 10, textAlign: "left" }}>
         {phases.map((p, i) => (
           <div key={i} className="row" style={{ gap: 12, opacity: i <= phase ? 1 : .4, transition: "opacity .3s" }}>
@@ -631,7 +631,7 @@ function ReportFlow({ onClose, tone }) {
           <div className="row" style={{ marginTop: 30, paddingTop: 20, borderTop: "1px solid var(--line)", gap: 12 }}>
             {step > 0 && <button className="btn btn-ghost" onClick={() => setStep(s => s === 2 ? 0 : s - 1)}><Icon name="back" size={16} /> Atrás</button>}
             <div className="grow" />
-            {step === 0 && <button className="btn btn-primary btn-lg" disabled={!canNext} onClick={() => setStep(1)}>Preparar borrador con Voz <Icon name="spark" size={16} /></button>}
+            {step === 0 && <button className="btn btn-primary btn-lg" disabled={!canNext} onClick={() => setStep(1)}>Preparar borrador con Eco <Icon name="spark" size={16} /></button>}
             {step === 2 && <button className="btn btn-primary btn-lg" onClick={() => setStep(3)}>Revisar versión final <Icon name="arrow" size={16} /></button>}
             {step === 3 && <button className="btn btn-ghost" onClick={onClose}>Guardar y cerrar</button>}
           </div>

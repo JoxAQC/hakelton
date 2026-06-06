@@ -166,7 +166,7 @@ export default function ChatSidebar({ isOpen, onClose, activeProject, setActiveP
             <Sparkles size={18} color="#ffffff" />
           </div>
           <div className="logo-text">
-            <h1 style={{ color: '#fff', fontSize: '16px' }}>Asistente Voz</h1>
+            <h1 style={{ color: '#fff', fontSize: '16px' }}>Eco</h1>
             <span style={{ color: 'rgba(255,255,255,.7)', fontSize: '12px' }}>Pregúntame lo que necesites</span>
           </div>
         </div>
@@ -185,7 +185,7 @@ export default function ChatSidebar({ isOpen, onClose, activeProject, setActiveP
                 <div className="empty-icon">
                   <Bot size={32} />
                 </div>
-                <h3>¡Hola! Soy tu asistente</h3>
+                <h3>Hola, soy Eco</h3>
                 <p>
                   Puedo ayudarte a encontrar voces, entender tus datos de impacto o preparar información para tus informes.
                 </p>

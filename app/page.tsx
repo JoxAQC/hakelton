@@ -22,7 +22,7 @@ export default function Home() {
           position: "fixed", bottom: "28px", right: "28px",
           backgroundColor: "#2563EB", color: "white", border: "none",
           borderRadius: "50%", width: "52px", height: "52px", padding: "0",
-          display: "flex", alignItems: "center", gap: "10px",
+          display: "flex", alignItems: "center", justifyContent: "center",
           cursor: "pointer",
           boxShadow: "0 4px 24px rgba(37,99,235,.40), 0 2px 8px rgba(0,0,0,.10)",
           zIndex: 9998, fontFamily: "inherit", fontSize: "14px", fontWeight: 700,
