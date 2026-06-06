@@ -124,6 +124,13 @@ erDiagram
     activities ||--o{ metric_values : "captura"
     documents ||--o{ embeddings : "genera"
     organizations ||--o{ reports : "produce"
+    category_metric_templates ||--o{ metrics_config : "plantilla_base"
+
+    category_metric_templates {
+        text category_id PK "salud|amb|edu|der"
+        text label
+        jsonb metrics_json "array de métricas predefinidas"
+    }
 
     organizations {
         uuid id PK

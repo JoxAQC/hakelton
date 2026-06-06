@@ -5,6 +5,7 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 /* --- data.js --- */
 /* Datos mock → DATA
    Dos tipos de voz: "testimonio" (comunidad) y "reporte" (equipo / voluntariado). */
+import { supabase } from "../lib/supabase/client";
 const DATA = (function () {
   const people = {
     // Comunidad
@@ -236,6 +237,28 @@ const DATA = (function () {
 
   return { people, conversations, transcript, teamReports, reports, draftBlocks, analytics, documents, projects, audioInbox };
 })();
+
+export async function loadSupabaseData() {
+  try {
+    const { data: org } = await supabase
+      .from("organizations")
+      .select("*, programs(*)")
+      .eq("name", "Fundación Raíces")
+      .single();
+
+    if (org && org.programs) {
+      DATA.orgCategory = org.category;
+      DATA.projects = org.programs.map((p, i) => ({
+        id: p.id,
+        label: p.name,
+        color: ["#6B8875", "#4A6352", "#7A9480", "#8B7355"][i % 4],
+        count: Math.floor(Math.random() * 5) + 1
+      }));
+    }
+  } catch (error) {
+    console.error("Error loading data from Supabase:", error);
+  }
+}
 
 /* --- tweaks-panel.jsx --- */
 // @ds-adherence-ignore -- omelette starter scaffold (raw elements/hex/px by design)
@@ -2875,4 +2898,4 @@ function App({ activeProject, setActiveProject }) {
 
 
 export default App;
-export { DATA };
+export { DATA, loadSupabaseData };

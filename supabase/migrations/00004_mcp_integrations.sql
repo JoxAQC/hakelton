@@ -12,4 +12,4 @@ CREATE TABLE mcp_integrations (
     UNIQUE (org_id, platform)
 );
 
-ALTER TABLE mcp_integrations ENABLE ROW LEVEL SECURITY;
+-- ALTER TABLE mcp_integrations ENABLE ROW LEVEL SECURITY;

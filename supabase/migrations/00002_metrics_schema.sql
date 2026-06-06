@@ -1,5 +1,12 @@
 -- Migration 00002: Metrics Configuration and Data Schema
 
+CREATE TABLE category_metric_templates (
+    category_id TEXT PRIMARY KEY,
+    label TEXT NOT NULL,
+    metrics_json JSONB NOT NULL DEFAULT '[]'::jsonb,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 CREATE TABLE metrics_config (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     program_id UUID REFERENCES programs(id) ON DELETE CASCADE,
@@ -21,5 +28,5 @@ CREATE TABLE metric_values (
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-ALTER TABLE metrics_config ENABLE ROW LEVEL SECURITY;
-ALTER TABLE metric_values ENABLE ROW LEVEL SECURITY;
+-- ALTER TABLE metrics_config ENABLE ROW LEVEL SECURITY;
+-- ALTER TABLE metric_values ENABLE ROW LEVEL SECURITY;

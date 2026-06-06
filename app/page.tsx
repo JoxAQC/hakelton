@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import LegacyApp from "./LegacyApp";
+import React, { useState, useEffect } from "react";
+import LegacyApp, { loadSupabaseData } from "./LegacyApp";
 import ChatSidebar from "./ChatSidebar";
 import "./legacy-styles.css";
 import { MessageCircle } from "lucide-react";
@@ -9,6 +9,15 @@ import { MessageCircle } from "lucide-react";
 export default function Home() {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [activeProject, setActiveProject] = useState(null);
+  const [dataLoaded, setDataLoaded] = useState(false);
+
+  useEffect(() => {
+    loadSupabaseData().then(() => setDataLoaded(true));
+  }, []);
+
+  if (!dataLoaded) {
+    return <div style={{ height: "100vh", display: "grid", placeItems: "center", color: "var(--muted)", fontFamily: "var(--sans)" }}>Cargando entorno Demo de Supabase...</div>;
+  }
 
   return (
     <>

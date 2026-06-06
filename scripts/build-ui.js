@@ -45,7 +45,7 @@ for (const file of files) {
   finalCode += `\n/* --- ${file} --- */\n` + content;
 }
 
-finalCode += `\nexport default App;\nexport { DATA };\n`;
+finalCode += `\nexport default App;\nexport { DATA, loadSupabaseData };\n`;
 
 // Replace window.DATA with module-level const (must run before window guards)
 finalCode = finalCode.replace(/window\.DATA\s*=\s*/g, 'const DATA = ');

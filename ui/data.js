@@ -1,5 +1,6 @@
 /* Datos mock → window.DATA
    Dos tipos de voz: "testimonio" (comunidad) y "reporte" (equipo / voluntariado). */
+import { supabase } from "../lib/supabase/client";
 window.DATA = (function () {
   const people = {
     // Comunidad
@@ -231,3 +232,25 @@ window.DATA = (function () {
 
   return { people, conversations, transcript, teamReports, reports, draftBlocks, analytics, documents, projects, audioInbox };
 })();
+
+export async function loadSupabaseData() {
+  try {
+    const { data: org } = await supabase
+      .from("organizations")
+      .select("*, programs(*)")
+      .eq("name", "Fundación Raíces")
+      .single();
+
+    if (org && org.programs) {
+      window.DATA.orgCategory = org.category;
+      window.DATA.projects = org.programs.map((p, i) => ({
+        id: p.id,
+        label: p.name,
+        color: ["#6B8875", "#4A6352", "#7A9480", "#8B7355"][i % 4],
+        count: Math.floor(Math.random() * 5) + 1
+      }));
+    }
+  } catch (error) {
+    console.error("Error loading data from Supabase:", error);
+  }
+}

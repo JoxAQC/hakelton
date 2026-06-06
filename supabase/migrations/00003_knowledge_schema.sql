@@ -49,9 +49,9 @@ CREATE TABLE reports (
 );
 
 -- Row Level Security
-ALTER TABLE documents ENABLE ROW LEVEL SECURITY;
-ALTER TABLE embeddings ENABLE ROW LEVEL SECURITY;
-ALTER TABLE reports ENABLE ROW LEVEL SECURITY;
+-- ALTER TABLE documents ENABLE ROW LEVEL SECURITY;
+-- ALTER TABLE embeddings ENABLE ROW LEVEL SECURITY;
+-- ALTER TABLE reports ENABLE ROW LEVEL SECURITY;
 
 -- Política base sugerida en contexto (luego adaptar auth.jwt)
 -- CREATE POLICY "org_isolation" ON embeddings FOR ALL USING (org_id = auth.jwt() ->> 'org_id');

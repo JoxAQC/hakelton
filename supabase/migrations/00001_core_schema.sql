@@ -22,6 +22,9 @@ CREATE TABLE programs (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     org_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
     name TEXT NOT NULL,
+    description TEXT,
+    budget_usd NUMERIC,
+    impact_summary TEXT,
     status TEXT CHECK (status IN ('active', 'paused', 'completed')) DEFAULT 'active',
     start_date DATE,
     end_date DATE,
@@ -51,11 +54,11 @@ CREATE TABLE beneficiary_records (
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Row Level Security Setup para Arquitectura Multi-tenant
-ALTER TABLE organizations ENABLE ROW LEVEL SECURITY;
-ALTER TABLE users ENABLE ROW LEVEL SECURITY;
-ALTER TABLE programs ENABLE ROW LEVEL SECURITY;
-ALTER TABLE activities ENABLE ROW LEVEL SECURITY;
-ALTER TABLE beneficiary_records ENABLE ROW LEVEL SECURITY;
+-- Row Level Security Setup para Arquitectura Multi-tenant (Desactivado temporalmente)
+-- ALTER TABLE organizations ENABLE ROW LEVEL SECURITY;
+-- ALTER TABLE users ENABLE ROW LEVEL SECURITY;
+-- ALTER TABLE programs ENABLE ROW LEVEL SECURITY;
+-- ALTER TABLE activities ENABLE ROW LEVEL SECURITY;
+-- ALTER TABLE beneficiary_records ENABLE ROW LEVEL SECURITY;
 
 -- Nota: Las políticas RLS dependerán del auth.jwt() para que cada usuario vea sólo los datos de su org_id.

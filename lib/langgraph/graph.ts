@@ -1,7 +1,6 @@
 import { StateGraph, Annotation, START, END } from "@langchain/langgraph";
 import Groq from "groq-sdk";
-import fs from "fs";
-import path from "path";
+import { supabaseAdmin } from "../supabase/client";
 
 // 1. Define the ChatMessage interface
 export interface ChatMessage {
@@ -62,14 +61,35 @@ interface NGO {
 }
 
 // Simple keyword matching search in local JSON database
-function retrieveNgos(queryStr: string): NGO[] {
+// Fetch from Supabase
+async function retrieveNgos(queryStr: string): Promise<NGO[]> {
   try {
-    const jsonPath = path.join(process.cwd(), "data", "ngos.json");
-    if (!fs.existsSync(jsonPath)) {
-      console.warn("ngos.json not found at:", jsonPath);
+    const { data: orgs, error } = await supabaseAdmin
+      .from("organizations")
+      .select("*, programs(*)");
+
+    if (error) {
+      console.error("Error fetching organizations from Supabase:", error);
       return [];
     }
-    const data = JSON.parse(fs.readFileSync(jsonPath, "utf-8")) as NGO[];
+
+    const data: NGO[] = (orgs || []).map(org => ({
+      id: org.id,
+      name: org.name,
+      focus_area: org.category || "",
+      mission: org.description || "",
+      annual_budget_usd: org.settings?.annual_budget_usd || 0,
+      headquarters: org.settings?.headquarters || "",
+      contact_email: org.settings?.contact_email || "",
+      highlights: org.settings?.highlights || "",
+      projects: (org.programs || []).map((p: any) => ({
+        name: p.name,
+        description: p.description || "",
+        budget_usd: p.budget_usd || 0,
+        status: p.status,
+        impact: p.impact_summary || ""
+      }))
+    }));
     
     if (!queryStr || queryStr.trim() === "") {
       return data;
@@ -99,13 +119,13 @@ function retrieveNgos(queryStr: string): NGO[] {
       
       return { ngo, score };
     });
-    
+
     return scored
       .filter(item => item.score > 0)
       .sort((a, b) => b.score - a.score)
       .map(item => item.ngo);
   } catch (error) {
-    console.error("Error reading or parsing ngos.json:", error);
+    console.error("Error retrieving NGOs from Supabase:", error);
     return [];
   }
 }
@@ -182,7 +202,7 @@ async function routerNode(state: typeof AgentState.State) {
 // Node 2: Retrieve Node
 async function retrieveNode(state: typeof AgentState.State) {
   const query = state.query;
-  const matchedNgos = retrieveNgos(query);
+  const matchedNgos = await retrieveNgos(query);
   
   let contextStr = "";
   if (matchedNgos.length === 0) {
