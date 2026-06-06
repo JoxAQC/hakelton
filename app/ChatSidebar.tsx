@@ -62,7 +62,8 @@ export default function ChatSidebar({ isOpen, onClose, activeProject, setActiveP
       : updatedMessages;
 
     try {
-      const response = await fetch("/api/chat", {
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "";
+      const response = await fetch(`${backendUrl}/api/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
