@@ -232,45 +232,140 @@ function Share({ blocks, metrics, onClose }) {
   const hasEst = mInc.some(m => m.kind === "estimated");
   const totalVoices = new Set(included.flatMap(b => b.sources.map(s => s.who))).size;
 
+  // Separar bloques por tipo para las secciones del reporte visual
+  const testimBlocks = included.filter(b => b.kindTag === "testimonio");
+  const teamBlocks   = included.filter(b => b.kindTag === "reporte");
+  const otherBlocks  = included.filter(b => b.kindTag !== "testimonio" && b.kindTag !== "reporte");
+
+  // Colores del sistema
+  const BG = "var(--blue)";         // sage green — fondo principal
+  const CARD = "#ffffff";
+  const ACCENT = "var(--warm)";     // tierra cálida — acento
+
   return (
-    <div className="float-in" style={{ display: "grid", gridTemplateColumns: "1fr 360px", gap: 26, alignItems: "start" }}>
-      {/* vista previa del informe */}
-      <div className="card" style={{ padding: 0, overflow: "hidden" }}>
-        <div style={{ height: 8, background: "linear-gradient(90deg, var(--blue), var(--warm))" }} />
-        <div style={{ padding: "30px 34px" }}>
-          <div className="row" style={{ gap: 9, marginBottom: 14 }}>
-            <Chip tone="blue" dot>Salud Comunitaria</Chip>
-            <Chip>Marzo 2026</Chip>
+    <div className="float-in" style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: 26, alignItems: "start" }}>
+
+      {/* ══════════════ VISTA PREVIA — estilo reporte visual ══════════════ */}
+      <div style={{ borderRadius: "var(--r-lg)", overflow: "hidden", background: BG, boxShadow: "var(--sh-lg)" }}>
+
+        {/* ── Encabezado ── */}
+        <div style={{ padding: "28px 30px 24px", background: BG }}>
+          <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: ".1em", textTransform: "uppercase", color: "rgba(255,255,255,.6)", marginBottom: 6 }}>Informe de Impacto · Fundación Raíces</div>
+          <h1 style={{ fontSize: 32, fontWeight: 900, letterSpacing: "-.03em", color: "#fff", margin: "0 0 6px", lineHeight: 1.1, textTransform: "uppercase" }}>Impacto de la posta médica en Villa El Sol</h1>
+          <div style={{ display: "flex", gap: 10, alignItems: "center", marginTop: 10 }}>
+            <span style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,.7)", background: "rgba(255,255,255,.12)", padding: "3px 10px", borderRadius: 999 }}>Salud Comunitaria</span>
+            <span style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,.7)", background: "rgba(255,255,255,.12)", padding: "3px 10px", borderRadius: 999 }}>Marzo 2026</span>
           </div>
-          <h1 style={{ fontSize: 27, fontWeight: 800, letterSpacing: "-.025em", margin: "0 0 8px", lineHeight: 1.15 }}>Impacto de la posta médica en Villa El Sol</h1>
-          <p style={{ color: "var(--muted)", fontSize: 14, margin: "0 0 22px" }}>Basado en {totalVoices} testimonios recogidos por WhatsApp · Fundación Raíces</p>
-          {mInc.length > 0 && <div style={{ marginBottom: 24 }}>
-            <div style={{ display: "flex", flexWrap: "wrap", border: "1px solid var(--line)", borderRadius: "var(--r)", overflow: "hidden" }}>
-              {mInc.map((m, i) => (
-                <div key={m.id} style={{ flex: "1 1 110px", padding: "15px 18px", borderLeft: i ? "1px solid var(--line)" : "none", background: "var(--surface)" }}>
-                  <div style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-.02em", lineHeight: 1, color: m.kind === "estimated" ? "var(--warm-deep)" : "var(--ink)" }}>{m.value}{m.unit || ""}{m.kind === "estimated" && <span style={{ fontSize: 14 }}>*</span>}</div>
-                  <div style={{ fontSize: 12, color: "var(--muted)", fontWeight: 600, marginTop: 5 }}>{m.label}</div>
+        </div>
+
+        {/* ── Fila de métricas clave ── */}
+        {mInc.length > 0 && (
+          <div style={{ display: "grid", gridTemplateColumns: `repeat(${Math.min(mInc.length, 4)}, 1fr)`, gap: 2, margin: "0 2px" }}>
+            {mInc.slice(0, 4).map((m, i) => (
+              <div key={m.id} style={{ background: CARD, padding: "18px 20px" }}>
+                <div style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)", letterSpacing: ".04em", textTransform: "uppercase", marginBottom: 6 }}>{m.label}</div>
+                <div style={{ fontSize: 30, fontWeight: 900, letterSpacing: "-.03em", color: m.kind === "estimated" ? "var(--warm-deep)" : BG, lineHeight: 1 }}>
+                  {m.value}{m.unit || ""}{m.kind === "estimated" && <span style={{ fontSize: 16, verticalAlign: "super" }}>*</span>}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* ── Cuerpo del informe ── */}
+        <div style={{ background: CARD, margin: "2px 2px 0", padding: "22px 26px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+
+          {/* Columna izquierda: resumen ejecutivo + voces de comunidad */}
+          <div>
+            {/* Resumen */}
+            <div style={{ marginBottom: 20 }}>
+              <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: ".07em", textTransform: "uppercase", color: BG, marginBottom: 8 }}>Resumen ejecutivo</div>
+              {testimBlocks.slice(0, 1).map(b => (
+                <div key={b.id}>
+                  <div style={{ fontWeight: 800, fontSize: 14, color: "var(--ink)", marginBottom: 4 }}>{b.heading}</div>
+                  <p style={{ fontSize: 13, lineHeight: 1.6, color: "var(--ink-soft)", margin: 0 }}>{b.ai}</p>
+                </div>
+              ))}
+              {testimBlocks.length === 0 && otherBlocks.slice(0,1).map(b => (
+                <div key={b.id}>
+                  <div style={{ fontWeight: 800, fontSize: 14, color: "var(--ink)", marginBottom: 4 }}>{b.heading}</div>
+                  <p style={{ fontSize: 13, lineHeight: 1.6, color: "var(--ink-soft)", margin: 0 }}>{b.ai}</p>
                 </div>
               ))}
             </div>
-            {hasEst && <div style={{ fontSize: 11.5, color: "var(--muted)", marginTop: 7 }}>* Cifra estimada y revisada por el equipo de Fundación Raíces.</div>}
-          </div>}
-          {included.map(b => (
-            <div key={b.id} style={{ marginBottom: 22 }}>
-              <h3 style={{ fontSize: 18, fontWeight: 800, margin: "0 0 7px" }}>{b.heading}</h3>
-              <p style={{ fontSize: 15, lineHeight: 1.65, color: "var(--ink)", margin: "0 0 10px" }}>{b.ai}</p>
-              {b.sources.map((s, i) => {
-                const p = DATA.people[s.who];
-                return <div key={i} className="quote" style={{ paddingLeft: 14, borderLeft: "3px solid " + (p.team ? "var(--blue)" : "var(--warm)"), margin: "8px 0", fontSize: 16 }}>
-                  "{s.quote}"<div style={{ fontFamily: "var(--sans)", fontStyle: "normal", fontSize: 12.5, color: "var(--muted)", fontWeight: 700, marginTop: 4 }}>— {p.name}, {p.role}</div>
-                </div>;
-              })}
+
+            {/* Voces de la comunidad */}
+            {testimBlocks.length > 0 && (
+              <div>
+                <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: ".07em", textTransform: "uppercase", color: "var(--warm-deep)", marginBottom: 10 }}>Voces de la comunidad</div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  {testimBlocks.flatMap(b => b.sources).slice(0, 3).map((s, i) => {
+                    const p = DATA.people[s.who];
+                    return (
+                      <div key={i} style={{ padding: "11px 13px", background: "var(--warm-tint)", borderRadius: "var(--r-sm)", borderLeft: "3px solid var(--warm)" }}>
+                        <div style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 13, lineHeight: 1.5, color: "var(--ink)", marginBottom: 6 }}>"{s.quote}"</div>
+                        <div style={{ fontSize: 11.5, fontWeight: 700, color: "var(--warm-deep)" }}>— {p.name}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Columna derecha: reporte de equipo + lo que falta */}
+          <div>
+            {/* Reporte del equipo */}
+            {teamBlocks.length > 0 && (
+              <div style={{ marginBottom: 20 }}>
+                <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: ".07em", textTransform: "uppercase", color: BG, marginBottom: 8 }}>Reporte del equipo</div>
+                {teamBlocks.map(b => (
+                  <div key={b.id} style={{ marginBottom: 10 }}>
+                    <div style={{ fontWeight: 800, fontSize: 14, color: "var(--ink)", marginBottom: 4 }}>{b.heading}</div>
+                    <p style={{ fontSize: 13, lineHeight: 1.6, color: "var(--ink-soft)", margin: "0 0 8px" }}>{b.ai}</p>
+                    {b.sources.slice(0,1).map((s, i) => {
+                      const p = DATA.people[s.who];
+                      return (
+                        <div key={i} style={{ padding: "10px 12px", background: "var(--blue-tint)", borderRadius: "var(--r-sm)", borderLeft: "3px solid var(--blue)" }}>
+                          <div style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 12.5, color: "var(--ink)", marginBottom: 5 }}>"{s.quote}"</div>
+                          <div style={{ fontSize: 11, fontWeight: 700, color: "var(--blue-deep)" }}>— {p.name}</div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Resto de bloques */}
+            {[...testimBlocks.slice(1), ...otherBlocks].slice(0, 2).map(b => (
+              <div key={b.id} style={{ marginBottom: 14 }}>
+                <div style={{ fontWeight: 800, fontSize: 13.5, color: "var(--ink)", marginBottom: 3 }}>{b.heading}</div>
+                <p style={{ fontSize: 12.5, lineHeight: 1.55, color: "var(--ink-soft)", margin: 0 }}>{b.ai}</p>
+              </div>
+            ))}
+
+            {/* Puntos clave */}
+            <div style={{ marginTop: 10, padding: "14px 16px", background: "var(--surface-2)", borderRadius: "var(--r-sm)" }}>
+              <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: ".07em", textTransform: "uppercase", color: "var(--ink-soft)", marginBottom: 8 }}>Puntos clave</div>
+              <ul style={{ margin: 0, paddingLeft: 16, display: "flex", flexDirection: "column", gap: 5 }}>
+                <li style={{ fontSize: 12.5, color: "var(--ink-soft)", lineHeight: 1.45 }}>La cercanía redujo barreras de acceso a la salud.</li>
+                <li style={{ fontSize: 12.5, color: "var(--ink-soft)", lineHeight: 1.45 }}>Faltan insumos y atención los fines de semana.</li>
+                <li style={{ fontSize: 12.5, color: "var(--ink-soft)", lineHeight: 1.45 }}>Equipo atendió ~80 personas en jornada de campo.</li>
+              </ul>
             </div>
-          ))}
+          </div>
+        </div>
+
+        {/* ── Pie ── */}
+        <div style={{ background: BG, padding: "12px 28px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <span style={{ fontSize: 11.5, color: "rgba(255,255,255,.6)", fontWeight: 600 }}>Fundación Raíces · Generado con Voz</span>
+          {hasEst && <span style={{ fontSize: 11, color: "rgba(255,255,255,.5)" }}>* Cifra estimada revisada por el equipo</span>}
+          <span style={{ fontSize: 11.5, color: "rgba(255,255,255,.6)", fontWeight: 600 }}>Basado en {totalVoices} voces</span>
         </div>
       </div>
 
-      {/* panel de aprobar / compartir */}
+      {/* ══════════════ PANEL APROBAR / COMPARTIR ══════════════ */}
       <div className="col" style={{ gap: 16, position: "sticky", top: 90 }}>
         <div className="card card-pad">
           <div className="row" style={{ gap: 10, marginBottom: 12 }}><span style={{ color: "var(--warm)" }}><Icon name="shield" size={20} /></span><span style={{ fontWeight: 800, fontSize: 16 }}>El último paso es tuyo</span></div>

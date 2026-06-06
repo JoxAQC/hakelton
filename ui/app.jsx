@@ -51,55 +51,164 @@ function Inicio({ onNew, setPage, copy }) {
   return <Analytics setPage={setPage} onNew={onNew} copy={copy} />;
 }
 
-/* ---------------- Conversaciones ---------------- */
-function Convos() {
-  const [sel, setSel] = aUse(DATA.conversations[0].id);
-  const c = DATA.conversations.find(x => x.id === sel);
+/* ---------------- Conversaciones (bandeja estilo inbox) ---------------- */
+function Convos({ onNew }) {
+  const [activeProject, setActiveProject] = aUse("todos");
+  const [sel, setSel] = aUse(DATA.audioInbox[0].id);
+  const [note, setNote] = aUse("");
+
+  const audio = DATA.audioInbox.find(a => a.id === sel) || DATA.audioInbox[0];
+  const person = audio ? DATA.people[audio.who] : null;
+  const project = audio ? DATA.projects.find(p => p.id === audio.project) : null;
+  const unreadTotal = DATA.audioInbox.filter(a => a.unread).length;
+
   return (
-    <div className="convos-layout">
-      <div className="convos-list">
-        <div style={{ position: "relative", marginBottom: 12 }}>
-          <span style={{ position: "absolute", left: 12, top: 11, color: "var(--faint)" }}><Icon name="search" size={17} /></span>
-          <input placeholder="Buscar persona o tema…" style={{ width: "100%", padding: "10px 12px 10px 38px", borderRadius: 999, border: "1px solid var(--line)", background: "var(--surface-2)", fontSize: 13.5, fontFamily: "inherit", outline: "none" }} />
-        </div>
-        {DATA.conversations.map(cv => (
-          <button key={cv.id} onClick={() => setSel(cv.id)} className="nav-item" style={{ height: "auto", padding: 12, gap: 12, marginBottom: 4, background: sel === cv.id ? "var(--blue-tint)" : "transparent", alignItems: "flex-start" }}>
-            <Avatar p={{ color: cv.color, initials: cv.initials }} size={42} />
-            <div className="grow" style={{ minWidth: 0 }}>
-              <div className="row" style={{ gap: 6 }}><span style={{ fontWeight: 700, fontSize: 14, color: "var(--ink)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{cv.name}</span>{cv.unread > 0 && <span className="badge" style={{ marginLeft: "auto" }}>{cv.unread}</span>}</div>
-              <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", fontWeight: 400 }}>{cv.summary}</div>
-              <div className="row" style={{ gap: 8, marginTop: 5 }}><span style={{ fontSize: 11.5, color: "var(--warm-deep)", fontWeight: 700 }} className="row"><Icon name="mic" size={12} /> {cv.voiceNotes}</span><span style={{ fontSize: 11.5, color: "var(--faint)" }}>{cv.lastAt}</span></div>
-            </div>
+    <div style={{ display: "grid", gridTemplateColumns: "220px 1fr 1fr", height: "100%", overflow: "hidden" }}>
+
+      {/* ---- Col 1: proyectos / labels ---- */}
+      <div style={{ borderRight: "1px solid var(--line-soft)", padding: "20px 12px", overflowY: "auto", display: "flex", flexDirection: "column", gap: 4 }}>
+        <button className="btn btn-primary btn-lg" onClick={onNew} style={{ marginBottom: 18, width: "100%", justifyContent: "center" }}>
+          <Icon name="plus" size={16} /> Nuevo informe
+        </button>
+
+        {[
+          { id: "todos", label: "Todos los audios", icon: "mic", badge: unreadTotal },
+          { id: "starred", label: "Destacados", icon: "star" },
+        ].map(item => (
+          <button key={item.id} onClick={() => setActiveProject(item.id)}
+            className="nav-item"
+            style={{ background: activeProject === item.id ? "var(--blue-tint)" : "transparent", color: activeProject === item.id ? "var(--blue-deep)" : "var(--ink-soft)", fontWeight: activeProject === item.id ? 700 : 600, borderRadius: "var(--r-sm)", padding: "9px 12px" }}>
+            <Icon name={item.icon} size={17} />
+            <span style={{ flex: 1, textAlign: "left" }}>{item.label}</span>
+            {item.badge > 0 && <span className="badge" style={{ background: "var(--blue)", color: "#fff" }}>{item.badge}</span>}
           </button>
         ))}
+
+        <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: ".06em", textTransform: "uppercase", color: "var(--faint)", padding: "16px 12px 6px" }}>Proyecto</div>
+        {DATA.projects.map(proj => {
+          const cnt = DATA.audioInbox.filter(a => a.project === proj.id && a.unread).length;
+          const isActive = activeProject === proj.id;
+          return (
+            <button key={proj.id} onClick={() => setActiveProject(proj.id)}
+              className="nav-item"
+              style={{ background: isActive ? "var(--blue-tint)" : "transparent", color: isActive ? "var(--blue-deep)" : "var(--ink-soft)", fontWeight: isActive ? 700 : 600, borderRadius: "var(--r-sm)", padding: "9px 12px" }}>
+              <span style={{ width: 10, height: 10, borderRadius: "50%", background: proj.color, flex: "none" }} />
+              <span style={{ flex: 1, textAlign: "left", fontSize: 13.5 }}>{proj.label}</span>
+              {cnt > 0 && <span style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)" }}>{cnt}</span>}
+            </button>
+          );
+        })}
       </div>
-      <div style={{ overflowY: "auto" }}>
-        <div className="topbar" style={{ padding: "16px 28px" }}>
-          <Avatar p={{ color: c.color, initials: c.initials }} size={40} />
-          <div><h1 style={{ fontSize: 17 }}>{c.name}</h1><div className="sub">{c.members} {c.members > 1 ? "personas" : "persona"} · {c.voiceNotes} notas de voz</div></div>
-          <div className="topbar-spacer" />
-          <button className="btn btn-soft btn-sm"><Icon name="doc" size={15} /> Usar en un informe</button>
-        </div>
-        <div style={{ padding: "20px 28px 60px", maxWidth: 760 }}>
-          <AINote><b>Transcripción automática activada.</b> Las notas de voz se convierten en texto al llegar. Puedes corregir cualquier palabra — la grabación original se conserva.</AINote>
-          <div style={{ marginTop: 18 }}>
-            {(c.role === "team" ? DATA.teamReports : DATA.transcript).map((t, i) => {
-              const p = DATA.people[t.who];
-              const isTeam = t.kind === "reporte";
-              return (
-                <div key={i} className="tline" style={{ padding: "16px 0" }}>
-                  <Avatar p={p} size={40} />
-                  <div className="grow">
-                    <div className="row" style={{ gap: 8 }}><span style={{ fontWeight: 700, fontSize: 14.5 }}>{p.name}</span>{isTeam ? <Chip tone="blue"><Icon name="users" size={12} /> Reporte de equipo</Chip> : <span style={{ fontSize: 12, color: "var(--muted)" }}>{p.role}</span>}<span className="grow" /><span style={{ fontSize: 12, color: "var(--muted)" }}>{t.at}</span></div>
-                    <div className="row" style={{ margin: "8px 0" }}><VoicePlayer dur={t.dur} color={p.color} /></div>
-                    <div style={{ fontSize: 15.5, color: "var(--ink)", lineHeight: 1.6 }}>{t.text}</div>
-                    <div className="row" style={{ gap: 7, marginTop: 9, flexWrap: "wrap" }}>{t.tags.map(tag => <Chip key={tag} tone={isTeam ? "" : "blue"}>{tag}</Chip>)}<button className="chip" style={{ cursor: "pointer" }}><Icon name="plus" size={13} /> etiqueta</button></div>
-                  </div>
-                </div>
-              );
-            })}
+
+      {/* ---- Col 2: lista de audios ---- */}
+      <div style={{ borderRight: "1px solid var(--line-soft)", overflowY: "auto", display: "flex", flexDirection: "column" }}>
+        <div style={{ padding: "16px 16px 12px", borderBottom: "1px solid var(--line-soft)", position: "sticky", top: 0, background: "var(--paper)", zIndex: 2 }}>
+          <div style={{ position: "relative" }}>
+            <span style={{ position: "absolute", left: 11, top: 10, color: "var(--faint)" }}><Icon name="search" size={16} /></span>
+            <input placeholder="Buscar audios…" style={{ width: "100%", padding: "9px 12px 9px 34px", borderRadius: 999, border: "1px solid var(--line)", background: "var(--surface-2)", fontSize: 13, fontFamily: "inherit", outline: "none" }} />
           </div>
         </div>
+
+        {(activeProject === "todos" || activeProject === "starred"
+          ? DATA.projects
+          : DATA.projects.filter(p => p.id === activeProject)
+        ).map(proj => {
+          const items = DATA.audioInbox.filter(a => a.project === proj.id);
+          if (!items.length) return null;
+          return (
+            <div key={proj.id}>
+              <div style={{ padding: "10px 16px 6px", fontSize: 11, fontWeight: 800, letterSpacing: ".05em", textTransform: "uppercase", color: proj.color, borderBottom: "1px solid var(--line-soft)", display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ width: 8, height: 8, borderRadius: "50%", background: proj.color }} />
+                {proj.label}
+              </div>
+              {items.map(a => {
+                const p = DATA.people[a.who];
+                const isSel = sel === a.id;
+                return (
+                  <button key={a.id} onClick={() => setSel(a.id)}
+                    style={{ width: "100%", textAlign: "left", padding: "14px 16px", display: "flex", gap: 12, alignItems: "flex-start", border: "none", borderBottom: "1px solid var(--line-soft)", background: isSel ? "var(--blue-tint)" : "transparent", cursor: "pointer", transition: "background .12s" }}>
+                    <Avatar p={p} size={38} />
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div className="row" style={{ gap: 6, marginBottom: 2 }}>
+                        <span style={{ fontWeight: a.unread ? 800 : 600, fontSize: 14, color: "var(--ink)", flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.name}</span>
+                        <span style={{ fontSize: 11.5, color: "var(--faint)", flex: "none" }}>{a.at}</span>
+                      </div>
+                      <div style={{ fontWeight: a.unread ? 700 : 500, fontSize: 13.5, color: "var(--ink)", marginBottom: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{a.subject}</div>
+                      <div className="row" style={{ gap: 6 }}>
+                        <span style={{ color: "var(--warm-deep)", fontSize: 12, fontWeight: 700, display: "flex", alignItems: "center", gap: 4 }}><Icon name="mic" size={12} /> {a.dur}</span>
+                        <span style={{ fontSize: 12, color: "var(--faint)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", flex: 1 }}>{a.preview}</span>
+                      </div>
+                    </div>
+                    {a.unread && <span style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--blue)", flex: "none", marginTop: 6 }} />}
+                  </button>
+                );
+              })}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* ---- Col 3: detalle del audio ---- */}
+      <div style={{ display: "flex", flexDirection: "column", overflowY: "auto" }}>
+        {audio && person ? (
+          <>
+            <div style={{ padding: "18px 24px", borderBottom: "1px solid var(--line-soft)", display: "flex", gap: 14, alignItems: "center" }}>
+              <Avatar p={person} size={42} />
+              <div style={{ flex: 1 }}>
+                <div style={{ fontWeight: 800, fontSize: 15.5 }}>{person.name}</div>
+                <div style={{ fontSize: 12.5, color: "var(--muted)" }}>{person.role}</div>
+              </div>
+              <div style={{ fontSize: 12, color: "var(--faint)" }}>{audio.at}</div>
+              <button className="btn btn-ghost btn-sm" onClick={onNew}><Icon name="doc" size={14} /> Usar en informe</button>
+            </div>
+
+            <div style={{ padding: "20px 24px", flex: 1, overflowY: "auto" }}>
+              {project && (
+                <div style={{ marginBottom: 12 }}>
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 700, color: project.color, padding: "3px 10px", background: project.color + "18", borderRadius: 999 }}>
+                    <span style={{ width: 7, height: 7, borderRadius: "50%", background: project.color }} />
+                    {project.label}
+                  </span>
+                </div>
+              )}
+              <h2 style={{ fontSize: 20, fontWeight: 800, margin: "0 0 18px", letterSpacing: "-.02em" }}>{audio.subject}</h2>
+              <div style={{ marginBottom: 20 }}>
+                <VoicePlayer dur={audio.dur} color={person.color} />
+              </div>
+              <div style={{ fontSize: 15, lineHeight: 1.7, color: "var(--ink)", marginBottom: 18 }}>{audio.text}</div>
+              <div className="row" style={{ gap: 7, flexWrap: "wrap" }}>
+                {audio.tags.map(tag => <Chip key={tag} tone="blue">{tag}</Chip>)}
+              </div>
+            </div>
+
+            <div style={{ borderTop: "1px solid var(--line-soft)", padding: "16px 24px", background: "var(--surface)" }}>
+              <div style={{ borderRadius: "var(--r)", border: "1px solid var(--line)", overflow: "hidden" }}>
+                <div style={{ padding: "10px 16px 4px", fontSize: 13, color: "var(--muted)", borderBottom: "1px solid var(--line-soft)" }}>
+                  <span style={{ fontWeight: 700, color: "var(--ink)" }}>Nota interna</span> · visible solo para tu equipo
+                </div>
+                <div style={{ padding: "8px 14px", borderBottom: "1px solid var(--line-soft)", display: "flex", gap: 8 }}>
+                  {["B", "I", "U"].map(f => (
+                    <button key={f} style={{ border: "none", background: "none", fontWeight: 700, fontSize: 13, color: "var(--ink-soft)", cursor: "pointer", padding: "2px 6px", borderRadius: 4 }}>{f}</button>
+                  ))}
+                </div>
+                <textarea
+                  value={note}
+                  onChange={e => setNote(e.target.value)}
+                  placeholder="Escribe una nota sobre este audio…"
+                  style={{ width: "100%", minHeight: 90, border: "none", outline: "none", padding: "12px 16px", fontFamily: "inherit", fontSize: 14, lineHeight: 1.6, resize: "none", color: "var(--ink)", background: "transparent" }}
+                />
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 12 }}>
+                <button className="btn btn-ghost btn-sm" onClick={onNew}><Icon name="spark" size={15} /> Crear informe con este audio</button>
+                <button className="btn btn-primary" disabled={!note.trim()}><Icon name="check" size={15} /> Guardar nota</button>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div style={{ flex: 1, display: "grid", placeItems: "center", color: "var(--faint)", fontSize: 14 }}>
+            Selecciona un audio para ver el detalle
+          </div>
+        )}
       </div>
     </div>
   );
@@ -288,7 +397,7 @@ function App() {
           ? <ReportFlow onClose={() => setFlow(false)} tone={t} />
           : <>
               {page === "inicio" && <Inicio onNew={() => setFlow(true)} setPage={setPage} copy={copy} />}
-              {page === "convos" && <Convos />}
+              {page === "convos" && <div style={{ height: "100vh", overflow: "hidden" }}><Convos onNew={() => setFlow(true)} /></div>}
               {page === "importar" && <Importar onGenerate={() => setFlow(true)} goDatos={() => setPage("inicio")} />}
               {page === "informes" && <Informes onNew={() => setFlow(true)} />}
               {page === "autom" && <Automatizaciones />}

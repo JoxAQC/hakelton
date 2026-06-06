@@ -166,7 +166,75 @@ const DATA = (function () {
     { id: "d3", name: "Encuesta_satisfaccion.xlsx", type: "xls", size: "77 KB", status: "done", note: "120 respuestas", detected: ["Edad", "Género", "Valoración 1–5"] },
   ];
 
-  return { people, conversations, transcript, teamReports, reports, draftBlocks, analytics, documents };
+  // Audios agrupados por proyecto (para la vista de bandeja de Informes)
+  const projects = [
+    { id: "salud",     label: "Salud Comunitaria",    color: "#6B8875", count: 4 },
+    { id: "ambiente",  label: "Medio Ambiente",        color: "#4A6352", count: 3 },
+    { id: "alimenta",  label: "Seguridad Alimentaria", color: "#7A9480", count: 2 },
+    { id: "educacion", label: "Educación",             color: "#8B7355", count: 1 },
+  ];
+
+  const audioInbox = [
+    // --- Salud Comunitaria ---
+    { id: "a1", project: "salud", who: "maria",   at: "Hoy · 09:14", dur: "0:48", unread: true,
+      subject: "Testimonio: acceso a la posta",
+      preview: "Desde que abrieron la posta, ya no tengo que viajar dos horas…",
+      text: "Buenos días señorita. Le quería contar que desde que abrieron la posta, ya no tengo que viajar dos horas hasta el hospital. Mi hija pudo vacunarse aquí mismo. Pero todavía faltan medicinas, a veces vamos y no hay nada.",
+      tags: ["acceso a salud", "vacunación", "falta de insumos"] },
+    { id: "a2", project: "salud", who: "roberto", at: "Hoy · 09:31", dur: "1:12", unread: true,
+      subject: "Demanda: atención de fin de semana",
+      preview: "Como dirigente le digo: la comunidad está agradecida pero necesitamos…",
+      text: "Como dirigente le digo: la comunidad está agradecida pero necesitamos que el puesto tenga atención los fines de semana. La gente se enferma cualquier día, no solo de lunes a viernes.",
+      tags: ["horario de atención", "demanda comunal"] },
+    { id: "a3", project: "salud", who: "luz",     at: "Hoy · 10:02", dur: "0:35", unread: false,
+      subject: "Impacto económico en las familias",
+      preview: "Yo soy mamá de tres. Antes gastaba en pasajes lo que no tenía…",
+      text: "Yo soy mamá de tres. Antes gastaba en pasajes lo que no tenía. Ahora camino diez minutos. Eso para nosotras es muchísimo, de verdad.",
+      tags: ["impacto económico", "cercanía"] },
+    { id: "a4", project: "salud", who: "carlosH", at: "Ayer · 08:50", dur: "1:05", unread: false,
+      subject: "Reporte de campo: jornada de salud",
+      preview: "Cerramos la jornada de salud en Villa El Sol. Atendimos unas 80 personas…",
+      text: "Listo compañeros, cerramos la jornada de salud en Villa El Sol. Atendimos a unas 80 personas y desplegamos dos carpas de triaje, con apoyo de una enfermera de la posta. Lo que no pudimos hacer fue la toma de presión: no llegó el tensiómetro, lo dejamos pendiente para la próxima.",
+      tags: ["jornada de salud", "80 atendidos", "pendiente: tensiómetro"] },
+
+    // --- Medio Ambiente ---
+    { id: "a5", project: "ambiente", who: "jowel", at: "Hoy · 11:20", dur: "0:52", unread: true,
+      subject: "Contaminación del río: voz de joven",
+      preview: "El río está muy mal, señorita. Ya no se puede pescar como antes…",
+      text: "El río está muy mal, señorita. Ya no se puede pescar como antes. Los jóvenes de aquí crecimos bañándonos ahí y ahora da miedo entrar. Queremos que alguien haga algo de verdad.",
+      tags: ["contaminación", "juventud", "pesca"] },
+    { id: "a6", project: "ambiente", who: "anaR", at: "Ayer · 16:05", dur: "0:52", unread: false,
+      subject: "Reporte: taller ambiental con jóvenes",
+      preview: "El taller ambiental salió bien, vinieron 25 jóvenes y recogimos…",
+      text: "El taller ambiental salió bien, vinieron 25 jóvenes y recogimos como 12 sacos de basura del río. Faltaron guantes para todos, anótenlo para la próxima compra.",
+      tags: ["taller ambiental", "25 participantes", "faltaron guantes"] },
+    { id: "a7", project: "ambiente", who: "roberto", at: "Hace 3 días", dur: "0:40", unread: false,
+      subject: "Acuerdo con el municipio sobre el río",
+      preview: "Estuvimos reunidos con el municipio y prometieron revisar las empresas…",
+      text: "Estuvimos reunidos con el municipio y prometieron revisar las empresas que están tirando residuos al río. Quedamos en un seguimiento para el próximo mes. Hay buena voluntad pero necesitamos ver hechos.",
+      tags: ["municipio", "empresas", "seguimiento"] },
+
+    // --- Seguridad Alimentaria ---
+    { id: "a8", project: "alimenta", who: "luz", at: "Hace 2 días · 14:30", dur: "0:44", unread: true,
+      subject: "Comedor popular: situación de insumos",
+      preview: "Ayer nos quedamos sin aceite y sin harina. Las donaciones bajaron mucho…",
+      text: "Ayer nos quedamos sin aceite y sin harina. Las donaciones bajaron mucho este mes. Seguimos atendiendo a 85 familias pero necesitamos apoyo urgente en insumos básicos.",
+      tags: ["comedor", "insumos", "urgente"] },
+    { id: "a9", project: "alimenta", who: "maria", at: "Hace 1 sem", dur: "0:30", unread: false,
+      subject: "Familias nuevas que se suman al comedor",
+      preview: "Han llegado cuatro familias nuevas del asentamiento de arriba…",
+      text: "Han llegado cuatro familias nuevas del asentamiento de arriba. Tienen niños pequeños. Les estamos dando un lugar pero ya estamos al límite de capacidad.",
+      tags: ["nuevas familias", "capacidad", "niños"] },
+
+    // --- Educación ---
+    { id: "a10", project: "educacion", who: "carlosH", at: "Hace 5 días", dur: "1:00", unread: false,
+      subject: "Reporte: talleres de refuerzo escolar",
+      preview: "Los talleres de refuerzo van bien. Tenemos 18 niños inscritos esta semana…",
+      text: "Los talleres de refuerzo van bien. Tenemos 18 niños inscritos esta semana, subió desde 12. Los profes voluntarios están comprometidos. Solo falta conseguir más cuadernos y lápices para los que no tienen.",
+      tags: ["refuerzo escolar", "18 niños", "materiales"] },
+  ];
+
+  return { people, conversations, transcript, teamReports, reports, draftBlocks, analytics, documents, projects, audioInbox };
 })();
 
 /* --- tweaks-panel.jsx --- */
@@ -1395,45 +1463,140 @@ function Share({ blocks, metrics, onClose }) {
   const hasEst = mInc.some(m => m.kind === "estimated");
   const totalVoices = new Set(included.flatMap(b => b.sources.map(s => s.who))).size;
 
+  // Separar bloques por tipo para las secciones del reporte visual
+  const testimBlocks = included.filter(b => b.kindTag === "testimonio");
+  const teamBlocks   = included.filter(b => b.kindTag === "reporte");
+  const otherBlocks  = included.filter(b => b.kindTag !== "testimonio" && b.kindTag !== "reporte");
+
+  // Colores del sistema
+  const BG = "var(--blue)";         // sage green — fondo principal
+  const CARD = "#ffffff";
+  const ACCENT = "var(--warm)";     // tierra cálida — acento
+
   return (
-    <div className="float-in" style={{ display: "grid", gridTemplateColumns: "1fr 360px", gap: 26, alignItems: "start" }}>
-      {/* vista previa del informe */}
-      <div className="card" style={{ padding: 0, overflow: "hidden" }}>
-        <div style={{ height: 8, background: "linear-gradient(90deg, var(--blue), var(--warm))" }} />
-        <div style={{ padding: "30px 34px" }}>
-          <div className="row" style={{ gap: 9, marginBottom: 14 }}>
-            <Chip tone="blue" dot>Salud Comunitaria</Chip>
-            <Chip>Marzo 2026</Chip>
+    <div className="float-in" style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: 26, alignItems: "start" }}>
+
+      {/* ══════════════ VISTA PREVIA — estilo reporte visual ══════════════ */}
+      <div style={{ borderRadius: "var(--r-lg)", overflow: "hidden", background: BG, boxShadow: "var(--sh-lg)" }}>
+
+        {/* ── Encabezado ── */}
+        <div style={{ padding: "28px 30px 24px", background: BG }}>
+          <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: ".1em", textTransform: "uppercase", color: "rgba(255,255,255,.6)", marginBottom: 6 }}>Informe de Impacto · Fundación Raíces</div>
+          <h1 style={{ fontSize: 32, fontWeight: 900, letterSpacing: "-.03em", color: "#fff", margin: "0 0 6px", lineHeight: 1.1, textTransform: "uppercase" }}>Impacto de la posta médica en Villa El Sol</h1>
+          <div style={{ display: "flex", gap: 10, alignItems: "center", marginTop: 10 }}>
+            <span style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,.7)", background: "rgba(255,255,255,.12)", padding: "3px 10px", borderRadius: 999 }}>Salud Comunitaria</span>
+            <span style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,.7)", background: "rgba(255,255,255,.12)", padding: "3px 10px", borderRadius: 999 }}>Marzo 2026</span>
           </div>
-          <h1 style={{ fontSize: 27, fontWeight: 800, letterSpacing: "-.025em", margin: "0 0 8px", lineHeight: 1.15 }}>Impacto de la posta médica en Villa El Sol</h1>
-          <p style={{ color: "var(--muted)", fontSize: 14, margin: "0 0 22px" }}>Basado en {totalVoices} testimonios recogidos por WhatsApp · Fundación Raíces</p>
-          {mInc.length > 0 && <div style={{ marginBottom: 24 }}>
-            <div style={{ display: "flex", flexWrap: "wrap", border: "1px solid var(--line)", borderRadius: "var(--r)", overflow: "hidden" }}>
-              {mInc.map((m, i) => (
-                <div key={m.id} style={{ flex: "1 1 110px", padding: "15px 18px", borderLeft: i ? "1px solid var(--line)" : "none", background: "var(--surface)" }}>
-                  <div style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-.02em", lineHeight: 1, color: m.kind === "estimated" ? "var(--warm-deep)" : "var(--ink)" }}>{m.value}{m.unit || ""}{m.kind === "estimated" && <span style={{ fontSize: 14 }}>*</span>}</div>
-                  <div style={{ fontSize: 12, color: "var(--muted)", fontWeight: 600, marginTop: 5 }}>{m.label}</div>
+        </div>
+
+        {/* ── Fila de métricas clave ── */}
+        {mInc.length > 0 && (
+          <div style={{ display: "grid", gridTemplateColumns: `repeat(${Math.min(mInc.length, 4)}, 1fr)`, gap: 2, margin: "0 2px" }}>
+            {mInc.slice(0, 4).map((m, i) => (
+              <div key={m.id} style={{ background: CARD, padding: "18px 20px" }}>
+                <div style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)", letterSpacing: ".04em", textTransform: "uppercase", marginBottom: 6 }}>{m.label}</div>
+                <div style={{ fontSize: 30, fontWeight: 900, letterSpacing: "-.03em", color: m.kind === "estimated" ? "var(--warm-deep)" : BG, lineHeight: 1 }}>
+                  {m.value}{m.unit || ""}{m.kind === "estimated" && <span style={{ fontSize: 16, verticalAlign: "super" }}>*</span>}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* ── Cuerpo del informe ── */}
+        <div style={{ background: CARD, margin: "2px 2px 0", padding: "22px 26px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+
+          {/* Columna izquierda: resumen ejecutivo + voces de comunidad */}
+          <div>
+            {/* Resumen */}
+            <div style={{ marginBottom: 20 }}>
+              <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: ".07em", textTransform: "uppercase", color: BG, marginBottom: 8 }}>Resumen ejecutivo</div>
+              {testimBlocks.slice(0, 1).map(b => (
+                <div key={b.id}>
+                  <div style={{ fontWeight: 800, fontSize: 14, color: "var(--ink)", marginBottom: 4 }}>{b.heading}</div>
+                  <p style={{ fontSize: 13, lineHeight: 1.6, color: "var(--ink-soft)", margin: 0 }}>{b.ai}</p>
+                </div>
+              ))}
+              {testimBlocks.length === 0 && otherBlocks.slice(0,1).map(b => (
+                <div key={b.id}>
+                  <div style={{ fontWeight: 800, fontSize: 14, color: "var(--ink)", marginBottom: 4 }}>{b.heading}</div>
+                  <p style={{ fontSize: 13, lineHeight: 1.6, color: "var(--ink-soft)", margin: 0 }}>{b.ai}</p>
                 </div>
               ))}
             </div>
-            {hasEst && <div style={{ fontSize: 11.5, color: "var(--muted)", marginTop: 7 }}>* Cifra estimada y revisada por el equipo de Fundación Raíces.</div>}
-          </div>}
-          {included.map(b => (
-            <div key={b.id} style={{ marginBottom: 22 }}>
-              <h3 style={{ fontSize: 18, fontWeight: 800, margin: "0 0 7px" }}>{b.heading}</h3>
-              <p style={{ fontSize: 15, lineHeight: 1.65, color: "var(--ink)", margin: "0 0 10px" }}>{b.ai}</p>
-              {b.sources.map((s, i) => {
-                const p = DATA.people[s.who];
-                return <div key={i} className="quote" style={{ paddingLeft: 14, borderLeft: "3px solid " + (p.team ? "var(--blue)" : "var(--warm)"), margin: "8px 0", fontSize: 16 }}>
-                  "{s.quote}"<div style={{ fontFamily: "var(--sans)", fontStyle: "normal", fontSize: 12.5, color: "var(--muted)", fontWeight: 700, marginTop: 4 }}>— {p.name}, {p.role}</div>
-                </div>;
-              })}
+
+            {/* Voces de la comunidad */}
+            {testimBlocks.length > 0 && (
+              <div>
+                <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: ".07em", textTransform: "uppercase", color: "var(--warm-deep)", marginBottom: 10 }}>Voces de la comunidad</div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  {testimBlocks.flatMap(b => b.sources).slice(0, 3).map((s, i) => {
+                    const p = DATA.people[s.who];
+                    return (
+                      <div key={i} style={{ padding: "11px 13px", background: "var(--warm-tint)", borderRadius: "var(--r-sm)", borderLeft: "3px solid var(--warm)" }}>
+                        <div style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 13, lineHeight: 1.5, color: "var(--ink)", marginBottom: 6 }}>"{s.quote}"</div>
+                        <div style={{ fontSize: 11.5, fontWeight: 700, color: "var(--warm-deep)" }}>— {p.name}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Columna derecha: reporte de equipo + lo que falta */}
+          <div>
+            {/* Reporte del equipo */}
+            {teamBlocks.length > 0 && (
+              <div style={{ marginBottom: 20 }}>
+                <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: ".07em", textTransform: "uppercase", color: BG, marginBottom: 8 }}>Reporte del equipo</div>
+                {teamBlocks.map(b => (
+                  <div key={b.id} style={{ marginBottom: 10 }}>
+                    <div style={{ fontWeight: 800, fontSize: 14, color: "var(--ink)", marginBottom: 4 }}>{b.heading}</div>
+                    <p style={{ fontSize: 13, lineHeight: 1.6, color: "var(--ink-soft)", margin: "0 0 8px" }}>{b.ai}</p>
+                    {b.sources.slice(0,1).map((s, i) => {
+                      const p = DATA.people[s.who];
+                      return (
+                        <div key={i} style={{ padding: "10px 12px", background: "var(--blue-tint)", borderRadius: "var(--r-sm)", borderLeft: "3px solid var(--blue)" }}>
+                          <div style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 12.5, color: "var(--ink)", marginBottom: 5 }}>"{s.quote}"</div>
+                          <div style={{ fontSize: 11, fontWeight: 700, color: "var(--blue-deep)" }}>— {p.name}</div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Resto de bloques */}
+            {[...testimBlocks.slice(1), ...otherBlocks].slice(0, 2).map(b => (
+              <div key={b.id} style={{ marginBottom: 14 }}>
+                <div style={{ fontWeight: 800, fontSize: 13.5, color: "var(--ink)", marginBottom: 3 }}>{b.heading}</div>
+                <p style={{ fontSize: 12.5, lineHeight: 1.55, color: "var(--ink-soft)", margin: 0 }}>{b.ai}</p>
+              </div>
+            ))}
+
+            {/* Puntos clave */}
+            <div style={{ marginTop: 10, padding: "14px 16px", background: "var(--surface-2)", borderRadius: "var(--r-sm)" }}>
+              <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: ".07em", textTransform: "uppercase", color: "var(--ink-soft)", marginBottom: 8 }}>Puntos clave</div>
+              <ul style={{ margin: 0, paddingLeft: 16, display: "flex", flexDirection: "column", gap: 5 }}>
+                <li style={{ fontSize: 12.5, color: "var(--ink-soft)", lineHeight: 1.45 }}>La cercanía redujo barreras de acceso a la salud.</li>
+                <li style={{ fontSize: 12.5, color: "var(--ink-soft)", lineHeight: 1.45 }}>Faltan insumos y atención los fines de semana.</li>
+                <li style={{ fontSize: 12.5, color: "var(--ink-soft)", lineHeight: 1.45 }}>Equipo atendió ~80 personas en jornada de campo.</li>
+              </ul>
             </div>
-          ))}
+          </div>
+        </div>
+
+        {/* ── Pie ── */}
+        <div style={{ background: BG, padding: "12px 28px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <span style={{ fontSize: 11.5, color: "rgba(255,255,255,.6)", fontWeight: 600 }}>Fundación Raíces · Generado con Voz</span>
+          {hasEst && <span style={{ fontSize: 11, color: "rgba(255,255,255,.5)" }}>* Cifra estimada revisada por el equipo</span>}
+          <span style={{ fontSize: 11.5, color: "rgba(255,255,255,.6)", fontWeight: 600 }}>Basado en {totalVoices} voces</span>
         </div>
       </div>
 
-      {/* panel de aprobar / compartir */}
+      {/* ══════════════ PANEL APROBAR / COMPARTIR ══════════════ */}
       <div className="col" style={{ gap: 16, position: "sticky", top: 90 }}>
         <div className="card card-pad">
           <div className="row" style={{ gap: 10, marginBottom: 12 }}><span style={{ color: "var(--warm)" }}><Icon name="shield" size={20} /></span><span style={{ fontWeight: 800, fontSize: 16 }}>El último paso es tuyo</span></div>
@@ -1978,55 +2141,164 @@ function Inicio({ onNew, setPage, copy }) {
   return <Analytics setPage={setPage} onNew={onNew} copy={copy} />;
 }
 
-/* ---------------- Conversaciones ---------------- */
-function Convos() {
-  const [sel, setSel] = aUse(DATA.conversations[0].id);
-  const c = DATA.conversations.find(x => x.id === sel);
+/* ---------------- Conversaciones (bandeja estilo inbox) ---------------- */
+function Convos({ onNew }) {
+  const [activeProject, setActiveProject] = aUse("todos");
+  const [sel, setSel] = aUse(DATA.audioInbox[0].id);
+  const [note, setNote] = aUse("");
+
+  const audio = DATA.audioInbox.find(a => a.id === sel) || DATA.audioInbox[0];
+  const person = audio ? DATA.people[audio.who] : null;
+  const project = audio ? DATA.projects.find(p => p.id === audio.project) : null;
+  const unreadTotal = DATA.audioInbox.filter(a => a.unread).length;
+
   return (
-    <div className="convos-layout">
-      <div className="convos-list">
-        <div style={{ position: "relative", marginBottom: 12 }}>
-          <span style={{ position: "absolute", left: 12, top: 11, color: "var(--faint)" }}><Icon name="search" size={17} /></span>
-          <input placeholder="Buscar persona o tema…" style={{ width: "100%", padding: "10px 12px 10px 38px", borderRadius: 999, border: "1px solid var(--line)", background: "var(--surface-2)", fontSize: 13.5, fontFamily: "inherit", outline: "none" }} />
-        </div>
-        {DATA.conversations.map(cv => (
-          <button key={cv.id} onClick={() => setSel(cv.id)} className="nav-item" style={{ height: "auto", padding: 12, gap: 12, marginBottom: 4, background: sel === cv.id ? "var(--blue-tint)" : "transparent", alignItems: "flex-start" }}>
-            <Avatar p={{ color: cv.color, initials: cv.initials }} size={42} />
-            <div className="grow" style={{ minWidth: 0 }}>
-              <div className="row" style={{ gap: 6 }}><span style={{ fontWeight: 700, fontSize: 14, color: "var(--ink)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{cv.name}</span>{cv.unread > 0 && <span className="badge" style={{ marginLeft: "auto" }}>{cv.unread}</span>}</div>
-              <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", fontWeight: 400 }}>{cv.summary}</div>
-              <div className="row" style={{ gap: 8, marginTop: 5 }}><span style={{ fontSize: 11.5, color: "var(--warm-deep)", fontWeight: 700 }} className="row"><Icon name="mic" size={12} /> {cv.voiceNotes}</span><span style={{ fontSize: 11.5, color: "var(--faint)" }}>{cv.lastAt}</span></div>
-            </div>
+    <div style={{ display: "grid", gridTemplateColumns: "220px 1fr 1fr", height: "100%", overflow: "hidden" }}>
+
+      {/* ---- Col 1: proyectos / labels ---- */}
+      <div style={{ borderRight: "1px solid var(--line-soft)", padding: "20px 12px", overflowY: "auto", display: "flex", flexDirection: "column", gap: 4 }}>
+        <button className="btn btn-primary btn-lg" onClick={onNew} style={{ marginBottom: 18, width: "100%", justifyContent: "center" }}>
+          <Icon name="plus" size={16} /> Nuevo informe
+        </button>
+
+        {[
+          { id: "todos", label: "Todos los audios", icon: "mic", badge: unreadTotal },
+          { id: "starred", label: "Destacados", icon: "star" },
+        ].map(item => (
+          <button key={item.id} onClick={() => setActiveProject(item.id)}
+            className="nav-item"
+            style={{ background: activeProject === item.id ? "var(--blue-tint)" : "transparent", color: activeProject === item.id ? "var(--blue-deep)" : "var(--ink-soft)", fontWeight: activeProject === item.id ? 700 : 600, borderRadius: "var(--r-sm)", padding: "9px 12px" }}>
+            <Icon name={item.icon} size={17} />
+            <span style={{ flex: 1, textAlign: "left" }}>{item.label}</span>
+            {item.badge > 0 && <span className="badge" style={{ background: "var(--blue)", color: "#fff" }}>{item.badge}</span>}
           </button>
         ))}
+
+        <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: ".06em", textTransform: "uppercase", color: "var(--faint)", padding: "16px 12px 6px" }}>Proyecto</div>
+        {DATA.projects.map(proj => {
+          const cnt = DATA.audioInbox.filter(a => a.project === proj.id && a.unread).length;
+          const isActive = activeProject === proj.id;
+          return (
+            <button key={proj.id} onClick={() => setActiveProject(proj.id)}
+              className="nav-item"
+              style={{ background: isActive ? "var(--blue-tint)" : "transparent", color: isActive ? "var(--blue-deep)" : "var(--ink-soft)", fontWeight: isActive ? 700 : 600, borderRadius: "var(--r-sm)", padding: "9px 12px" }}>
+              <span style={{ width: 10, height: 10, borderRadius: "50%", background: proj.color, flex: "none" }} />
+              <span style={{ flex: 1, textAlign: "left", fontSize: 13.5 }}>{proj.label}</span>
+              {cnt > 0 && <span style={{ fontSize: 11, fontWeight: 700, color: "var(--muted)" }}>{cnt}</span>}
+            </button>
+          );
+        })}
       </div>
-      <div style={{ overflowY: "auto" }}>
-        <div className="topbar" style={{ padding: "16px 28px" }}>
-          <Avatar p={{ color: c.color, initials: c.initials }} size={40} />
-          <div><h1 style={{ fontSize: 17 }}>{c.name}</h1><div className="sub">{c.members} {c.members > 1 ? "personas" : "persona"} · {c.voiceNotes} notas de voz</div></div>
-          <div className="topbar-spacer" />
-          <button className="btn btn-soft btn-sm"><Icon name="doc" size={15} /> Usar en un informe</button>
-        </div>
-        <div style={{ padding: "20px 28px 60px", maxWidth: 760 }}>
-          <AINote><b>Transcripción automática activada.</b> Las notas de voz se convierten en texto al llegar. Puedes corregir cualquier palabra — la grabación original se conserva.</AINote>
-          <div style={{ marginTop: 18 }}>
-            {(c.role === "team" ? DATA.teamReports : DATA.transcript).map((t, i) => {
-              const p = DATA.people[t.who];
-              const isTeam = t.kind === "reporte";
-              return (
-                <div key={i} className="tline" style={{ padding: "16px 0" }}>
-                  <Avatar p={p} size={40} />
-                  <div className="grow">
-                    <div className="row" style={{ gap: 8 }}><span style={{ fontWeight: 700, fontSize: 14.5 }}>{p.name}</span>{isTeam ? <Chip tone="blue"><Icon name="users" size={12} /> Reporte de equipo</Chip> : <span style={{ fontSize: 12, color: "var(--muted)" }}>{p.role}</span>}<span className="grow" /><span style={{ fontSize: 12, color: "var(--muted)" }}>{t.at}</span></div>
-                    <div className="row" style={{ margin: "8px 0" }}><VoicePlayer dur={t.dur} color={p.color} /></div>
-                    <div style={{ fontSize: 15.5, color: "var(--ink)", lineHeight: 1.6 }}>{t.text}</div>
-                    <div className="row" style={{ gap: 7, marginTop: 9, flexWrap: "wrap" }}>{t.tags.map(tag => <Chip key={tag} tone={isTeam ? "" : "blue"}>{tag}</Chip>)}<button className="chip" style={{ cursor: "pointer" }}><Icon name="plus" size={13} /> etiqueta</button></div>
-                  </div>
-                </div>
-              );
-            })}
+
+      {/* ---- Col 2: lista de audios ---- */}
+      <div style={{ borderRight: "1px solid var(--line-soft)", overflowY: "auto", display: "flex", flexDirection: "column" }}>
+        <div style={{ padding: "16px 16px 12px", borderBottom: "1px solid var(--line-soft)", position: "sticky", top: 0, background: "var(--paper)", zIndex: 2 }}>
+          <div style={{ position: "relative" }}>
+            <span style={{ position: "absolute", left: 11, top: 10, color: "var(--faint)" }}><Icon name="search" size={16} /></span>
+            <input placeholder="Buscar audios…" style={{ width: "100%", padding: "9px 12px 9px 34px", borderRadius: 999, border: "1px solid var(--line)", background: "var(--surface-2)", fontSize: 13, fontFamily: "inherit", outline: "none" }} />
           </div>
         </div>
+
+        {(activeProject === "todos" || activeProject === "starred"
+          ? DATA.projects
+          : DATA.projects.filter(p => p.id === activeProject)
+        ).map(proj => {
+          const items = DATA.audioInbox.filter(a => a.project === proj.id);
+          if (!items.length) return null;
+          return (
+            <div key={proj.id}>
+              <div style={{ padding: "10px 16px 6px", fontSize: 11, fontWeight: 800, letterSpacing: ".05em", textTransform: "uppercase", color: proj.color, borderBottom: "1px solid var(--line-soft)", display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ width: 8, height: 8, borderRadius: "50%", background: proj.color }} />
+                {proj.label}
+              </div>
+              {items.map(a => {
+                const p = DATA.people[a.who];
+                const isSel = sel === a.id;
+                return (
+                  <button key={a.id} onClick={() => setSel(a.id)}
+                    style={{ width: "100%", textAlign: "left", padding: "14px 16px", display: "flex", gap: 12, alignItems: "flex-start", border: "none", borderBottom: "1px solid var(--line-soft)", background: isSel ? "var(--blue-tint)" : "transparent", cursor: "pointer", transition: "background .12s" }}>
+                    <Avatar p={p} size={38} />
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div className="row" style={{ gap: 6, marginBottom: 2 }}>
+                        <span style={{ fontWeight: a.unread ? 800 : 600, fontSize: 14, color: "var(--ink)", flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.name}</span>
+                        <span style={{ fontSize: 11.5, color: "var(--faint)", flex: "none" }}>{a.at}</span>
+                      </div>
+                      <div style={{ fontWeight: a.unread ? 700 : 500, fontSize: 13.5, color: "var(--ink)", marginBottom: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{a.subject}</div>
+                      <div className="row" style={{ gap: 6 }}>
+                        <span style={{ color: "var(--warm-deep)", fontSize: 12, fontWeight: 700, display: "flex", alignItems: "center", gap: 4 }}><Icon name="mic" size={12} /> {a.dur}</span>
+                        <span style={{ fontSize: 12, color: "var(--faint)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", flex: 1 }}>{a.preview}</span>
+                      </div>
+                    </div>
+                    {a.unread && <span style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--blue)", flex: "none", marginTop: 6 }} />}
+                  </button>
+                );
+              })}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* ---- Col 3: detalle del audio ---- */}
+      <div style={{ display: "flex", flexDirection: "column", overflowY: "auto" }}>
+        {audio && person ? (
+          <>
+            <div style={{ padding: "18px 24px", borderBottom: "1px solid var(--line-soft)", display: "flex", gap: 14, alignItems: "center" }}>
+              <Avatar p={person} size={42} />
+              <div style={{ flex: 1 }}>
+                <div style={{ fontWeight: 800, fontSize: 15.5 }}>{person.name}</div>
+                <div style={{ fontSize: 12.5, color: "var(--muted)" }}>{person.role}</div>
+              </div>
+              <div style={{ fontSize: 12, color: "var(--faint)" }}>{audio.at}</div>
+              <button className="btn btn-ghost btn-sm" onClick={onNew}><Icon name="doc" size={14} /> Usar en informe</button>
+            </div>
+
+            <div style={{ padding: "20px 24px", flex: 1, overflowY: "auto" }}>
+              {project && (
+                <div style={{ marginBottom: 12 }}>
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 700, color: project.color, padding: "3px 10px", background: project.color + "18", borderRadius: 999 }}>
+                    <span style={{ width: 7, height: 7, borderRadius: "50%", background: project.color }} />
+                    {project.label}
+                  </span>
+                </div>
+              )}
+              <h2 style={{ fontSize: 20, fontWeight: 800, margin: "0 0 18px", letterSpacing: "-.02em" }}>{audio.subject}</h2>
+              <div style={{ marginBottom: 20 }}>
+                <VoicePlayer dur={audio.dur} color={person.color} />
+              </div>
+              <div style={{ fontSize: 15, lineHeight: 1.7, color: "var(--ink)", marginBottom: 18 }}>{audio.text}</div>
+              <div className="row" style={{ gap: 7, flexWrap: "wrap" }}>
+                {audio.tags.map(tag => <Chip key={tag} tone="blue">{tag}</Chip>)}
+              </div>
+            </div>
+
+            <div style={{ borderTop: "1px solid var(--line-soft)", padding: "16px 24px", background: "var(--surface)" }}>
+              <div style={{ borderRadius: "var(--r)", border: "1px solid var(--line)", overflow: "hidden" }}>
+                <div style={{ padding: "10px 16px 4px", fontSize: 13, color: "var(--muted)", borderBottom: "1px solid var(--line-soft)" }}>
+                  <span style={{ fontWeight: 700, color: "var(--ink)" }}>Nota interna</span> · visible solo para tu equipo
+                </div>
+                <div style={{ padding: "8px 14px", borderBottom: "1px solid var(--line-soft)", display: "flex", gap: 8 }}>
+                  {["B", "I", "U"].map(f => (
+                    <button key={f} style={{ border: "none", background: "none", fontWeight: 700, fontSize: 13, color: "var(--ink-soft)", cursor: "pointer", padding: "2px 6px", borderRadius: 4 }}>{f}</button>
+                  ))}
+                </div>
+                <textarea
+                  value={note}
+                  onChange={e => setNote(e.target.value)}
+                  placeholder="Escribe una nota sobre este audio…"
+                  style={{ width: "100%", minHeight: 90, border: "none", outline: "none", padding: "12px 16px", fontFamily: "inherit", fontSize: 14, lineHeight: 1.6, resize: "none", color: "var(--ink)", background: "transparent" }}
+                />
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 12 }}>
+                <button className="btn btn-ghost btn-sm" onClick={onNew}><Icon name="spark" size={15} /> Crear informe con este audio</button>
+                <button className="btn btn-primary" disabled={!note.trim()}><Icon name="check" size={15} /> Guardar nota</button>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div style={{ flex: 1, display: "grid", placeItems: "center", color: "var(--faint)", fontSize: 14 }}>
+            Selecciona un audio para ver el detalle
+          </div>
+        )}
       </div>
     </div>
   );
@@ -2215,7 +2487,7 @@ function App() {
           ? <ReportFlow onClose={() => setFlow(false)} tone={t} />
           : <>
               {page === "inicio" && <Inicio onNew={() => setFlow(true)} setPage={setPage} copy={copy} />}
-              {page === "convos" && <Convos />}
+              {page === "convos" && <div style={{ height: "100vh", overflow: "hidden" }}><Convos onNew={() => setFlow(true)} /></div>}
               {page === "importar" && <Importar onGenerate={() => setFlow(true)} goDatos={() => setPage("inicio")} />}
               {page === "informes" && <Informes onNew={() => setFlow(true)} />}
               {page === "autom" && <Automatizaciones />}
