@@ -29,6 +29,7 @@ const ICONS = {
   eye:    "M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Zm10 3a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z",
   link:   "M9 15l6-6M10 6l1-1a4 4 0 0 1 6 6l-1 1M14 18l-1 1a4 4 0 0 1-6-6l1-1",
   chart:  "M4 20h16M7 20v-7M12 20V7M17 20v-10",
+  menu:   "M4 7h16M4 12h16M4 17h16",
   upload: "M12 14V4m0 0 4 4m-4-4-4 4M5 16v3a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-3",
   table:  "M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm-1 5h18M9 5v14",
   trash:  "M5 7h14M10 7V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2m-7 0 1 13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1l1-13",
@@ -59,10 +60,11 @@ function Wave({ playing = false, bars = 28, color }) {
   const heights = useRef(Array.from({ length: bars }, (_, i) =>
     6 + Math.round(Math.abs(Math.sin(i * 1.7) * 14) + (i % 3) * 2))).current;
   return (
-    <div className="wave" style={color ? { "--warm": color } : null}>
+    <div className="wave" style={color ? { color } : undefined}>
       {heights.map((h, i) => (
         <span key={i} style={{
           height: h,
+          background: color || "var(--blue)",
           opacity: playing ? 0.55 + 0.45 * Math.abs(Math.sin(i)) : 0.8,
           animation: playing ? `vp 0.9s ${i * 0.045}s ease-in-out infinite alternate` : "none",
         }} />
@@ -72,19 +74,18 @@ function Wave({ playing = false, bars = 28, color }) {
 }
 
 /* ---- Reproductor de nota de voz ---------------------------------- */
-function VoicePlayer({ dur = "0:48", color }) {
+function VoicePlayer({ dur = "0:48", color, compact = false }) {
   const [on, setOn] = useState(false);
   useEffect(() => { if (!on) return; const t = setTimeout(() => setOn(false), 2600); return () => clearTimeout(t); }, [on]);
+  const tint = color ? `color-mix(in srgb, ${color} 14%, white)` : "var(--warm-tint)";
+  const durColor = color ? `color-mix(in srgb, ${color} 72%, black)` : "var(--warm-deep)";
   return (
-    <div className="row" style={{ gap: 11, padding: "8px 12px", background: "var(--warm-tint)", borderRadius: 999, width: "fit-content" }}>
-      <button onClick={() => setOn(v => !v)} style={{
-        border: "none", background: color || "var(--warm)", color: "#fff",
-        width: 30, height: 30, borderRadius: 999, display: "grid", placeItems: "center",
-      }}>
-        <Icon name={on ? "pause" : "play"} size={15} />
+    <div className={"voice-player" + (compact ? " voice-player-compact" : "")} style={{ background: tint }}>
+      <button type="button" onClick={() => setOn(v => !v)} className="voice-player-btn" style={{ background: color || "var(--warm)" }}>
+        <Icon name={on ? "pause" : "play"} size={compact ? 13 : 15} />
       </button>
-      <Wave playing={on} bars={22} color={color} />
-      <span style={{ fontSize: 12.5, fontWeight: 700, color: "var(--warm-deep)", fontVariantNumeric: "tabular-nums" }}>{dur}</span>
+      <Wave playing={on} bars={compact ? 16 : 22} color={color} />
+      <span className="voice-player-dur" style={{ color: durColor }}>{dur}</span>
     </div>
   );
 }

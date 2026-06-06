@@ -1,11 +1,5 @@
 "use client";
 import React, { useState, useEffect, useRef, useMemo } from "react";
-const aUse = useState;
-const rUse = useState;
-const dUse = useState;
-const iUse = useState;
-const oUse = useState;
-const iRef = useRef;
 
 
 /* --- data.js --- */
@@ -14,38 +8,38 @@ const iRef = useRef;
 const DATA = (function () {
   const people = {
     // Comunidad
-    maria:   { id: "maria",   name: "María Elena Quispe",   role: "Vecina · Programa de salud", color: "oklch(0.62 0.14 30)",  initials: "MQ" },
-    roberto: { id: "roberto", name: "Don Roberto Mamani",   role: "Dirigente comunal",          color: "oklch(0.55 0.12 250)", initials: "RM" },
-    luz:     { id: "luz",     name: "Luz Carrasco",          role: "Madre · Comedor popular",    color: "oklch(0.60 0.13 145)", initials: "LC" },
-    jowel:   { id: "jowel",   name: "Jowel Andrade",         role: "Joven · Taller ambiental",   color: "oklch(0.58 0.12 300)", initials: "JA" },
+    maria:   { id: "maria",   name: "María Elena Quispe",   role: "Vecina · Programa de salud", color: "#6B8875",  initials: "MQ" },
+    roberto: { id: "roberto", name: "Don Roberto Mamani",   role: "Dirigente comunal",          color: "#5D7A66", initials: "RM" },
+    luz:     { id: "luz",     name: "Luz Carrasco",          role: "Madre · Comedor popular",    color: "#7A9480", initials: "LC" },
+    jowel:   { id: "jowel",   name: "Jowel Andrade",         role: "Joven · Taller ambiental",   color: "#4A6352", initials: "JA" },
     // Equipo / voluntariado
-    carlosH: { id: "carlosH", name: "Carlos Huamán",         role: "Voluntario · Equipo de campo", color: "oklch(0.50 0.10 248)", initials: "CH", team: true },
-    anaR:    { id: "anaR",    name: "Ana Rivas",             role: "Coordinadora de jornada",      color: "oklch(0.52 0.11 278)", initials: "AR", team: true },
+    carlosH: { id: "carlosH", name: "Carlos Huamán",         role: "Voluntario · Equipo de campo", color: "#8B7355", initials: "CH", team: true },
+    anaR:    { id: "anaR",    name: "Ana Rivas",             role: "Coordinadora de jornada",      color: "#3D5244", initials: "AR", team: true },
   };
 
   // Conversaciones de WhatsApp conectadas
   const conversations = [
     {
       id: "equipo", name: "Equipo de campo · Voluntariado", kind: "Grupo", role: "team",
-      members: 8, color: "oklch(0.50 0.10 248)", initials: "EC",
+      members: 8, color: "#5D7A66", initials: "EC",
       lastAt: "hace 30 min", unread: 2, voiceNotes: 6,
       summary: "Reportes de los voluntarios: qué se hizo, qué se desplegó y qué quedó pendiente.",
     },
     {
       id: "salud", name: "Salud Comunitaria — Villa El Sol", kind: "Grupo", role: "community",
-      members: 14, color: "oklch(0.62 0.14 30)", initials: "SC",
+      members: 14, color: "#6B8875", initials: "SC",
       lastAt: "hace 12 min", unread: 3, voiceNotes: 8,
       summary: "Testimonios sobre la nueva posta médica y acceso a medicinas.",
     },
     {
       id: "ambiente", name: "Jóvenes por el río", kind: "Grupo", role: "community",
-      members: 21, color: "oklch(0.58 0.12 300)", initials: "JR",
+      members: 21, color: "#4A6352", initials: "JR",
       lastAt: "ayer", unread: 0, voiceNotes: 11,
       summary: "Jornada de limpieza y voces sobre la contaminación del río.",
     },
     {
       id: "roberto", name: "Don Roberto Mamani", kind: "Directo", role: "community",
-      members: 1, color: "oklch(0.55 0.12 250)", initials: "RM",
+      members: 1, color: "#7A9480", initials: "RM",
       lastAt: "hace 3 h", unread: 1, voiceNotes: 2,
       summary: "Seguimiento al acuerdo con el municipio.",
     },
@@ -86,9 +80,9 @@ const DATA = (function () {
 
   // Informes existentes
   const reports = [
-    { id: "r1", title: "Impacto de la posta médica — Marzo 2026", program: "Salud Comunitaria", status: "Borrador en revisión", voices: 8, updated: "hoy", color: "oklch(0.62 0.14 30)", impact: 120, impactLabel: "personas impactadas" },
-    { id: "r2", title: "Resultados jornada de limpieza del río", program: "Medio Ambiente", status: "Aprobado", voices: 11, updated: "hace 4 días", color: "oklch(0.58 0.12 300)", impact: 340, impactLabel: "kg de residuos retirados" },
-    { id: "r3", title: "Comedor Las Manitos — Reporte trimestral", program: "Seguridad alimentaria", status: "Aprobado", voices: 6, updated: "hace 2 sem", color: "oklch(0.60 0.13 145)", impact: 85, impactLabel: "familias atendidas" },
+    { id: "r1", title: "Impacto de la posta médica — Marzo 2026", program: "Salud Comunitaria", status: "Borrador en revisión", voices: 8, updated: "hoy", color: "#6B8875", impact: 120, impactLabel: "personas impactadas" },
+    { id: "r2", title: "Resultados jornada de limpieza del río", program: "Medio Ambiente", status: "Aprobado", voices: 11, updated: "hace 4 días", color: "#4A6352", impact: 340, impactLabel: "kg de residuos retirados" },
+    { id: "r3", title: "Comedor Las Manitos — Reporte trimestral", program: "Seguridad alimentaria", status: "Aprobado", voices: 6, updated: "hace 2 sem", color: "#7A9480", impact: 85, impactLabel: "familias atendidas" },
   ];
 
   // Bloques que la IA propone — mezcla testimonios de comunidad + reportes del equipo
@@ -145,19 +139,19 @@ const DATA = (function () {
     ],
     base: { impacted: 1240, events: 8, voices: 142, docs: 11 },
     gender: [
-      { label: "Femenino", value: 58, color: "oklch(0.64 0.13 18)" },
-      { label: "Masculino", value: 39, color: "oklch(0.55 0.11 250)" },
-      { label: "Otro / NS", value: 3, color: "oklch(0.70 0.03 258)" },
+      { label: "Femenino", value: 58, color: "#5D7A66" },
+      { label: "Masculino", value: 39, color: "#6B8875" },
+      { label: "Otro / NS", value: 3, color: "#999999" },
     ],
     age: [
       { label: "0–12", value: 14 }, { label: "13–17", value: 12 }, { label: "18–29", value: 26 },
       { label: "30–44", value: 23 }, { label: "45–64", value: 17 }, { label: "65+", value: 8 },
     ],
     programs: [
-      { name: "Salud comunitaria", value: 480, color: "oklch(0.62 0.14 30)" },
-      { name: "Medio ambiente", value: 340, color: "oklch(0.58 0.12 300)" },
-      { name: "Educación", value: 260, color: "oklch(0.60 0.13 200)" },
-      { name: "Seguridad alimentaria", value: 160, color: "oklch(0.60 0.13 145)" },
+      { name: "Salud comunitaria", value: 480, color: "#5D7A66" },
+      { name: "Medio ambiente", value: 340, color: "#4A6352" },
+      { name: "Educación", value: 260, color: "#6B8875" },
+      { name: "Seguridad alimentaria", value: 160, color: "#7A9480" },
     ],
     trend: [
       { m: "Oct", v: 520 }, { m: "Nov", v: 640 }, { m: "Dic", v: 710 },
@@ -807,13 +801,11 @@ function TweakButton({ label, onClick, secondary = false }) {
   );
 }
 
-if (typeof window !== "undefined") {
-Object.assign(window, {
+if (typeof window !== "undefined") Object.assign(window, {
   useTweaks, TweaksPanel, TweakSection, TweakRow,
   TweakSlider, TweakToggle, TweakRadio, TweakSelect,
   TweakText, TweakNumber, TweakColor, TweakButton,
 });
-}
 
 /* --- ui.jsx --- */
 /* Componentes UI compartidos → window */
@@ -847,6 +839,7 @@ const ICONS = {
   eye:    "M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Zm10 3a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z",
   link:   "M9 15l6-6M10 6l1-1a4 4 0 0 1 6 6l-1 1M14 18l-1 1a4 4 0 0 1-6-6l1-1",
   chart:  "M4 20h16M7 20v-7M12 20V7M17 20v-10",
+  menu:   "M4 7h16M4 12h16M4 17h16",
   upload: "M12 14V4m0 0 4 4m-4-4-4 4M5 16v3a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-3",
   table:  "M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm-1 5h18M9 5v14",
   trash:  "M5 7h14M10 7V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2m-7 0 1 13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1l1-13",
@@ -877,10 +870,11 @@ function Wave({ playing = false, bars = 28, color }) {
   const heights = useRef(Array.from({ length: bars }, (_, i) =>
     6 + Math.round(Math.abs(Math.sin(i * 1.7) * 14) + (i % 3) * 2))).current;
   return (
-    <div className="wave" style={color ? { "--warm": color } : null}>
+    <div className="wave" style={color ? { color } : undefined}>
       {heights.map((h, i) => (
         <span key={i} style={{
           height: h,
+          background: color || "var(--blue)",
           opacity: playing ? 0.55 + 0.45 * Math.abs(Math.sin(i)) : 0.8,
           animation: playing ? `vp 0.9s ${i * 0.045}s ease-in-out infinite alternate` : "none",
         }} />
@@ -890,19 +884,18 @@ function Wave({ playing = false, bars = 28, color }) {
 }
 
 /* ---- Reproductor de nota de voz ---------------------------------- */
-function VoicePlayer({ dur = "0:48", color }) {
+function VoicePlayer({ dur = "0:48", color, compact = false }) {
   const [on, setOn] = useState(false);
   useEffect(() => { if (!on) return; const t = setTimeout(() => setOn(false), 2600); return () => clearTimeout(t); }, [on]);
+  const tint = color ? `color-mix(in srgb, ${color} 14%, white)` : "var(--warm-tint)";
+  const durColor = color ? `color-mix(in srgb, ${color} 72%, black)` : "var(--warm-deep)";
   return (
-    <div className="row" style={{ gap: 11, padding: "8px 12px", background: "var(--warm-tint)", borderRadius: 999, width: "fit-content" }}>
-      <button onClick={() => setOn(v => !v)} style={{
-        border: "none", background: color || "var(--warm)", color: "#fff",
-        width: 30, height: 30, borderRadius: 999, display: "grid", placeItems: "center",
-      }}>
-        <Icon name={on ? "pause" : "play"} size={15} />
+    <div className={"voice-player" + (compact ? " voice-player-compact" : "")} style={{ background: tint }}>
+      <button type="button" onClick={() => setOn(v => !v)} className="voice-player-btn" style={{ background: color || "var(--warm)" }}>
+        <Icon name={on ? "pause" : "play"} size={compact ? 13 : 15} />
       </button>
-      <Wave playing={on} bars={22} color={color} />
-      <span style={{ fontSize: 12.5, fontWeight: 700, color: "var(--warm-deep)", fontVariantNumeric: "tabular-nums" }}>{dur}</span>
+      <Wave playing={on} bars={compact ? 16 : 22} color={color} />
+      <span className="voice-player-dur" style={{ color: durColor }}>{dur}</span>
     </div>
   );
 }
@@ -927,9 +920,7 @@ function AINote({ children }) {
   );
 }
 
-if (typeof window !== "undefined") {
-Object.assign(window, { Icon, Avatar, Wave, VoicePlayer, Switch, Chip, AINote });
-}
+if (typeof window !== "undefined") Object.assign(window, { Icon, Avatar, Wave, VoicePlayer, Switch, Chip, AINote });
 
 /* animación de barras */
 if (typeof document !== "undefined") {
@@ -940,7 +931,7 @@ document.head.appendChild(__vp);
 
 /* --- onboarding.jsx --- */
 /* Onboarding — 3 variaciones comparables → window.Onboarding */
-
+const oUse = useState;
 
 /* QR falso (cuadritos — placeholder) */
 function FakeQR({ size = 168 }) {
@@ -971,7 +962,7 @@ function FakeQR({ size = 168 }) {
 /* Placeholder de ilustración rayado */
 function Illu({ label, h = 220, tone = "blue" }) {
   const bg = tone === "warm" ? "var(--warm-tint)" : "var(--blue-tint)";
-  const stripe = tone === "warm" ? "oklch(0.88 0.06 55)" : "oklch(0.86 0.05 252)";
+  const stripe = tone === "warm" ? "#E5DDD2" : "#D5E0D8";
   return (
     <div style={{
       height: h, borderRadius: "var(--r-lg)", background: bg,
@@ -1068,7 +1059,7 @@ function VariantWizard({ onFinish }) {
         </div>
 
         {/* derecha: visual */}
-        <div style={{ background: "linear-gradient(160deg, var(--blue-tint), oklch(0.965 0.02 252))", display: "grid", placeItems: "center", padding: 36, borderLeft: "1px solid var(--line)" }}>
+        <div style={{ background: "linear-gradient(160deg, var(--blue-tint), var(--green-tint))", display: "grid", placeItems: "center", padding: 36, borderLeft: "1px solid var(--line)" }}>
           {step === 0 && <div style={{ textAlign: "center" }}>
             <div style={{ position: "relative", width: 230 }}>
               {DATA.transcript.slice(0, 2).map((t, i) => {
@@ -1177,7 +1168,7 @@ function VariantTour({ onFinish }) {
         {/* mockup atenuado de la app */}
         <div className="card" style={{ padding: 0, overflow: "hidden", boxShadow: "var(--sh-lg)" }}>
           <div style={{ padding: "16px 22px", borderBottom: "1px solid var(--line)", display: "flex", gap: 11, alignItems: "center", background: "var(--surface-2)" }}>
-            <Avatar p={{ color: "oklch(0.62 0.14 30)", initials: "SC" }} size={34} />
+            <Avatar p={{ color: "#6B8875", initials: "SC" }} size={34} />
             <div><div style={{ fontWeight: 800, fontSize: 15 }}>Salud Comunitaria — Villa El Sol</div><div style={{ fontSize: 12, color: "var(--muted)" }}>3 voces nuevas · hoy</div></div>
           </div>
           <div style={{ padding: 22, display: "flex", flexDirection: "column", gap: 14 }}>
@@ -1234,7 +1225,7 @@ function Onboarding({ variant, setVariant, onFinish }) {
   return (
     <div style={{ minHeight: "100vh", background: "radial-gradient(1200px 600px at 70% -10%, var(--blue-tint), transparent), var(--paper)", display: "flex", flexDirection: "column" }}>
       {/* barra comparadora */}
-      <div style={{ position: "sticky", top: 0, zIndex: 30, padding: "13px 22px", display: "flex", alignItems: "center", gap: 14, background: "oklch(0.992 0.004 85 / .8)", backdropFilter: "blur(10px)", borderBottom: "1px solid var(--line-soft)" }}>
+      <div style={{ position: "sticky", top: 0, zIndex: 30, padding: "13px 22px", display: "flex", alignItems: "center", gap: 14, background: "rgba(235,234,230,.85)", backdropFilter: "blur(10px)", borderBottom: "1px solid var(--line-soft)" }}>
         <div className="row" style={{ gap: 9 }}>
           <span className="chip warm" style={{ fontWeight: 800 }}><Icon name="eye" size={14} /> Comparando onboarding</span>
         </div>
@@ -1265,7 +1256,8 @@ if (typeof window !== "undefined") window.Onboarding = Onboarding;
 
 /* --- reports.jsx --- */
 /* Flujo de generación de informes (pieza central) → window.ReportFlow */
-
+const rUse = useState;
+const rEff = useEffect;
 
 function StepBar({ step }) {
   const names = ["Elegir voces", "Borrador IA", "Revisar y editar", "Compartir"];
@@ -1543,7 +1535,7 @@ function Share({ blocks, metrics, onClose }) {
           <p style={{ fontSize: 13.5, color: "var(--ink-soft)", lineHeight: 1.55, margin: "0 0 14px" }}>Revisa que el informe suene como tu organización. Voz no comparte nada hasta que tú lo apruebes.</p>
           <label className="row" style={{ gap: 11, padding: 12, borderRadius: "var(--r-sm)", background: approved ? "var(--green-tint)" : "var(--surface-2)", border: "1px solid " + (approved ? "var(--green)" : "var(--line)"), cursor: "pointer", transition: "all .15s" }}>
             <Switch on={approved} warm onClick={() => setApproved(a => !a)} />
-            <span style={{ fontSize: 13.5, fontWeight: 700, color: approved ? "oklch(0.42 0.09 152)" : "var(--ink)" }}>{approved ? "Revisado y aprobado por mí" : "Confirmo que lo revisé"}</span>
+            <span style={{ fontSize: 13.5, fontWeight: 700, color: approved ? "var(--green-deep)" : "var(--ink)" }}>{approved ? "Revisado y aprobado por mí" : "Confirmo que lo revisé"}</span>
           </label>
         </div>
 
@@ -1558,7 +1550,7 @@ function Share({ blocks, metrics, onClose }) {
         </div>
 
         {approved && <div className="card card-pad float-in" style={{ background: "var(--green-tint)", border: "1px solid var(--green)" }}>
-          <div className="row" style={{ gap: 9, color: "oklch(0.42 0.09 152)", fontWeight: 700, fontSize: 14 }}><Icon name="check" size={18} /> Informe listo para compartir 🎉</div>
+          <div className="row" style={{ gap: 9, color: "var(--green-deep)", fontWeight: 700, fontSize: 14 }}><Icon name="check" size={18} /> Informe listo para compartir 🎉</div>
         </div>}
       </div>
     </div>
@@ -1621,7 +1613,7 @@ document.head.appendChild(__sp);
 
 /* --- analytics.jsx --- */
 /* Panel de datos — indicadores demográficos fusionados → window.Analytics */
-
+const dUse = useState;
 
 function fmt(n) { return Math.round(n).toLocaleString("es-PE"); }
 
@@ -1719,6 +1711,42 @@ function StatBig({ value, label, sub, tone, note }) {
   );
 }
 
+function HeroStat({ value, label, sub, period }) {
+  return (
+    <div className="bento-hero card">
+      <div className="bento-hero-top">
+        <span className="bento-hero-tag">Impacto · {period}</span>
+        <Icon name="arrow" size={15} style={{ opacity: .75 }} />
+      </div>
+      <div className="bento-hero-value">{value}<span>*</span></div>
+      <div className="bento-hero-label">{label}</div>
+      {sub && <div className="bento-hero-sub">{sub}</div>}
+    </div>
+  );
+}
+
+function StatMini({ value, label }) {
+  return (
+    <div className="bento-mini card">
+      <div className="bento-mini-val">{value}</div>
+      <div className="bento-mini-lbl">{label}</div>
+    </div>
+  );
+}
+
+function StatAccent({ value, label, sub }) {
+  return (
+    <div className="bento-accent card">
+      <div className="bento-accent-top">
+        <span className="bento-accent-lbl">{label}</span>
+        <Icon name="mic" size={16} style={{ color: "var(--blue)" }} />
+      </div>
+      <div className="bento-accent-val">{value}</div>
+      {sub && <div className="bento-accent-sub">{sub}</div>}
+    </div>
+  );
+}
+
 function Panel({ title, sub, children, foot }) {
   return (
     <div className="card" style={{ padding: 0, overflow: "hidden" }}>
@@ -1732,23 +1760,23 @@ function Panel({ title, sub, children, foot }) {
   );
 }
 
-function Analytics({ activeProject, setActiveProject }) {
+function Analytics({ activeProject, setActiveProject, setPage, onNew, copy }) {
   const [scope, setScope] = dUse("mes");
   const a = activeProject ? activeProject.dashboard_data : DATA.analytics;
   
   // If a project is selected, force mult to 1 (all-time) and hide scopes
   const sc = activeProject ? { id: "all", label: "Histórico del Proyecto", mult: 1 } : DATA.analytics.scopes.find(s => s.id === scope);
   const mult = sc.mult;
+  const recentVoices = [DATA.teamReports[0], ...DATA.transcript].slice(0, 2);
 
   return (
-    <div className="page float-in" style={{ maxWidth: 1120 }}>
-      <div className="row" style={{ alignItems: "flex-start", marginBottom: 6, flexWrap: "wrap", gap: 14 }}>
-        <div>
-          <h2 style={{ fontSize: 25, fontWeight: 800, letterSpacing: "-.025em", margin: 0 }}>Panel de datos</h2>
+    <div className="page float-in">
+      <div className="inicio-header">
+        <div className="inicio-header-main">
+          <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-.025em", margin: 0 }}>{copy?.greet ?? "Buenos días"}, Carla 👋</h2>
           <p style={{ color: "var(--muted)", fontSize: 14.5, margin: "4px 0 0" }}>Datos fusionados de tus eventos, voces y documentos · <b style={{ color: "var(--ink-soft)" }}>{sc.label}</b></p>
         </div>
-        <div className="grow" />
-        <div className="row" style={{ gap: 10 }}>
+        <div className="inicio-header-actions" style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
           {/* Project Selector */}
           <select 
             value={activeProject ? activeProject.id : "general"} 
@@ -1764,9 +1792,8 @@ function Analytics({ activeProject, setActiveProject }) {
             ))}
           </select>
 
-          {/* Scopes (only show if no project is selected) */}
           {!activeProject && (
-            <div className="row" style={{ gap: 5, background: "var(--surface-2)", padding: 4, borderRadius: 999, border: "1px solid var(--line)" }}>
+            <div className="scope-toggle">
               {DATA.analytics.scopes.map(s => (
                 <button key={s.id} onClick={() => setScope(s.id)} style={{
                   border: "none", padding: "7px 14px", borderRadius: 999, fontWeight: 700, fontSize: 13,
@@ -1777,52 +1804,102 @@ function Analytics({ activeProject, setActiveProject }) {
               ))}
             </div>
           )}
+          <button className="btn btn-ghost"><Icon name="down" size={16} /> Exportar</button>
+          {onNew && <button className="btn btn-primary btn-lg" onClick={onNew}><Icon name="plus" size={18} /> Nuevo informe</button>}
         </div>
-        <button className="btn btn-ghost"><Icon name="down" size={16} /> Exportar</button>
+        </div>
       </div>
 
       <div style={{ marginBottom: 16 }}>
         <AINote>Estos indicadores <b>fusionan</b> tus eventos, los testimonios de la comunidad, los reportes del equipo y los documentos que subiste. Los datos demográficos son <b>auto-declarados</b> por las personas — trátalos como aproximados, no como censo.</AINote>
       </div>
 
-      <div className="row" style={{ gap: 14, marginBottom: 16, alignItems: "stretch" }}>
-        <StatBig value={fmt(a.base.impacted * mult)} label="Personas impactadas" sub="Suma de todos los eventos" tone="warm" note />
-        <StatBig value={fmt(a.base.events * mult)} label="Eventos / jornadas" />
-        <StatBig value={fmt(a.base.voices * mult)} label="Voces recogidas" sub="Testimonios + reportes" />
-        <StatBig value={fmt(a.base.docs * mult)} label="Documentos procesados" />
-      </div>
+      <div className="inicio-bento">
+        {/* Col 1 — caja destacada + mini stats */}
+        <HeroStat
+          value={fmt(a.base.impacted * mult)}
+          label="Personas impactadas"
+          sub="Suma de todos los eventos"
+          period={sc.label.toLowerCase()}
+        />
+        <div className="bento-minis">
+          <StatMini value={fmt(a.base.events * mult)} label="Eventos / jornadas" />
+          <StatMini value={fmt(a.base.docs * mult)} label="Documentos" />
+        </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 16 }}>
-        <Panel title="Género" sub="Distribución de personas alcanzadas" foot="Auto-declarado · 3% sin dato">
-          <div className="row" style={{ gap: 22, alignItems: "center" }}>
-            <Donut data={a.gender} />
-            <div className="col" style={{ gap: 11, flex: 1 }}>
-              {a.gender.map(g => (
-                <div key={g.label} className="row" style={{ gap: 10 }}>
-                  <span style={{ width: 12, height: 12, borderRadius: 4, background: g.color, flex: "none" }} />
-                  <span style={{ fontSize: 13.5, fontWeight: 600, color: "var(--ink-soft)" }}>{g.label}</span>
-                  <div className="grow" />
-                  <span style={{ fontSize: 14, fontWeight: 800 }}>{g.value}%</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </Panel>
-
-        <Panel title="Rango de edad" sub="% de personas alcanzadas">
-          <AgeBars data={a.age} />
-        </Panel>
-      </div>
-
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-        {!activeProject && (
-          <Panel title="Personas por programa" sub={`Total: ${fmt(a.base.impacted * mult)}`}>
-            <ProgBars data={a.programs} mult={mult} />
+        {/* Col 2 — gráfico principal + demografía */}
+        <div className="bento-trend">
+          <Panel title="Tendencia de impacto" sub="Personas alcanzadas por mes">
+            <Trend data={a.trend} mult={mult} />
           </Panel>
+        </div>
+        <div className="bento-demo">
+          <Panel title="Género" sub="Distribución" foot="Auto-declarado · 3% sin dato">
+            <div className="donut-row">
+              <Donut data={a.gender} size={120} thickness={18} />
+              <div className="col" style={{ gap: 8, flex: 1, minWidth: 100 }}>
+                {a.gender.map(g => (
+                  <div key={g.label} className="row" style={{ gap: 8 }}>
+                    <span style={{ width: 10, height: 10, borderRadius: 3, background: g.color, flex: "none" }} />
+                    <span style={{ fontSize: 12.5, fontWeight: 600, color: "var(--ink-soft)" }}>{g.label}</span>
+                    <div className="grow" />
+                    <span style={{ fontSize: 13, fontWeight: 800 }}>{g.value}%</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Panel>
+          <Panel title="Rango de edad" sub="% alcanzadas">
+            <AgeBars data={a.age} />
+          </Panel>
+        </div>
+
+        {/* Fila ancha — programas (como Payment History) */}
+        {!activeProject && (
+          <div className="bento-wide">
+            <Panel title="Personas por programa" sub={`Total: ${fmt(a.base.impacted * mult)} · ${sc.label}`}>
+              <ProgBars data={a.programs} mult={mult} />
+            </Panel>
+          </div>
         )}
-        <Panel title="Tendencia de impacto" sub={activeProject ? "Personas alcanzadas por mes en este proyecto" : "Personas alcanzadas por mes"}>
-          <Trend data={a.trend} mult={mult} />
-        </Panel>
+
+        {/* Col 3 — voces + CTA */}
+        <StatAccent
+          value={fmt(a.base.voices * mult)}
+          label="Voces recogidas"
+          sub="Testimonios + reportes"
+        />
+        <div className="bento-voices card voices-card">
+          <div className="voices-card-head">
+            <h3>Voces recientes</h3>
+            <div className="grow" />
+            {setPage && <button className="btn btn-soft btn-sm" onClick={() => setPage("convos")}>Ver todas <Icon name="arrow" size={14} /></button>}
+          </div>
+          {recentVoices.map((t, i) => {
+            const p = DATA.people[t.who];
+            return (
+              <div key={i} className="voice-item">
+                <div className="voice-item-head">
+                  <Avatar p={p} size={34} />
+                  <div className="voice-item-meta">
+                    <span className="voice-item-name">{p.name}</span>
+                    <span className="voice-item-time">{t.at}</span>
+                  </div>
+                </div>
+                <p className="voice-item-text">{t.text}</p>
+                <VoicePlayer dur={t.dur} color={p.color} compact />
+              </div>
+            );
+          })}
+        </div>
+        {onNew && (
+          <div className="bento-cta card card-pad">
+            <div style={{ color: "var(--blue)", marginBottom: 8 }}><Icon name="spark" size={22} /></div>
+            <h3 style={{ fontSize: 15, fontWeight: 800, margin: "0 0 6px" }}>8 voces sobre salud</h3>
+            <p style={{ fontSize: 12.5, color: "var(--ink-soft)", lineHeight: 1.5, margin: "0 0 12px" }}>Listas para un informe sólido.</p>
+            <button className="btn btn-primary" style={{ width: "100%" }} onClick={onNew}>Crear informe</button>
+          </div>
+        )}
       </div>
 
       <div style={{ marginTop: 14, fontSize: 12, color: "var(--muted)" }}>* Cifra que combina conteos exactos y estimaciones revisadas por el equipo.</div>
@@ -1834,12 +1911,13 @@ if (typeof window !== "undefined") window.Analytics = Analytics;
 
 /* --- importar.jsx --- */
 /* Importar documentos → generar informe → window.Importar */
-
+const iUse = useState;
+const iRef = useRef;
 
 const TYPE_META = {
-  pdf: { label: "PDF", color: "oklch(0.58 0.16 25)", tint: "oklch(0.95 0.04 25)", detected: ["Testimonios", "Acuerdos", "Fechas"], note: (n) => `${n} páginas` },
-  xls: { label: "XLS", color: "oklch(0.55 0.12 150)", tint: "oklch(0.95 0.04 150)", detected: ["Tabla", "Edad", "Género", "Distrito"], note: (n) => `${n} registros` },
-  doc: { label: "DOC", color: "oklch(0.52 0.12 250)", tint: "oklch(0.95 0.03 250)", detected: ["Texto", "Secciones"], note: () => "documento de texto" },
+  pdf: { label: "PDF", color: "#B85C5C", tint: "#FDECEA", detected: ["Testimonios", "Acuerdos", "Fechas"], note: (n) => `${n} páginas` },
+  xls: { label: "XLS", color: "#5D7A66", tint: "#E8F5E9", detected: ["Tabla", "Edad", "Género", "Distrito"], note: (n) => `${n} registros` },
+  doc: { label: "DOC", color: "#4A6352", tint: "#E8EDE9", detected: ["Texto", "Secciones"], note: () => "documento de texto" },
 };
 function extType(name) {
   const e = (name.split(".").pop() || "").toLowerCase();
@@ -1940,7 +2018,7 @@ function Importar({ onGenerate, goDatos }) {
 
       {/* resumen + generar */}
       <div className="card" style={{ marginTop: 20, padding: 0, overflow: "hidden", border: "1px solid var(--blue-tint2)" }}>
-        <div style={{ padding: 20, background: "linear-gradient(165deg, var(--blue-tint), oklch(0.97 0.015 252))" }}>
+        <div style={{ padding: 20, background: "linear-gradient(165deg, var(--blue-tint), var(--green-tint))" }}>
           <div className="row" style={{ gap: 11, marginBottom: 10 }}>
             <span style={{ color: "var(--blue)" }}><Icon name="spark" size={22} /></span>
             <span style={{ fontWeight: 800, fontSize: 17 }}>Voz leyó {done.length} documento{done.length !== 1 ? "s" : ""}</span>
@@ -1965,129 +2043,56 @@ if (typeof window !== "undefined") window.Importar = Importar;
 
 /* --- app.jsx --- */
 /* App shell + páginas + root → monta en #root */
-
+const aUse = useState;
 
 /* ---------------- Sidebar ---------------- */
-function Sidebar({ page, setPage, tone }) {
-  const nav = [
+function Sidebar({ page, setPage, open, onNavigate }) {
+  const go = (id) => { setPage(id); onNavigate?.(); };
+  const mainNav = [
     { id: "inicio", icon: "home", label: "Inicio" },
     { id: "convos", icon: "chat", label: "Conversaciones", badge: "5" },
     { id: "importar", icon: "upload", label: "Importar" },
     { id: "informes", icon: "doc", label: "Informes" },
-    { id: "datos", icon: "chart", label: "Panel de datos" },
   ];
-  return (
-    <aside className="sidebar">
-      <div className="brand">
-        <div className="brand-mark"><Icon name="mic" size={21} /></div>
-        <div><div className="brand-name">Voz</div><div className="brand-sub">Fundación Raíces</div></div>
-      </div>
-      <div className="nav-label">Trabajo</div>
-      {nav.map(n => (
-        <button key={n.id} className={"nav-item" + (page === n.id ? " active" : "")} onClick={() => setPage(n.id)}>
-          <Icon name={n.icon} size={20} /> {n.label}
-          {n.badge && <span className="badge">{n.badge}</span>}
-        </button>
-      ))}
-      <div className="nav-label">Organización</div>
-      <button className={"nav-item" + (page === "equipo" ? " active" : "")} onClick={() => setPage("equipo")}><Icon name="users" size={20} /> Equipo</button>
-      <button className={"nav-item" + (page === "autom" ? " active" : "")} onClick={() => setPage("autom")}><Icon name="wand" size={20} /> Automatizaciones</button>
-      <button className="nav-item"><Icon name="gear" size={20} /> Configuración</button>
+  const orgNav = [
+    { id: "equipo", icon: "users", label: "Equipo" },
+    { id: "autom", icon: "wand", label: "Automatizaciones" },
+  ];
 
-      <div className="side-foot">
-        <div className="ai-note" style={{ padding: "11px 12px", marginBottom: 12, fontSize: 12.5 }}>
-          <span className="ai-ico"><Icon name="shield" size={16} /></span>
-          <div>Voz nunca responde ni envía mensajes sin tu aprobación.</div>
-        </div>
-        <div className="side-user">
-          <Avatar p={{ color: "var(--blue)", initials: "CV" }} size={36} />
-          <div className="grow"><div className="nm">Carla Vega</div><div className="rl">Coordinadora</div></div>
-          <Icon name="gear" size={16} style={{ color: "var(--faint)" }} />
-        </div>
-      </div>
+  const NavIcon = ({ item }) => (
+    <button
+      type="button"
+      className={"nav-icon" + (page === item.id ? " active" : "")}
+      onClick={() => go(item.id)}
+      title={item.label}
+      aria-label={item.label}
+      aria-current={page === item.id ? "page" : undefined}
+    >
+      <Icon name={item.icon} size={22} />
+      {item.badge && <span className="nav-badge">{item.badge}</span>}
+    </button>
+  );
+
+  return (
+    <aside className={"sidebar" + (open ? " open" : "")}>
+      <nav className="nav-island" aria-label="Trabajo">
+        {mainNav.map(n => <NavIcon key={n.id} item={n} />)}
+      </nav>
+      <nav className="nav-island" aria-label="Organización">
+        {orgNav.map(n => <NavIcon key={n.id} item={n} />)}
+      </nav>
+      <nav className="nav-island nav-island-foot" aria-label="Sistema">
+        <button type="button" className="nav-icon" title="Configuración" aria-label="Configuración">
+          <Icon name="gear" size={22} />
+        </button>
+      </nav>
     </aside>
   );
 }
 
-/* ---------------- Inicio ---------------- */
+/* ---------------- Inicio (panel de datos + voces recientes) ---------------- */
 function Inicio({ onNew, setPage, copy }) {
-  const stats = [
-    { ic: "mic", v: "26", l: "voces esta semana", tone: "warm" },
-    { ic: "users", v: "19", l: "personas escuchadas", tone: "blue" },
-    { ic: "doc", v: "1", l: "informe en borrador", tone: "blue" },
-  ];
-  return (
-    <div className="page float-in">
-      <div className="row" style={{ alignItems: "flex-end", marginBottom: 22 }}>
-        <div>
-          <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-.025em", margin: 0 }}>{copy.greet}, Carla 👋</h2>
-          <p style={{ color: "var(--muted)", fontSize: 15, margin: "4px 0 0" }}>Llegaron 3 voces nuevas hoy. Cuando quieras, las convertimos en un informe.</p>
-        </div>
-        <div className="grow" />
-        <button className="btn btn-primary btn-lg" onClick={onNew}><Icon name="plus" size={18} /> Nuevo informe</button>
-      </div>
-
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 14, marginBottom: 22 }}>
-        {stats.map((s, i) => (
-          <div key={i} className="card card-pad" style={{ display: "flex", gap: 14, alignItems: "center" }}>
-            <div style={{ width: 46, height: 46, borderRadius: 13, display: "grid", placeItems: "center", background: s.tone === "warm" ? "var(--warm-tint)" : "var(--blue-tint)", color: s.tone === "warm" ? "var(--warm)" : "var(--blue)" }}><Icon name={s.ic} size={23} /></div>
-            <div><div style={{ fontSize: 27, fontWeight: 800, letterSpacing: "-.02em", lineHeight: 1 }}>{s.v}</div><div style={{ fontSize: 13, color: "var(--muted)", marginTop: 3 }}>{s.l}</div></div>
-          </div>
-        ))}
-      </div>
-
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: 18 }}>
-        {/* voces recientes */}
-        <div className="card card-pad">
-          <div className="row" style={{ marginBottom: 6 }}>
-            <h3 style={{ fontSize: 17, fontWeight: 800, margin: 0 }}>Voces recientes</h3>
-            <div className="grow" />
-            <button className="btn btn-soft btn-sm" onClick={() => setPage("convos")}>Ver todas <Icon name="arrow" size={14} /></button>
-          </div>
-          <p style={{ fontSize: 13, color: "var(--muted)", margin: "0 0 6px" }}>Testimonios de la comunidad y reportes del equipo, transcritos automáticamente.</p>
-          {[DATA.teamReports[0], ...DATA.transcript].map((t, i) => {
-            const p = DATA.people[t.who];
-            const isTeam = t.kind === "reporte";
-            return (
-              <div key={i} className="tline">
-                <Avatar p={p} size={40} />
-                <div className="grow">
-                  <div className="row" style={{ gap: 8 }}>
-                    <span style={{ fontWeight: 700, fontSize: 14.5 }}>{p.name}</span>
-                    {isTeam
-                      ? <Chip tone="blue"><Icon name="users" size={12} /> Equipo</Chip>
-                      : <span style={{ fontSize: 12.5, color: "var(--muted)" }}>· {p.role}</span>}
-                    <span className="grow" /><span style={{ fontSize: 12, color: "var(--faint)" }}>{t.at}</span>
-                  </div>
-                  {isTeam
-                    ? <div style={{ fontSize: 14.5, color: "var(--ink)", lineHeight: 1.55, margin: "5px 0 9px" }}>{t.text}</div>
-                    : <div style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 15.5, color: "var(--ink)", lineHeight: 1.5, margin: "5px 0 9px" }}>"{t.text}"</div>}
-                  <div className="row" style={{ gap: 10, flexWrap: "wrap" }}>
-                    <VoicePlayer dur={t.dur} color={p.color} />
-                    {t.tags.slice(0, 2).map(tag => <Chip key={tag} tone={isTeam ? "" : "blue"}>{tag}</Chip>)}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* lateral */}
-        <div className="col" style={{ gap: 16 }}>
-          <div className="card card-pad" style={{ background: "linear-gradient(165deg, var(--blue-tint), oklch(0.96 0.02 252))", border: "1px solid var(--blue-tint2)" }}>
-            <div style={{ color: "var(--blue)", marginBottom: 10 }}><Icon name="spark" size={26} /></div>
-            <h3 style={{ fontSize: 17, fontWeight: 800, margin: "0 0 6px" }}>Tienes 8 voces sobre salud</h3>
-            <p style={{ fontSize: 13.5, color: "var(--blue-ink)", lineHeight: 1.55, margin: "0 0 14px" }}>Suficientes para un informe sólido. Voz prepara un borrador y tú lo revisas, sección por sección.</p>
-            <button className="btn btn-primary" style={{ width: "100%" }} onClick={onNew}>Crear informe con estas voces</button>
-          </div>
-          <div className="card card-pad">
-            <div className="row" style={{ gap: 9, marginBottom: 10 }}><span style={{ color: "var(--warm)" }}><Icon name="heart" size={20} /></span><h3 style={{ fontSize: 15.5, fontWeight: 800, margin: 0 }}>El toque humano</h3></div>
-            <p style={{ fontSize: 13, color: "var(--ink-soft)", lineHeight: 1.55, margin: 0 }}>Voz transcribe y ordena. <b>Decidir qué se cuenta, y cómo, sigue siendo tu trabajo.</b> Por eso cada informe pasa por tus manos antes de salir.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  return <Analytics setPage={setPage} onNew={onNew} copy={copy} />;
 }
 
 /* ---------------- Conversaciones ---------------- */
@@ -2095,8 +2100,8 @@ function Convos() {
   const [sel, setSel] = aUse(DATA.conversations[0].id);
   const c = DATA.conversations.find(x => x.id === sel);
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "320px 1fr", height: "calc(100vh - 70px)" }}>
-      <div style={{ borderRight: "1px solid var(--line)", overflowY: "auto", padding: 14 }}>
+    <div className="convos-layout">
+      <div className="convos-list">
         <div style={{ position: "relative", marginBottom: 12 }}>
           <span style={{ position: "absolute", left: 12, top: 11, color: "var(--faint)" }}><Icon name="search" size={17} /></span>
           <input placeholder="Buscar persona o tema…" style={{ width: "100%", padding: "10px 12px 10px 38px", borderRadius: 999, border: "1px solid var(--line)", background: "var(--surface-2)", fontSize: 13.5, fontFamily: "inherit", outline: "none" }} />
@@ -2202,7 +2207,7 @@ function Automatizaciones() {
       <div className="card" style={{ marginTop: 22, overflow: "hidden" }}>
         {items.map((it, i) => (
           <div key={it.id} className="row" style={{ padding: "17px 20px", gap: 16, borderTop: i ? "1px solid var(--line-soft)" : "none", alignItems: "flex-start" }}>
-            <div style={{ width: 40, height: 40, borderRadius: 11, flex: "none", display: "grid", placeItems: "center", background: it.caution ? "var(--amber-tint)" : "var(--blue-tint)", color: it.caution ? "oklch(0.6 0.12 75)" : "var(--blue)" }}><Icon name={it.caution ? "spark" : "wand"} size={20} /></div>
+            <div style={{ width: 40, height: 40, borderRadius: 11, flex: "none", display: "grid", placeItems: "center", background: it.caution ? "var(--amber-tint)" : "var(--blue-tint)", color: it.caution ? "#8A7340" : "var(--blue)" }}><Icon name={it.caution ? "spark" : "wand"} size={20} /></div>
             <div className="grow">
               <div className="row" style={{ gap: 9 }}><span style={{ fontWeight: 800, fontSize: 15.5 }}>{it.t}</span>{it.safe && <Chip tone="green">Seguro</Chip>}{it.caution && <Chip tone="amber" dot>Revisa siempre</Chip>}</div>
               <div style={{ fontSize: 13.5, color: "var(--ink-soft)", marginTop: 4, lineHeight: 1.5 }}>{it.d}</div>
@@ -2231,8 +2236,8 @@ function Automatizaciones() {
 function Equipo() {
   const team = [
     { p: { name: "Carla Vega", color: "var(--blue)", initials: "CV" }, role: "Coordinadora", perm: "Puede crear y aprobar informes" },
-    { p: { name: "Carlos Ruiz", color: "oklch(0.55 0.1 250)", initials: "CR" }, role: "Equipo de campo", perm: "Recoge y etiqueta voces" },
-    { p: { name: "Ana Soto", color: "oklch(0.6 0.13 145)", initials: "AS" }, role: "Dirección", perm: "Solo lectura de informes finales" },
+    { p: { name: "Carlos Ruiz", color: "#5D7A66", initials: "CR" }, role: "Equipo de campo", perm: "Recoge y etiqueta voces" },
+    { p: { name: "Ana Soto", color: "#6B8875", initials: "AS" }, role: "Dirección", perm: "Solo lectura de informes finales" },
   ];
   return (
     <div className="page float-in" style={{ maxWidth: 760 }}>
@@ -2270,6 +2275,14 @@ function App({ activeProject, setActiveProject }) {
   const [variant, setVariant] = aUse("wizard");
   const [page, setPage] = aUse("inicio");
   const [flow, setFlow] = aUse(false);
+  const [menuOpen, setMenuOpen] = aUse(false);
+
+  React.useEffect(() => {
+    const mq = window.matchMedia("(min-width: 769px)");
+    const close = () => { if (mq.matches) setMenuOpen(false); };
+    mq.addEventListener("change", close);
+    return () => mq.removeEventListener("change", close);
+  }, []);
 
   // aplica tweaks a las variables CSS (los tints se derivan con color-mix)
   React.useEffect(() => {
@@ -2305,16 +2318,24 @@ function App({ activeProject, setActiveProject }) {
 
   return (
     <div className="app">
-      <Sidebar page={page} setPage={(p) => { setFlow(false); setPage(p); }} tone={t} />
+      {menuOpen && <button type="button" className={"sidebar-backdrop open"} onClick={() => setMenuOpen(false)} aria-label="Cerrar menú" />}
+      <Sidebar page={page} setPage={(p) => { setFlow(false); setPage(p); }} open={menuOpen} onNavigate={() => setMenuOpen(false)} />
       <div className="main">
+        <div className="mobile-bar">
+          <button type="button" className="btn btn-ghost btn-sm mobile-menu-btn" onClick={() => setMenuOpen(true)} aria-label="Abrir menú">
+            <Icon name="menu" size={20} />
+          </button>
+          <div className="mobile-brand"><Icon name="mic" size={18} /></div>
+          <span className="mobile-bar-title">Voz</span>
+        </div>
         {flow
           ? <ReportFlow onClose={() => setFlow(false)} tone={t} />
           : <>
               {page === "inicio" && <Inicio onNew={() => setFlow(true)} setPage={setPage} copy={copy} />}
               {page === "convos" && <Convos />}
-              {page === "importar" && <Importar onGenerate={() => setFlow(true)} goDatos={() => setPage("datos")} />}
+              {page === "importar" && <Importar onGenerate={() => setFlow(true)} goDatos={() => setPage("inicio")} />}
               {page === "informes" && <Informes onNew={() => setFlow(true)} />}
-              {page === "datos" && <Analytics activeProject={activeProject} setActiveProject={setActiveProject} />}
+              {page === "datos" && <Analytics activeProject={activeProject} setActiveProject={setActiveProject} setPage={setPage} onNew={() => setFlow(true)} />}
               {page === "autom" && <Automatizaciones />}
               {page === "equipo" && <Equipo />}
             </>}
