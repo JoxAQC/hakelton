@@ -153,11 +153,11 @@ function Panel({ title, sub, children, foot }) {
 
 /* Datos por proyecto */
 const PROJECT_DATA = {
-  todos:    { label: "Todos",               impacted: 1240, voices: 142, events: 8, docs: 11 },
-  salud:    { label: "Salud Comunitaria",   impacted: 480,  voices: 48,  events: 3, docs: 4  },
-  ambiente: { label: "Medio Ambiente",      impacted: 340,  voices: 36,  events: 2, docs: 3  },
-  educacion:{ label: "Educación",           impacted: 260,  voices: 32,  events: 2, docs: 2  },
-  alimenta: { label: "Seg. Alimentaria",    impacted: 160,  voices: 26,  events: 1, docs: 2  },
+  todos:    { label: "Todos",                    impacted: 1240, voices: 142, events: 8, docs: 11 },
+  aulas:    { label: "Aulas Conectadas",         impacted: 480,  voices: 48,  events: 3, docs: 4  },
+  tutorias: { label: "Tutorías Solidarias",      impacted: 340,  voices: 36,  events: 2, docs: 3  },
+  formacion:{ label: "Formación Docente",        impacted: 260,  voices: 32,  events: 2, docs: 2  },
+  becas:    { label: "Becas Futuro",             impacted: 160,  voices: 26,  events: 1, docs: 2  },
 };
 
 function Analytics({ setPage, onNew, copy }) {
