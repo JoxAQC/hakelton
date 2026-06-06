@@ -277,7 +277,7 @@ function Share({ blocks, metrics, onClose }) {
           <p style={{ fontSize: 13.5, color: "var(--ink-soft)", lineHeight: 1.55, margin: "0 0 14px" }}>Revisa que el informe suene como tu organización. Voz no comparte nada hasta que tú lo apruebes.</p>
           <label className="row" style={{ gap: 11, padding: 12, borderRadius: "var(--r-sm)", background: approved ? "var(--green-tint)" : "var(--surface-2)", border: "1px solid " + (approved ? "var(--green)" : "var(--line)"), cursor: "pointer", transition: "all .15s" }}>
             <Switch on={approved} warm onClick={() => setApproved(a => !a)} />
-            <span style={{ fontSize: 13.5, fontWeight: 700, color: approved ? "oklch(0.42 0.09 152)" : "var(--ink)" }}>{approved ? "Revisado y aprobado por mí" : "Confirmo que lo revisé"}</span>
+            <span style={{ fontSize: 13.5, fontWeight: 700, color: approved ? "var(--green-deep)" : "var(--ink)" }}>{approved ? "Revisado y aprobado por mí" : "Confirmo que lo revisé"}</span>
           </label>
         </div>
 
@@ -292,7 +292,7 @@ function Share({ blocks, metrics, onClose }) {
         </div>
 
         {approved && <div className="card card-pad float-in" style={{ background: "var(--green-tint)", border: "1px solid var(--green)" }}>
-          <div className="row" style={{ gap: 9, color: "oklch(0.42 0.09 152)", fontWeight: 700, fontSize: 14 }}><Icon name="check" size={18} /> Informe listo para compartir 🎉</div>
+          <div className="row" style={{ gap: 9, color: "var(--green-deep)", fontWeight: 700, fontSize: 14 }}><Icon name="check" size={18} /> Informe listo para compartir 🎉</div>
         </div>}
       </div>
     </div>

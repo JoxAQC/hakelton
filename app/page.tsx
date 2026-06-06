@@ -21,7 +21,7 @@ export default function Home() {
           position: "fixed",
           bottom: "2rem",
           right: "2rem",
-          backgroundColor: "var(--primary-color, #3b82f6)",
+          backgroundColor: "var(--blue, #5D7A66)",
           color: "white",
           border: "none",
           borderRadius: "50%",
@@ -31,7 +31,7 @@ export default function Home() {
           alignItems: "center",
           justifyContent: "center",
           cursor: "pointer",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+          boxShadow: "0 4px 12px rgba(93,122,102,.35)",
           zIndex: 9998,
           transition: "transform 0.2s ease"
         }}

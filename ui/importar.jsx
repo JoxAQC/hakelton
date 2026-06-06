@@ -2,9 +2,9 @@
 const { useState: iUse, useRef: iRef } = React;
 
 const TYPE_META = {
-  pdf: { label: "PDF", color: "oklch(0.58 0.16 25)", tint: "oklch(0.95 0.04 25)", detected: ["Testimonios", "Acuerdos", "Fechas"], note: (n) => `${n} páginas` },
-  xls: { label: "XLS", color: "oklch(0.55 0.12 150)", tint: "oklch(0.95 0.04 150)", detected: ["Tabla", "Edad", "Género", "Distrito"], note: (n) => `${n} registros` },
-  doc: { label: "DOC", color: "oklch(0.52 0.12 250)", tint: "oklch(0.95 0.03 250)", detected: ["Texto", "Secciones"], note: () => "documento de texto" },
+  pdf: { label: "PDF", color: "#B85C5C", tint: "#FDECEA", detected: ["Testimonios", "Acuerdos", "Fechas"], note: (n) => `${n} páginas` },
+  xls: { label: "XLS", color: "#5D7A66", tint: "#E8F5E9", detected: ["Tabla", "Edad", "Género", "Distrito"], note: (n) => `${n} registros` },
+  doc: { label: "DOC", color: "#4A6352", tint: "#E8EDE9", detected: ["Texto", "Secciones"], note: () => "documento de texto" },
 };
 function extType(name) {
   const e = (name.split(".").pop() || "").toLowerCase();
@@ -105,7 +105,7 @@ function Importar({ onGenerate, goDatos }) {
 
       {/* resumen + generar */}
       <div className="card" style={{ marginTop: 20, padding: 0, overflow: "hidden", border: "1px solid var(--blue-tint2)" }}>
-        <div style={{ padding: 20, background: "linear-gradient(165deg, var(--blue-tint), oklch(0.97 0.015 252))" }}>
+        <div style={{ padding: 20, background: "linear-gradient(165deg, var(--blue-tint), var(--green-tint))" }}>
           <div className="row" style={{ gap: 11, marginBottom: 10 }}>
             <span style={{ color: "var(--blue)" }}><Icon name="spark" size={22} /></span>
             <span style={{ fontWeight: 800, fontSize: 17 }}>Voz leyó {done.length} documento{done.length !== 1 ? "s" : ""}</span>

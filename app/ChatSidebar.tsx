@@ -144,12 +144,12 @@ export default function ChatSidebar({ isOpen, onClose }: ChatSidebarProps) {
     <div 
       style={{
         position: 'fixed', top: 0, right: 0, width: '45vw', minWidth: '400px', height: '100vh', 
-        backgroundColor: '#0f172a', borderLeft: '1px solid #334155',
+        backgroundColor: '#EBEAE6', borderLeft: '1px solid #E0DFDB',
         transform: isOpen ? 'translateX(0)' : 'translateX(100%)', transition: 'transform 0.3s ease-in-out',
-        zIndex: 9999, display: 'flex', flexDirection: 'column', boxShadow: '-5px 0 15px rgba(0,0,0,0.5)'
+        zIndex: 9999, display: 'flex', flexDirection: 'column', boxShadow: '-4px 0 20px rgba(26,26,26,.08)'
       }}
     >
-      <button onClick={onClose} style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'rgba(255,255,255,0.1)', color: 'white', border: 'none', width: '32px', height: '32px', borderRadius: '50%', cursor: 'pointer', zIndex: 10000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
+      <button onClick={onClose} style={{ position: 'absolute', top: '1rem', right: '1rem', background: '#222222', color: 'white', border: 'none', width: '32px', height: '32px', borderRadius: '50%', cursor: 'pointer', zIndex: 10000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
       <div className="app-container" style={{ width: '100%', height: '100%', overflow: 'hidden', position: 'relative' }}>
         {/* Header */}
       <header className="app-header">
@@ -199,13 +199,13 @@ export default function ChatSidebar({ isOpen, onClose }: ChatSidebarProps) {
                     <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.4rem" }}>
                       {msg.role === "user" ? (
                         <>
-                          <span style={{ fontSize: "0.75rem", fontWeight: 600, color: "#a5b4fc" }}>Tú</span>
-                          <User size={12} color="#a5b4fc" />
+                          <span style={{ fontSize: "0.75rem", fontWeight: 600, color: "#4A6352" }}>Tú</span>
+                          <User size={12} color="#4A6352" />
                         </>
                       ) : (
                         <>
-                          <Bot size={12} color="#10b981" />
-                          <span style={{ fontSize: "0.75rem", fontWeight: 600, color: "#34d399" }}>
+                          <Bot size={12} color="#5D7A66" />
+                          <span style={{ fontSize: "0.75rem", fontWeight: 600, color: "#3D6B47" }}>
                             Asistente RAG
                           </span>
                         </>

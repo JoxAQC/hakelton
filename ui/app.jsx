@@ -2,126 +2,53 @@
 const { useState: aUse } = React;
 
 /* ---------------- Sidebar ---------------- */
-function Sidebar({ page, setPage, tone }) {
-  const nav = [
+function Sidebar({ page, setPage, open, onNavigate }) {
+  const go = (id) => { setPage(id); onNavigate?.(); };
+  const mainNav = [
     { id: "inicio", icon: "home", label: "Inicio" },
     { id: "convos", icon: "chat", label: "Conversaciones", badge: "5" },
     { id: "importar", icon: "upload", label: "Importar" },
     { id: "informes", icon: "doc", label: "Informes" },
-    { id: "datos", icon: "chart", label: "Panel de datos" },
   ];
-  return (
-    <aside className="sidebar">
-      <div className="brand">
-        <div className="brand-mark"><Icon name="mic" size={21} /></div>
-        <div><div className="brand-name">Voz</div><div className="brand-sub">Fundación Raíces</div></div>
-      </div>
-      <div className="nav-label">Trabajo</div>
-      {nav.map(n => (
-        <button key={n.id} className={"nav-item" + (page === n.id ? " active" : "")} onClick={() => setPage(n.id)}>
-          <Icon name={n.icon} size={20} /> {n.label}
-          {n.badge && <span className="badge">{n.badge}</span>}
-        </button>
-      ))}
-      <div className="nav-label">Organización</div>
-      <button className={"nav-item" + (page === "equipo" ? " active" : "")} onClick={() => setPage("equipo")}><Icon name="users" size={20} /> Equipo</button>
-      <button className={"nav-item" + (page === "autom" ? " active" : "")} onClick={() => setPage("autom")}><Icon name="wand" size={20} /> Automatizaciones</button>
-      <button className="nav-item"><Icon name="gear" size={20} /> Configuración</button>
+  const orgNav = [
+    { id: "equipo", icon: "users", label: "Equipo" },
+    { id: "autom", icon: "wand", label: "Automatizaciones" },
+  ];
 
-      <div className="side-foot">
-        <div className="ai-note" style={{ padding: "11px 12px", marginBottom: 12, fontSize: 12.5 }}>
-          <span className="ai-ico"><Icon name="shield" size={16} /></span>
-          <div>Voz nunca responde ni envía mensajes sin tu aprobación.</div>
-        </div>
-        <div className="side-user">
-          <Avatar p={{ color: "var(--blue)", initials: "CV" }} size={36} />
-          <div className="grow"><div className="nm">Carla Vega</div><div className="rl">Coordinadora</div></div>
-          <Icon name="gear" size={16} style={{ color: "var(--faint)" }} />
-        </div>
-      </div>
+  const NavIcon = ({ item }) => (
+    <button
+      type="button"
+      className={"nav-icon" + (page === item.id ? " active" : "")}
+      onClick={() => go(item.id)}
+      title={item.label}
+      aria-label={item.label}
+      aria-current={page === item.id ? "page" : undefined}
+    >
+      <Icon name={item.icon} size={22} />
+      {item.badge && <span className="nav-badge">{item.badge}</span>}
+    </button>
+  );
+
+  return (
+    <aside className={"sidebar" + (open ? " open" : "")}>
+      <nav className="nav-island" aria-label="Trabajo">
+        {mainNav.map(n => <NavIcon key={n.id} item={n} />)}
+      </nav>
+      <nav className="nav-island" aria-label="Organización">
+        {orgNav.map(n => <NavIcon key={n.id} item={n} />)}
+      </nav>
+      <nav className="nav-island nav-island-foot" aria-label="Sistema">
+        <button type="button" className="nav-icon" title="Configuración" aria-label="Configuración">
+          <Icon name="gear" size={22} />
+        </button>
+      </nav>
     </aside>
   );
 }
 
-/* ---------------- Inicio ---------------- */
+/* ---------------- Inicio (panel de datos + voces recientes) ---------------- */
 function Inicio({ onNew, setPage, copy }) {
-  const stats = [
-    { ic: "mic", v: "26", l: "voces esta semana", tone: "warm" },
-    { ic: "users", v: "19", l: "personas escuchadas", tone: "blue" },
-    { ic: "doc", v: "1", l: "informe en borrador", tone: "blue" },
-  ];
-  return (
-    <div className="page float-in">
-      <div className="row" style={{ alignItems: "flex-end", marginBottom: 22 }}>
-        <div>
-          <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-.025em", margin: 0 }}>{copy.greet}, Carla 👋</h2>
-          <p style={{ color: "var(--muted)", fontSize: 15, margin: "4px 0 0" }}>Llegaron 3 voces nuevas hoy. Cuando quieras, las convertimos en un informe.</p>
-        </div>
-        <div className="grow" />
-        <button className="btn btn-primary btn-lg" onClick={onNew}><Icon name="plus" size={18} /> Nuevo informe</button>
-      </div>
-
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 14, marginBottom: 22 }}>
-        {stats.map((s, i) => (
-          <div key={i} className="card card-pad" style={{ display: "flex", gap: 14, alignItems: "center" }}>
-            <div style={{ width: 46, height: 46, borderRadius: 13, display: "grid", placeItems: "center", background: s.tone === "warm" ? "var(--warm-tint)" : "var(--blue-tint)", color: s.tone === "warm" ? "var(--warm)" : "var(--blue)" }}><Icon name={s.ic} size={23} /></div>
-            <div><div style={{ fontSize: 27, fontWeight: 800, letterSpacing: "-.02em", lineHeight: 1 }}>{s.v}</div><div style={{ fontSize: 13, color: "var(--muted)", marginTop: 3 }}>{s.l}</div></div>
-          </div>
-        ))}
-      </div>
-
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: 18 }}>
-        {/* voces recientes */}
-        <div className="card card-pad">
-          <div className="row" style={{ marginBottom: 6 }}>
-            <h3 style={{ fontSize: 17, fontWeight: 800, margin: 0 }}>Voces recientes</h3>
-            <div className="grow" />
-            <button className="btn btn-soft btn-sm" onClick={() => setPage("convos")}>Ver todas <Icon name="arrow" size={14} /></button>
-          </div>
-          <p style={{ fontSize: 13, color: "var(--muted)", margin: "0 0 6px" }}>Testimonios de la comunidad y reportes del equipo, transcritos automáticamente.</p>
-          {[DATA.teamReports[0], ...DATA.transcript].map((t, i) => {
-            const p = DATA.people[t.who];
-            const isTeam = t.kind === "reporte";
-            return (
-              <div key={i} className="tline">
-                <Avatar p={p} size={40} />
-                <div className="grow">
-                  <div className="row" style={{ gap: 8 }}>
-                    <span style={{ fontWeight: 700, fontSize: 14.5 }}>{p.name}</span>
-                    {isTeam
-                      ? <Chip tone="blue"><Icon name="users" size={12} /> Equipo</Chip>
-                      : <span style={{ fontSize: 12.5, color: "var(--muted)" }}>· {p.role}</span>}
-                    <span className="grow" /><span style={{ fontSize: 12, color: "var(--faint)" }}>{t.at}</span>
-                  </div>
-                  {isTeam
-                    ? <div style={{ fontSize: 14.5, color: "var(--ink)", lineHeight: 1.55, margin: "5px 0 9px" }}>{t.text}</div>
-                    : <div style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 15.5, color: "var(--ink)", lineHeight: 1.5, margin: "5px 0 9px" }}>"{t.text}"</div>}
-                  <div className="row" style={{ gap: 10, flexWrap: "wrap" }}>
-                    <VoicePlayer dur={t.dur} color={p.color} />
-                    {t.tags.slice(0, 2).map(tag => <Chip key={tag} tone={isTeam ? "" : "blue"}>{tag}</Chip>)}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* lateral */}
-        <div className="col" style={{ gap: 16 }}>
-          <div className="card card-pad" style={{ background: "linear-gradient(165deg, var(--blue-tint), oklch(0.96 0.02 252))", border: "1px solid var(--blue-tint2)" }}>
-            <div style={{ color: "var(--blue)", marginBottom: 10 }}><Icon name="spark" size={26} /></div>
-            <h3 style={{ fontSize: 17, fontWeight: 800, margin: "0 0 6px" }}>Tienes 8 voces sobre salud</h3>
-            <p style={{ fontSize: 13.5, color: "var(--blue-ink)", lineHeight: 1.55, margin: "0 0 14px" }}>Suficientes para un informe sólido. Voz prepara un borrador y tú lo revisas, sección por sección.</p>
-            <button className="btn btn-primary" style={{ width: "100%" }} onClick={onNew}>Crear informe con estas voces</button>
-          </div>
-          <div className="card card-pad">
-            <div className="row" style={{ gap: 9, marginBottom: 10 }}><span style={{ color: "var(--warm)" }}><Icon name="heart" size={20} /></span><h3 style={{ fontSize: 15.5, fontWeight: 800, margin: 0 }}>El toque humano</h3></div>
-            <p style={{ fontSize: 13, color: "var(--ink-soft)", lineHeight: 1.55, margin: 0 }}>Voz transcribe y ordena. <b>Decidir qué se cuenta, y cómo, sigue siendo tu trabajo.</b> Por eso cada informe pasa por tus manos antes de salir.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  return <Analytics setPage={setPage} onNew={onNew} copy={copy} />;
 }
 
 /* ---------------- Conversaciones ---------------- */
@@ -129,8 +56,8 @@ function Convos() {
   const [sel, setSel] = aUse(DATA.conversations[0].id);
   const c = DATA.conversations.find(x => x.id === sel);
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "320px 1fr", height: "calc(100vh - 70px)" }}>
-      <div style={{ borderRight: "1px solid var(--line)", overflowY: "auto", padding: 14 }}>
+    <div className="convos-layout">
+      <div className="convos-list">
         <div style={{ position: "relative", marginBottom: 12 }}>
           <span style={{ position: "absolute", left: 12, top: 11, color: "var(--faint)" }}><Icon name="search" size={17} /></span>
           <input placeholder="Buscar persona o tema…" style={{ width: "100%", padding: "10px 12px 10px 38px", borderRadius: 999, border: "1px solid var(--line)", background: "var(--surface-2)", fontSize: 13.5, fontFamily: "inherit", outline: "none" }} />
@@ -236,7 +163,7 @@ function Automatizaciones() {
       <div className="card" style={{ marginTop: 22, overflow: "hidden" }}>
         {items.map((it, i) => (
           <div key={it.id} className="row" style={{ padding: "17px 20px", gap: 16, borderTop: i ? "1px solid var(--line-soft)" : "none", alignItems: "flex-start" }}>
-            <div style={{ width: 40, height: 40, borderRadius: 11, flex: "none", display: "grid", placeItems: "center", background: it.caution ? "var(--amber-tint)" : "var(--blue-tint)", color: it.caution ? "oklch(0.6 0.12 75)" : "var(--blue)" }}><Icon name={it.caution ? "spark" : "wand"} size={20} /></div>
+            <div style={{ width: 40, height: 40, borderRadius: 11, flex: "none", display: "grid", placeItems: "center", background: it.caution ? "var(--amber-tint)" : "var(--blue-tint)", color: it.caution ? "#8A7340" : "var(--blue)" }}><Icon name={it.caution ? "spark" : "wand"} size={20} /></div>
             <div className="grow">
               <div className="row" style={{ gap: 9 }}><span style={{ fontWeight: 800, fontSize: 15.5 }}>{it.t}</span>{it.safe && <Chip tone="green">Seguro</Chip>}{it.caution && <Chip tone="amber" dot>Revisa siempre</Chip>}</div>
               <div style={{ fontSize: 13.5, color: "var(--ink-soft)", marginTop: 4, lineHeight: 1.5 }}>{it.d}</div>
@@ -265,8 +192,8 @@ function Automatizaciones() {
 function Equipo() {
   const team = [
     { p: { name: "Carla Vega", color: "var(--blue)", initials: "CV" }, role: "Coordinadora", perm: "Puede crear y aprobar informes" },
-    { p: { name: "Carlos Ruiz", color: "oklch(0.55 0.1 250)", initials: "CR" }, role: "Equipo de campo", perm: "Recoge y etiqueta voces" },
-    { p: { name: "Ana Soto", color: "oklch(0.6 0.13 145)", initials: "AS" }, role: "Dirección", perm: "Solo lectura de informes finales" },
+    { p: { name: "Carlos Ruiz", color: "#5D7A66", initials: "CR" }, role: "Equipo de campo", perm: "Recoge y etiqueta voces" },
+    { p: { name: "Ana Soto", color: "#6B8875", initials: "AS" }, role: "Dirección", perm: "Solo lectura de informes finales" },
   ];
   return (
     <div className="page float-in" style={{ maxWidth: 760 }}>
@@ -304,6 +231,14 @@ function App() {
   const [variant, setVariant] = aUse("wizard");
   const [page, setPage] = aUse("inicio");
   const [flow, setFlow] = aUse(false);
+  const [menuOpen, setMenuOpen] = aUse(false);
+
+  React.useEffect(() => {
+    const mq = window.matchMedia("(min-width: 769px)");
+    const close = () => { if (mq.matches) setMenuOpen(false); };
+    mq.addEventListener("change", close);
+    return () => mq.removeEventListener("change", close);
+  }, []);
 
   // aplica tweaks a las variables CSS (los tints se derivan con color-mix)
   React.useEffect(() => {
@@ -339,16 +274,23 @@ function App() {
 
   return (
     <div className="app">
-      <Sidebar page={page} setPage={(p) => { setFlow(false); setPage(p); }} tone={t} />
+      {menuOpen && <button type="button" className={"sidebar-backdrop open"} onClick={() => setMenuOpen(false)} aria-label="Cerrar menú" />}
+      <Sidebar page={page} setPage={(p) => { setFlow(false); setPage(p); }} open={menuOpen} onNavigate={() => setMenuOpen(false)} />
       <div className="main">
+        <div className="mobile-bar">
+          <button type="button" className="btn btn-ghost btn-sm mobile-menu-btn" onClick={() => setMenuOpen(true)} aria-label="Abrir menú">
+            <Icon name="menu" size={20} />
+          </button>
+          <div className="mobile-brand"><Icon name="mic" size={18} /></div>
+          <span className="mobile-bar-title">Voz</span>
+        </div>
         {flow
           ? <ReportFlow onClose={() => setFlow(false)} tone={t} />
           : <>
               {page === "inicio" && <Inicio onNew={() => setFlow(true)} setPage={setPage} copy={copy} />}
               {page === "convos" && <Convos />}
-              {page === "importar" && <Importar onGenerate={() => setFlow(true)} goDatos={() => setPage("datos")} />}
+              {page === "importar" && <Importar onGenerate={() => setFlow(true)} goDatos={() => setPage("inicio")} />}
               {page === "informes" && <Informes onNew={() => setFlow(true)} />}
-              {page === "datos" && <Analytics />}
               {page === "autom" && <Automatizaciones />}
               {page === "equipo" && <Equipo />}
             </>}

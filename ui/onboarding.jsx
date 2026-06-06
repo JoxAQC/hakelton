@@ -30,7 +30,7 @@ function FakeQR({ size = 168 }) {
 /* Placeholder de ilustración rayado */
 function Illu({ label, h = 220, tone = "blue" }) {
   const bg = tone === "warm" ? "var(--warm-tint)" : "var(--blue-tint)";
-  const stripe = tone === "warm" ? "oklch(0.88 0.06 55)" : "oklch(0.86 0.05 252)";
+  const stripe = tone === "warm" ? "#E5DDD2" : "#D5E0D8";
   return (
     <div style={{
       height: h, borderRadius: "var(--r-lg)", background: bg,
@@ -127,7 +127,7 @@ function VariantWizard({ onFinish }) {
         </div>
 
         {/* derecha: visual */}
-        <div style={{ background: "linear-gradient(160deg, var(--blue-tint), oklch(0.965 0.02 252))", display: "grid", placeItems: "center", padding: 36, borderLeft: "1px solid var(--line)" }}>
+        <div style={{ background: "linear-gradient(160deg, var(--blue-tint), var(--green-tint))", display: "grid", placeItems: "center", padding: 36, borderLeft: "1px solid var(--line)" }}>
           {step === 0 && <div style={{ textAlign: "center" }}>
             <div style={{ position: "relative", width: 230 }}>
               {DATA.transcript.slice(0, 2).map((t, i) => {
@@ -236,7 +236,7 @@ function VariantTour({ onFinish }) {
         {/* mockup atenuado de la app */}
         <div className="card" style={{ padding: 0, overflow: "hidden", boxShadow: "var(--sh-lg)" }}>
           <div style={{ padding: "16px 22px", borderBottom: "1px solid var(--line)", display: "flex", gap: 11, alignItems: "center", background: "var(--surface-2)" }}>
-            <Avatar p={{ color: "oklch(0.62 0.14 30)", initials: "SC" }} size={34} />
+            <Avatar p={{ color: "#6B8875", initials: "SC" }} size={34} />
             <div><div style={{ fontWeight: 800, fontSize: 15 }}>Salud Comunitaria — Villa El Sol</div><div style={{ fontSize: 12, color: "var(--muted)" }}>3 voces nuevas · hoy</div></div>
           </div>
           <div style={{ padding: 22, display: "flex", flexDirection: "column", gap: 14 }}>
@@ -293,7 +293,7 @@ function Onboarding({ variant, setVariant, onFinish }) {
   return (
     <div style={{ minHeight: "100vh", background: "radial-gradient(1200px 600px at 70% -10%, var(--blue-tint), transparent), var(--paper)", display: "flex", flexDirection: "column" }}>
       {/* barra comparadora */}
-      <div style={{ position: "sticky", top: 0, zIndex: 30, padding: "13px 22px", display: "flex", alignItems: "center", gap: 14, background: "oklch(0.992 0.004 85 / .8)", backdropFilter: "blur(10px)", borderBottom: "1px solid var(--line-soft)" }}>
+      <div style={{ position: "sticky", top: 0, zIndex: 30, padding: "13px 22px", display: "flex", alignItems: "center", gap: 14, background: "rgba(235,234,230,.85)", backdropFilter: "blur(10px)", borderBottom: "1px solid var(--line-soft)" }}>
         <div className="row" style={{ gap: 9 }}>
           <span className="chip warm" style={{ fontWeight: 800 }}><Icon name="eye" size={14} /> Comparando onboarding</span>
         </div>
