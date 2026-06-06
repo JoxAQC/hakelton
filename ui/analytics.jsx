@@ -151,140 +151,165 @@ function Panel({ title, sub, children, foot }) {
   );
 }
 
+/* Datos por proyecto */
+const PROJECT_DATA = {
+  todos:    { label: "Todos",               impacted: 1240, voices: 142, events: 8, docs: 11 },
+  salud:    { label: "Salud Comunitaria",   impacted: 480,  voices: 48,  events: 3, docs: 4  },
+  ambiente: { label: "Medio Ambiente",      impacted: 340,  voices: 36,  events: 2, docs: 3  },
+  educacion:{ label: "Educación",           impacted: 260,  voices: 32,  events: 2, docs: 2  },
+  alimenta: { label: "Seg. Alimentaria",    impacted: 160,  voices: 26,  events: 1, docs: 2  },
+};
+
 function Analytics({ setPage, onNew, copy }) {
   const a = DATA.analytics;
   const [scope, setScope] = dUse("mes");
+  const [project, setProject] = dUse("todos");
   const sc = a.scopes.find(s => s.id === scope);
   const mult = sc.mult;
+  const pd = PROJECT_DATA[project];
+
+  const CARD_STYLE = { background: "#fff", borderRadius: "var(--r)", padding: "20px 22px", border: "1px solid var(--line)", boxShadow: "var(--sh-sm)" };
 
   return (
     <div className="page float-in">
-      {/* Cabecera */}
-      <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 24, flexWrap: "wrap" }}>
+
+      {/* ── Cabecera ── */}
+      <div style={{ display: "flex", alignItems: "flex-start", gap: 16, marginBottom: 22, flexWrap: "wrap" }}>
         <div style={{ flex: 1 }}>
-          <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-.025em", margin: "0 0 3px" }}>
+          <h2 style={{ fontSize: 24, fontWeight: 800, letterSpacing: "-.025em", margin: "0 0 3px" }}>
             {copy?.greet ?? "Buenos días"}, Carla 👋
           </h2>
-          <p style={{ color: "var(--muted)", fontSize: 14, margin: 0 }}>
+          <p style={{ color: "var(--muted)", fontSize: 13.5, margin: 0 }}>
             Resumen de impacto · <b style={{ color: "var(--ink-soft)" }}>{sc.label}</b>
           </p>
         </div>
-        <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
-          <div style={{ display: "flex", background: "var(--surface-2)", borderRadius: 999, padding: 3, border: "1px solid var(--line-soft)" }}>
-            {a.scopes.map(s => (
+        <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+          {/* Selector de período */}
+          <div style={{ display: "flex", background: "var(--paper)", borderRadius: 8, padding: 3, border: "1px solid var(--line)" }}>
+            {[{ id: "mes", l: "Este mes" }, { id: "tri", l: "Trimestre" }, { id: "anio", l: "Este año" }].map(s => (
               <button key={s.id} onClick={() => setScope(s.id)} style={{
-                border: "none", padding: "6px 14px", borderRadius: 999, fontWeight: 700, fontSize: 13,
+                border: "none", padding: "6px 12px", borderRadius: 6, fontWeight: 600, fontSize: 13,
                 background: scope === s.id ? "#fff" : "transparent",
-                color: scope === s.id ? "var(--blue-deep)" : "var(--muted)",
+                color: scope === s.id ? "var(--blue)" : "var(--muted)",
                 boxShadow: scope === s.id ? "var(--sh-sm)" : "none",
                 transition: "all .15s", cursor: "pointer", fontFamily: "inherit",
-              }}>{s.id === "mes" ? "Este mes" : s.id === "tri" ? "Trimestre" : "Este año"}</button>
+              }}>{s.l}</button>
             ))}
           </div>
-          <button className="btn btn-ghost" style={{ fontSize: 13 }}><Icon name="down" size={15} /> Exportar</button>
-          {onNew && <button className="btn btn-primary" onClick={onNew}><Icon name="plus" size={16} /> Nuevo informe</button>}
+          <button className="btn btn-ghost" style={{ fontSize: 13, padding: "8px 14px" }}><Icon name="down" size={14} /> Exportar</button>
+          {onNew && <button className="btn btn-primary" style={{ padding: "8px 16px", fontSize: 13.5 }} onClick={onNew}><Icon name="plus" size={15} /> Nuevo informe</button>}
         </div>
       </div>
 
-      {/* Fila de métricas clave — 4 tarjetas */}
+      {/* ── Filtro por proyecto (tabs) ── */}
+      <div style={{ display: "flex", gap: 6, marginBottom: 20, overflowX: "auto", paddingBottom: 2 }}>
+        {Object.entries(PROJECT_DATA).map(([id, p]) => (
+          <button key={id} onClick={() => setProject(id)} style={{
+            border: "1.5px solid " + (project === id ? "var(--blue)" : "var(--line)"),
+            background: project === id ? "var(--blue)" : "#fff",
+            color: project === id ? "#fff" : "var(--ink-soft)",
+            borderRadius: 999, padding: "6px 16px", fontSize: 13, fontWeight: 600,
+            cursor: "pointer", fontFamily: "inherit", whiteSpace: "nowrap",
+            transition: "all .15s",
+          }}>{p.label}</button>
+        ))}
+      </div>
+
+      {/* ── 4 tarjetas de métricas ── */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14, marginBottom: 20 }}>
         {[
-          { val: fmt(a.base.impacted * mult), label: "Personas alcanzadas", icon: "users", color: "var(--blue)", bg: "var(--blue-tint)" },
-          { val: fmt(a.base.voices * mult), label: "Voces recogidas", icon: "mic", color: "var(--warm-deep)", bg: "var(--warm-tint)" },
-          { val: fmt(a.base.events * mult), label: "Eventos realizados", icon: "check", color: "var(--green-deep)", bg: "var(--green-tint)" },
-          { val: fmt(a.base.docs * mult), label: "Documentos subidos", icon: "doc", color: "var(--ink-soft)", bg: "var(--surface-2)" },
+          { val: fmt(pd.impacted * mult), label: "Personas alcanzadas", icon: "users",  color: "var(--blue)",      bg: "var(--blue-tint)" },
+          { val: fmt(pd.voices  * mult), label: "Voces recogidas",     icon: "mic",   color: "var(--warm-deep)", bg: "var(--warm-tint)" },
+          { val: fmt(pd.events  * mult), label: "Eventos realizados",  icon: "check", color: "var(--green-deep)", bg: "var(--green-tint)" },
+          { val: fmt(pd.docs    * mult), label: "Documentos subidos",  icon: "doc",   color: "var(--muted)",     bg: "var(--surface-2)" },
         ].map((m, i) => (
-          <div key={i} style={{ background: "#fff", borderRadius: "var(--r)", padding: "18px 20px", border: "1px solid var(--line-soft)", boxShadow: "var(--sh-sm)" }}>
-            <div style={{ width: 36, height: 36, borderRadius: 10, background: m.bg, display: "grid", placeItems: "center", marginBottom: 12, color: m.color }}>
-              <Icon name={m.icon} size={18} />
+          <div key={i} style={{ ...CARD_STYLE, display: "flex", gap: 14, alignItems: "center" }}>
+            <div style={{ width: 44, height: 44, borderRadius: 12, background: m.bg, display: "grid", placeItems: "center", flex: "none", color: m.color }}>
+              <Icon name={m.icon} size={20} />
             </div>
-            <div style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-.03em", color: "var(--ink)", lineHeight: 1 }}>{m.val}</div>
-            <div style={{ fontSize: 12.5, color: "var(--muted)", fontWeight: 600, marginTop: 5 }}>{m.label}</div>
+            <div>
+              <div style={{ fontSize: 26, fontWeight: 900, letterSpacing: "-.03em", color: "var(--ink)", lineHeight: 1 }}>{m.val}</div>
+              <div style={{ fontSize: 12, color: "var(--muted)", fontWeight: 500, marginTop: 3 }}>{m.label}</div>
+            </div>
           </div>
         ))}
       </div>
 
-      {/* Fila principal — gráfico + programas */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: 16, marginBottom: 16 }}>
-        {/* Tendencia */}
-        <div style={{ background: "#fff", borderRadius: "var(--r)", padding: "20px 22px", border: "1px solid var(--line-soft)", boxShadow: "var(--sh-sm)" }}>
-          <div style={{ fontWeight: 800, fontSize: 15, marginBottom: 4 }}>Tendencia de personas alcanzadas</div>
-          <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 18 }}>Últimos 6 meses</div>
+      {/* ── Fila central: tendencia + programas ── */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 300px", gap: 16, marginBottom: 16 }}>
+        <div style={CARD_STYLE}>
+          <div style={{ fontWeight: 700, fontSize: 14.5, marginBottom: 3 }}>Personas alcanzadas</div>
+          <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 16 }}>Últimos 6 meses · {pd.label}</div>
           <Trend data={a.trend} mult={mult} />
         </div>
-
-        {/* Programas */}
-        <div style={{ background: "#fff", borderRadius: "var(--r)", padding: "20px 22px", border: "1px solid var(--line-soft)", boxShadow: "var(--sh-sm)" }}>
-          <div style={{ fontWeight: 800, fontSize: 15, marginBottom: 4 }}>Personas por programa</div>
-          <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 18 }}>Total {sc.label}</div>
+        <div style={CARD_STYLE}>
+          <div style={{ fontWeight: 700, fontSize: 14.5, marginBottom: 3 }}>Por programa</div>
+          <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 16 }}>{sc.label}</div>
           <ProgBars data={a.programs} mult={mult} />
         </div>
       </div>
 
-      {/* Fila inferior — género + edad + voces recientes */}
-      <div style={{ display: "grid", gridTemplateColumns: "220px 1fr 1fr", gap: 16 }}>
-        {/* Género */}
-        <div style={{ background: "#fff", borderRadius: "var(--r)", padding: "20px 22px", border: "1px solid var(--line-soft)", boxShadow: "var(--sh-sm)" }}>
-          <div style={{ fontWeight: 800, fontSize: 15, marginBottom: 4 }}>Género</div>
-          <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 16 }}>Autoreportado</div>
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 14 }}>
-            <Donut data={a.gender} size={110} thickness={16} />
-            <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: 7 }}>
+      {/* ── Fila inferior: género + edad + voces ── */}
+      <div style={{ display: "grid", gridTemplateColumns: "200px 1fr 1fr", gap: 16 }}>
+        <div style={CARD_STYLE}>
+          <div style={{ fontWeight: 700, fontSize: 14.5, marginBottom: 3 }}>Género</div>
+          <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 14 }}>Autoreportado</div>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+            <Donut data={a.gender} size={100} thickness={14} />
+            <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: 6 }}>
               {a.gender.map(g => (
-                <div key={g.label} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <span style={{ width: 10, height: 10, borderRadius: 3, background: g.color, flex: "none" }} />
-                  <span style={{ fontSize: 12.5, fontWeight: 600, color: "var(--ink-soft)", flex: 1 }}>{g.label}</span>
-                  <span style={{ fontSize: 13, fontWeight: 800 }}>{g.value}%</span>
+                <div key={g.label} style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                  <span style={{ width: 8, height: 8, borderRadius: 2, background: g.color, flex: "none" }} />
+                  <span style={{ fontSize: 12, color: "var(--muted)", flex: 1 }}>{g.label}</span>
+                  <span style={{ fontSize: 12.5, fontWeight: 700 }}>{g.value}%</span>
                 </div>
               ))}
             </div>
           </div>
         </div>
 
-        {/* Edad */}
-        <div style={{ background: "#fff", borderRadius: "var(--r)", padding: "20px 22px", border: "1px solid var(--line-soft)", boxShadow: "var(--sh-sm)" }}>
-          <div style={{ fontWeight: 800, fontSize: 15, marginBottom: 4 }}>Rango de edad</div>
-          <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 16 }}>% de personas alcanzadas</div>
+        <div style={CARD_STYLE}>
+          <div style={{ fontWeight: 700, fontSize: 14.5, marginBottom: 3 }}>Rango de edad</div>
+          <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 14 }}>% de personas</div>
           <AgeBars data={a.age} />
         </div>
 
-        {/* Voces recientes */}
-        <div style={{ background: "#fff", borderRadius: "var(--r)", padding: "20px 22px", border: "1px solid var(--line-soft)", boxShadow: "var(--sh-sm)" }}>
-          <div style={{ display: "flex", alignItems: "center", marginBottom: 16 }}>
-            <div style={{ fontWeight: 800, fontSize: 15, flex: 1 }}>Voces recientes</div>
+        <div style={CARD_STYLE}>
+          <div style={{ display: "flex", alignItems: "center", marginBottom: 14 }}>
+            <div style={{ fontWeight: 700, fontSize: 14.5, flex: 1 }}>Voces recientes</div>
             {setPage && (
-              <button onClick={() => setPage("convos")} style={{ border: "none", background: "none", color: "var(--blue)", fontWeight: 700, fontSize: 12.5, cursor: "pointer", fontFamily: "inherit", display: "flex", alignItems: "center", gap: 4 }}>
-                Ver todas <Icon name="arrow" size={13} />
+              <button onClick={() => setPage("convos")} style={{ border: "none", background: "none", color: "var(--blue)", fontWeight: 600, fontSize: 12.5, cursor: "pointer", fontFamily: "inherit", display: "flex", alignItems: "center", gap: 4 }}>
+                Ver todas <Icon name="arrow" size={12} />
               </button>
             )}
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {[DATA.teamReports[0], ...DATA.transcript].slice(0, 2).map((t, i) => {
               const p = DATA.people[t.who];
               return (
-                <div key={i} style={{ paddingBottom: i === 0 ? 14 : 0, borderBottom: i === 0 ? "1px solid var(--line-soft)" : "none" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-                    <Avatar p={p} size={30} />
+                <div key={i} style={{ paddingBottom: i === 0 ? 12 : 0, borderBottom: i === 0 ? "1px solid var(--line)" : "none" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5 }}>
+                    <Avatar p={p} size={28} />
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontWeight: 700, fontSize: 13 }}>{p.name}</div>
-                      <div style={{ fontSize: 11.5, color: "var(--muted)" }}>{t.at}</div>
+                      <div style={{ fontWeight: 600, fontSize: 12.5 }}>{p.name}</div>
+                      <div style={{ fontSize: 11, color: "var(--muted)" }}>{t.at}</div>
                     </div>
                   </div>
-                  <p style={{ margin: "0 0 8px", fontSize: 12.5, color: "var(--ink-soft)", lineHeight: 1.5, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{t.text}</p>
+                  <p style={{ margin: "0 0 7px", fontSize: 12, color: "var(--ink-soft)", lineHeight: 1.5, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{t.text}</p>
                   <VoicePlayer dur={t.dur} color={p.color} compact />
                 </div>
               );
             })}
           </div>
           {onNew && (
-            <button onClick={onNew} className="btn btn-primary" style={{ width: "100%", marginTop: 14, justifyContent: "center" }}>
-              <Icon name="spark" size={15} /> Crear informe con estas voces
+            <button onClick={onNew} className="btn btn-primary" style={{ width: "100%", marginTop: 12, justifyContent: "center", fontSize: 13 }}>
+              <Icon name="spark" size={14} /> Crear informe
             </button>
           )}
         </div>
       </div>
 
-      <div style={{ marginTop: 12, fontSize: 11.5, color: "var(--faint)" }}>* Las cifras combinan datos exactos y estimaciones del equipo.</div>
+      <div style={{ marginTop: 12, fontSize: 11, color: "var(--faint)" }}>* Las cifras combinan datos exactos y estimaciones del equipo.</div>
     </div>
   );
 }

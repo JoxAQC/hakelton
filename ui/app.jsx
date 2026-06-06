@@ -4,6 +4,7 @@ const { useState: aUse } = React;
 /* ---------------- Sidebar ---------------- */
 function Sidebar({ page, setPage, open, onNavigate }) {
   const go = (id) => { setPage(id); onNavigate?.(); };
+  const [collapsed, setCollapsed] = aUse(false);
   const mainNav = [
     { id: "inicio", icon: "home", label: "Inicio" },
     { id: "convos", icon: "chat", label: "Mensajes", badge: "5" },
@@ -14,56 +15,65 @@ function Sidebar({ page, setPage, open, onNavigate }) {
     { id: "autom", icon: "wand", label: "Automatizaciones" },
   ];
 
+  const w = collapsed ? 64 : 220;
+
   return (
-    <aside className={"sidebar" + (open ? " open" : "")}>
-      {/* Logo */}
-      <div className="sidebar-logo">
-        <div className="sidebar-logo-icon">
-          <Icon name="mic" size={18} />
+    <aside className={"sidebar" + (open ? " open" : "")} style={{ width: w, transition: "width 0.22s cubic-bezier(.4,0,.2,1)", overflow: "hidden" }}>
+      {/* Logo + toggle */}
+      <div className="sidebar-logo" style={{ justifyContent: collapsed ? "center" : "flex-start", gap: collapsed ? 0 : 10 }}>
+        <div className="sidebar-logo-icon" style={{ flexShrink: 0 }}>
+          <Icon name="mic" size={17} />
         </div>
-        <span className="sidebar-logo-name">Voz</span>
+        {!collapsed && <span className="sidebar-logo-name" style={{ opacity: 1 }}>Eco</span>}
+        {!collapsed && <div style={{ flex: 1 }} />}
+        <button onClick={() => setCollapsed(c => !c)} style={{ border: "none", background: "none", cursor: "pointer", color: "var(--muted)", display: "flex", alignItems: "center", padding: 4, borderRadius: 6, flexShrink: 0 }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            {collapsed ? <path d="M9 18l6-6-6-6" /> : <path d="M15 18l-6-6 6-6" />}
+          </svg>
+        </button>
       </div>
 
       {/* Nav principal */}
       <nav className="nav-group" aria-label="Principal">
         {mainNav.map(n => (
-          <button
-            key={n.id}
-            type="button"
+          <button key={n.id} type="button"
             className={"nav-item-row" + (page === n.id ? " active" : "")}
             onClick={() => go(n.id)}
+            title={collapsed ? n.label : undefined}
             aria-current={page === n.id ? "page" : undefined}
+            style={{ justifyContent: collapsed ? "center" : "flex-start", padding: collapsed ? "10px" : "9px 10px" }}
           >
             <span className="nav-icon-wrap"><Icon name={n.icon} size={19} /></span>
-            <span className="nav-item-label">{n.label}</span>
-            {n.badge && <span className="nav-badge">{n.badge}</span>}
+            {!collapsed && <span className="nav-item-label" style={{ opacity: 1 }}>{n.label}</span>}
+            {!collapsed && n.badge && <span className="nav-badge">{n.badge}</span>}
           </button>
         ))}
       </nav>
 
-      {/* Nav organización */}
-      <div className="nav-group-label" style={{ padding: "14px 14px 4px" }}>Organización</div>
+      {!collapsed && <div className="nav-group-label" style={{ padding: "14px 14px 4px" }}>Organización</div>}
       <nav className="nav-group" aria-label="Organización">
         {orgNav.map(n => (
-          <button
-            key={n.id}
-            type="button"
+          <button key={n.id} type="button"
             className={"nav-item-row" + (page === n.id ? " active" : "")}
             onClick={() => go(n.id)}
+            title={collapsed ? n.label : undefined}
+            style={{ justifyContent: collapsed ? "center" : "flex-start", padding: collapsed ? "10px" : "9px 10px" }}
           >
             <span className="nav-icon-wrap"><Icon name={n.icon} size={19} /></span>
-            <span className="nav-item-label">{n.label}</span>
+            {!collapsed && <span className="nav-item-label" style={{ opacity: 1 }}>{n.label}</span>}
           </button>
         ))}
       </nav>
 
       <div className="nav-spacer" />
 
-      {/* Config */}
       <nav className="nav-group" aria-label="Sistema">
-        <button type="button" className="nav-item-row">
+        <button type="button" className="nav-item-row"
+          title={collapsed ? "Configuración" : undefined}
+          style={{ justifyContent: collapsed ? "center" : "flex-start", padding: collapsed ? "10px" : "9px 10px" }}
+        >
           <span className="nav-icon-wrap"><Icon name="gear" size={19} /></span>
-          <span className="nav-item-label">Configuración</span>
+          {!collapsed && <span className="nav-item-label" style={{ opacity: 1 }}>Configuración</span>}
         </button>
       </nav>
     </aside>
@@ -263,7 +273,7 @@ function Informes({ onNew }) {
             <Icon name="spark" size={28} />
           </div>
           <div style={{ fontWeight: 800, fontSize: 17, color: "var(--blue-deep)" }}>Nuevo informe</div>
-          <div style={{ fontSize: 13.5, color: "var(--blue-ink)", lineHeight: 1.5, maxWidth: 200 }}>Elige las voces, Voz arma un borrador y tú lo revisas.</div>
+          <div style={{ fontSize: 13.5, color: "var(--blue-ink)", lineHeight: 1.5, maxWidth: 200 }}>Elige las voces, Eco arma un borrador y tú lo revisas.</div>
         </button>
 
         {/* Tarjetas de informes existentes — estilo reporte visual */}
@@ -324,7 +334,7 @@ function Automatizaciones() {
     { id: "transcribe", t: "Transcribir las notas de voz al llegar", d: "Convierte audio a texto automáticamente. La grabación original siempre se conserva.", safe: true },
     { id: "group", t: "Agrupar voces parecidas por tema", d: "Te ahorra ordenar a mano. Solo sugiere agrupaciones — tú puedes deshacerlas.", safe: true },
     { id: "notify", t: "Avisarme cuando haya suficientes voces para un informe", d: "Una notificación amable, sin presión. Tú decides si lo creas.", safe: true },
-    { id: "autodraft", t: "Preparar borradores de informe automáticamente", d: "Voz dejaría un borrador listo para que lo revises. Nunca se comparte solo.", caution: true },
+    { id: "autodraft", t: "Preparar borradores de informe automáticamente", d: "Eco dejaría un borrador listo para que lo revises. Nunca se comparte solo.", caution: true },
   ];
   return (
     <div className="page float-in" style={{ maxWidth: 800 }}>
@@ -345,16 +355,7 @@ function Automatizaciones() {
       </div>
 
       {/* la línea roja: responder por WhatsApp */}
-      <div className="card" style={{ marginTop: 16, padding: 20, border: "1.5px solid var(--warm-tint2)", background: "var(--warm-tint)" }}>
-        <div className="row" style={{ gap: 14, alignItems: "flex-start" }}>
-          <div style={{ width: 40, height: 40, borderRadius: 11, flex: "none", display: "grid", placeItems: "center", background: "var(--warm)", color: "#fff" }}><Icon name="heart" size={20} /></div>
-          <div className="grow">
-            <div className="row" style={{ gap: 9 }}><span style={{ fontWeight: 800, fontSize: 15.5 }}>Responder en WhatsApp automáticamente</span><Chip tone="warm" dot>Desactivado a propósito</Chip></div>
-            <div style={{ fontSize: 13.5, color: "var(--warm-deep)", marginTop: 4, lineHeight: 1.55 }}>Las personas que te escriben merecen una respuesta humana. Voz <b>nunca</b> contestará por ti. Esta función no existe — y así seguirá.</div>
-          </div>
-          <div style={{ opacity: .5 }}><Switch on={false} onClick={() => {}} /></div>
-        </div>
-      </div>
+      
     </div>
   );
 }
@@ -363,8 +364,8 @@ function Automatizaciones() {
 function Equipo() {
   const team = [
     { p: { name: "Carla Vega", color: "var(--blue)", initials: "CV" }, role: "Coordinadora", perm: "Puede crear y aprobar informes" },
-    { p: { name: "Carlos Ruiz", color: "#5D7A66", initials: "CR" }, role: "Equipo de campo", perm: "Recoge y etiqueta voces" },
-    { p: { name: "Ana Soto", color: "#6B8875", initials: "AS" }, role: "Dirección", perm: "Solo lectura de informes finales" },
+    { p: { name: "Carlos Ruiz", color: "var(--blue)", initials: "CR" }, role: "Equipo de campo", perm: "Recoge y etiqueta voces" },
+    { p: { name: "Ana Soto", color: "var(--blue-deep)", initials: "AS" }, role: "Dirección", perm: "Solo lectura de informes finales" },
   ];
   return (
     <div className="page float-in" style={{ maxWidth: 760 }}>
@@ -385,7 +386,7 @@ function Equipo() {
 /* ---------------- Root ---------------- */
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "accent": "#3f6fb3",
-  "warm": "#c97a4e",
+  "warm": "#0EA5E9",
   "density": "regular",
   "tone": "calido",
   "showOnboarding": true
@@ -425,8 +426,8 @@ function App({ activeProject, setActiveProject }) {
   const panel = (
     <TweaksPanel>
       <TweakSection label="Color" />
-      <TweakColor label="Azul confianza" value={t.accent} options={["#3f6fb3", "#2f6e8f", "#4a5fb0", "#2f7d6b"]} onChange={v => setTweak("accent", v)} />
-      <TweakColor label="Acento cálido (voces)" value={t.warm} options={["#c97a4e", "#cc6a52", "#c98a3a", "#b56a8a"]} onChange={v => setTweak("warm", v)} />
+      <TweakColor label="Azul confianza" value={t.accent} options={["#3f6fb3", "#2f6e8f", "#4a5fb0", "#1a7fc1"]} onChange={v => setTweak("accent", v)} />
+      <TweakColor label="Acento cálido (voces)" value={t.warm} options={["#0EA5E9", "#38BDF8", "#0284C7", "#06B6D4"]} onChange={v => setTweak("warm", v)} />
       <TweakSection label="Interfaz" />
       <TweakRadio label="Densidad" value={t.density} options={["compact", "regular", "comfy"]} onChange={v => setTweak("density", v)} />
       <TweakRadio label="Tono de la copy" value={t.tone} options={["calido", "directo"]} onChange={v => setTweak("tone", v)} />
@@ -458,13 +459,13 @@ function App({ activeProject, setActiveProject }) {
         {flow
           ? <ReportFlow onClose={() => setFlow(false)} tone={t} />
           : <>
-              {page === "inicio" && <Inicio onNew={() => setFlow(true)} setPage={setPage} copy={copy} />}
-              {page === "convos" && <div style={{ height: "100vh", overflow: "hidden" }}><Convos onNew={() => setFlow(true)} /></div>}
-              {page === "informes" && <Informes onNew={() => setFlow(true)} />}
-              {page === "datos" && <Analytics activeProject={activeProject} setActiveProject={setActiveProject} setPage={setPage} onNew={() => setFlow(true)} copy={copy} />}
-              {page === "autom" && <Automatizaciones />}
-              {page === "equipo" && <Equipo />}
-            </>}
+            {page === "inicio" && <Inicio onNew={() => setFlow(true)} setPage={setPage} copy={copy} />}
+            {page === "convos" && <div style={{ height: "100vh", overflow: "hidden" }}><Convos onNew={() => setFlow(true)} /></div>}
+            {page === "informes" && <Informes onNew={() => setFlow(true)} />}
+            {page === "datos" && <Analytics activeProject={activeProject} setActiveProject={setActiveProject} setPage={setPage} onNew={() => setFlow(true)} copy={copy} />}
+            {page === "autom" && <Automatizaciones />}
+            {page === "equipo" && <Equipo />}
+          </>}
       </div>
       {panel}
     </div>

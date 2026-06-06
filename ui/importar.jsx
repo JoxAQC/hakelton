@@ -2,9 +2,9 @@
 const { useState: iUse, useRef: iRef } = React;
 
 const TYPE_META = {
-  pdf: { label: "PDF", color: "#B85C5C", tint: "#FDECEA", detected: ["Testimonios", "Acuerdos", "Fechas"], note: (n) => `${n} páginas` },
-  xls: { label: "XLS", color: "#5D7A66", tint: "#E8F5E9", detected: ["Tabla", "Edad", "Género", "Distrito"], note: (n) => `${n} registros` },
-  doc: { label: "DOC", color: "#4A6352", tint: "#E8EDE9", detected: ["Texto", "Secciones"], note: () => "documento de texto" },
+  pdf: { label: "PDF", color: "#2563EB", tint: "#EFF6FF", detected: ["Testimonios", "Acuerdos", "Fechas"], note: (n) => `${n} páginas` },
+  xls: { label: "XLS", color: "#0369A1", tint: "#E0F2FE", detected: ["Tabla", "Edad", "Género", "Distrito"], note: (n) => `${n} registros` },
+  doc: { label: "DOC", color: "#1D4ED8", tint: "#DBEAFE", detected: ["Texto", "Secciones"], note: () => "documento de texto" },
 };
 function extType(name) {
   const e = (name.split(".").pop() || "").toLowerCase();
@@ -74,7 +74,7 @@ function Importar({ onGenerate, goDatos }) {
   return (
     <div className="page float-in" style={{ maxWidth: 920 }}>
       <h2 style={{ fontSize: 25, fontWeight: 800, letterSpacing: "-.025em", margin: 0 }}>Importar documentos</h2>
-      <p style={{ color: "var(--ink-soft)", fontSize: 15, margin: "5px 0 0", lineHeight: 1.55, maxWidth: 620 }}>Sube actas, listas de asistencia o encuestas en <b>PDF, Excel o Word</b>. Voz los lee, extrae los datos y prepara un borrador de informe — que <b>tú revisas</b> antes de compartir.</p>
+      <p style={{ color: "var(--ink-soft)", fontSize: 15, margin: "5px 0 0", lineHeight: 1.55, maxWidth: 620 }}>Sube actas, listas de asistencia o encuestas en <b>PDF, Excel o Word</b>. Eco los lee, extrae los datos y prepara un borrador de informe — que <b>tú revisas</b> antes de compartir.</p>
 
       {/* dropzone */}
       <div
@@ -105,7 +105,7 @@ function Importar({ onGenerate, goDatos }) {
 
       {/* resumen + generar */}
       <div className="card" style={{ marginTop: 20, padding: 0, overflow: "hidden", border: "1px solid var(--blue-tint2)" }}>
-        <div style={{ padding: 20, background: "linear-gradient(165deg, var(--blue-tint), var(--green-tint))" }}>
+        <div style={{ padding: 20, background: "linear-gradient(165deg, var(--blue-tint), var(--blue-tint2))" }}>
           <div className="row" style={{ gap: 11, marginBottom: 10 }}>
             <span style={{ color: "var(--blue)" }}><Icon name="spark" size={22} /></span>
             <span style={{ fontWeight: 800, fontSize: 17 }}>Voz leyó {done.length} documento{done.length !== 1 ? "s" : ""}</span>

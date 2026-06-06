@@ -170,11 +170,26 @@ function VariantWizard({ onFinish }) {
             <h2 style={{ fontSize: 27, fontWeight: 800, letterSpacing: "-.02em", margin: "16px 0 0", lineHeight: 1.15 }}>Vincula tus herramientas</h2>
             <p style={{ fontSize: 15, color: "var(--ink-soft)", lineHeight: 1.6, marginTop: 12 }}>¿Tu ONG usa Drive o Notion? Conéctalos para que la IA extraiga contexto histórico de forma segura.</p>
             <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 18 }}>
-              {["Google Workspace / Drive", "Notion", "OneDrive"].map(plat => (
-                <div key={plat} style={{ padding: "12px 14px", borderRadius: "var(--r-sm)", border: "1px solid var(--line)", background: "var(--surface)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              {[
+                {
+                  name: "Google Workspace / Drive",
+                  icon: <svg width="20" height="20" viewBox="0 0 87.3 78" xmlns="http://www.w3.org/2000/svg"><path d="m6.6 66.85 3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8h-27.5c0 1.55.4 3.1 1.2 4.5z" fill="#0066da"/><path d="m43.65 25-13.75-23.8c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44a9.06 9.06 0 0 0 -1.2 4.5h27.5z" fill="#00ac47"/><path d="m73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5h-27.502l5.852 11.5z" fill="#ea4335"/><path d="m43.65 25 13.75-23.8c-1.35-.8-2.9-1.2-4.5-1.2h-18.5c-1.6 0-3.15.45-4.5 1.2z" fill="#00832d"/><path d="m59.8 53h-32.3l-13.75 23.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z" fill="#2684fc"/><path d="m73.4 26.5-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3l-13.75 23.8 16.15 28h27.45c0-1.55-.4-3.1-1.2-4.5z" fill="#ffba00"/></svg>
+                },
+                {
+                  name: "Notion",
+                  icon: <svg width="20" height="20" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M6 7.3C8.1 9 9 9.2 12.9 8.9l67-4c.8 0 .1-.8-.2-1L68.4.5C67.1-.4 65.3-.1 63.7 0L8.9 4.3C6.9 4.5 6.5 5.5 6 7.3zm2.8 10.3v67.5c0 3.7 1.8 5 6 4.8l73.5-4.3c4.2-.2 4.7-2.8 4.7-5.8V12.8c0-3-.1-4.4-2.3-6.1-2.3-1.7-3.4-1.5-5.3-1.3L11.1 9.7C8.7 9.9 8.8 11.3 8.8 17.6zm66.5 3.6c.4 1.7 0 3.4-1.7 3.6l-2.7.5v40.3c-2.4 1.3-4.6 2-6.4 2-3 0-3.8-.9-6.1-3.6L40.1 38.4v25.4l5.7 1.3s0 3.4-4.7 3.4L28 68.9c-.4-1-.1-3.4 1.5-3.8l3.9-1.1V29l-5.4-.4c-.4-1.7.6-4.1 3.2-4.3l13.6-.9 19.7 30.2V25.8L60 24.9c-.4-2.1 1.2-3.6 3.2-3.8z" fill="#37352f"/></svg>
+                },
+                {
+                  name: "OneDrive / Microsoft 365",
+                  icon: <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14.13 9.37A6.21 6.21 0 0 1 20.27 15c0 .11 0 .22-.01.33A4.5 4.5 0 0 1 19.5 24H5a5 5 0 0 1-.88-9.92A6.2 6.2 0 0 1 4 13a6.21 6.21 0 0 1 10.13-3.63z" fill="#0078D4"/><path d="M14.13 9.37A6.21 6.21 0 0 0 8.5 7a6.18 6.18 0 0 0-4.38 1.81A4.5 4.5 0 0 1 5 24h14.5a4.5 4.5 0 0 0 .77-8.67 6.21 6.21 0 0 0-6.14-5.96z" fill="#0078D4" opacity=".7"/></svg>
+                },
+              ].map(plat => (
+                <div key={plat.name} style={{ padding: "12px 14px", borderRadius: "var(--r-sm)", border: "1px solid var(--line)", background: "var(--surface)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    <span style={{ color: "var(--muted)" }}><Icon name="doc" size={18} /></span>
-                    <span style={{ fontWeight: 600, fontSize: 14 }}>{plat}</span>
+                    <div style={{ width: 36, height: 36, borderRadius: 8, background: "#fff", border: "1px solid var(--line)", display: "grid", placeItems: "center", flexShrink: 0, boxShadow: "var(--sh-sm)" }}>
+                      {plat.icon}
+                    </div>
+                    <span style={{ fontWeight: 600, fontSize: 14 }}>{plat.name}</span>
                   </div>
                   <button className="btn btn-soft btn-sm" disabled>Próximamente</button>
                 </div>
@@ -200,7 +215,7 @@ function VariantWizard({ onFinish }) {
         </div>
 
         {/* derecha: visual */}
-        <div style={{ background: "linear-gradient(160deg, var(--blue-tint), var(--green-tint))", display: "grid", placeItems: "center", padding: 36, borderLeft: "1px solid var(--line)" }}>
+        <div style={{ background: "linear-gradient(160deg, var(--blue-tint), var(--blue-tint2))", display: "grid", placeItems: "center", padding: 36, borderLeft: "1px solid var(--line)" }}>
           {step === 0 && <div style={{ textAlign: "center" }}>
             <div style={{ position: "relative", width: 230 }}>
               {DATA.transcript.slice(0, 2).map((t, i) => {
@@ -237,7 +252,45 @@ function VariantWizard({ onFinish }) {
               </div>
             );
           })()}
-          {step === 3 && <Illu label="MCP Integrations" h={240} tone="blue" />}
+          {step === 3 && (
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, width: "100%", maxWidth: 300 }}>
+              {/* Tarjetas de app con logo real */}
+              {[
+                {
+                  name: "Google Drive",
+                  desc: "Reportes anteriores y documentos históricos",
+                  logo: <svg width="28" height="28" viewBox="0 0 87.3 78" xmlns="http://www.w3.org/2000/svg"><path d="m6.6 66.85 3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8h-27.5c0 1.55.4 3.1 1.2 4.5z" fill="#0066da"/><path d="m43.65 25-13.75-23.8c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44a9.06 9.06 0 0 0 -1.2 4.5h27.5z" fill="#00ac47"/><path d="m73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5h-27.502l5.852 11.5z" fill="#ea4335"/><path d="m43.65 25 13.75-23.8c-1.35-.8-2.9-1.2-4.5-1.2h-18.5c-1.6 0-3.15.45-4.5 1.2z" fill="#00832d"/><path d="m59.8 53h-32.3l-13.75 23.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z" fill="#2684fc"/><path d="m73.4 26.5-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3l-13.75 23.8 16.15 28h27.45c0-1.55-.4-3.1-1.2-4.5z" fill="#ffba00"/></svg>,
+                  bg: "#fff",
+                },
+                {
+                  name: "Notion",
+                  desc: "Notas, acuerdos y bases de conocimiento",
+                  logo: <svg width="24" height="24" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M6 7.3C8.1 9 9 9.2 12.9 8.9l67-4c.8 0 .1-.8-.2-1L68.4.5C67.1-.4 65.3-.1 63.7 0L8.9 4.3C6.9 4.5 6.5 5.5 6 7.3zm2.8 10.3v67.5c0 3.7 1.8 5 6 4.8l73.5-4.3c4.2-.2 4.7-2.8 4.7-5.8V12.8c0-3-.1-4.4-2.3-6.1-2.3-1.7-3.4-1.5-5.3-1.3L11.1 9.7C8.7 9.9 8.8 11.3 8.8 17.6zm66.5 3.6c.4 1.7 0 3.4-1.7 3.6l-2.7.5v40.3c-2.4 1.3-4.6 2-6.4 2-3 0-3.8-.9-6.1-3.6L40.1 38.4v25.4l5.7 1.3s0 3.4-4.7 3.4L28 68.9c-.4-1-.1-3.4 1.5-3.8l3.9-1.1V29l-5.4-.4c-.4-1.7.6-4.1 3.2-4.3l13.6-.9 19.7 30.2V25.8L60 24.9c-.4-2.1 1.2-3.6 3.2-3.8z" fill="#37352f"/></svg>,
+                  bg: "#fff",
+                },
+                {
+                  name: "OneDrive",
+                  desc: "Planillas Excel y archivos Microsoft 365",
+                  logo: <svg width="28" height="22" viewBox="0 0 24 18" xmlns="http://www.w3.org/2000/svg"><path d="M10.6 3.8A6 6 0 0 1 21 8.5l.1.5A4 4 0 0 1 20 17H5a4 4 0 0 1-.5-8A6 6 0 0 1 10.6 3.8z" fill="#0078D4"/><path d="M6.5 8.3A5 5 0 0 1 15 5.5a6 6 0 0 0-4.4 2.3A4 4 0 0 0 5 13.5a4 4 0 0 1 1.5-5.2z" fill="#28A8E0"/></svg>,
+                  bg: "#fff",
+                },
+              ].map((app, i) => (
+                <div key={i} style={{ width: "100%", background: "#fff", borderRadius: "var(--r-sm)", padding: "12px 14px", boxShadow: "var(--sh)", display: "flex", alignItems: "center", gap: 12 }}>
+                  <div style={{ width: 42, height: 42, borderRadius: 10, background: app.bg, border: "1px solid var(--line)", display: "grid", placeItems: "center", flexShrink: 0, boxShadow: "var(--sh-sm)" }}>
+                    {app.logo}
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: 700, fontSize: 13.5, color: "var(--ink)" }}>{app.name}</div>
+                    <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 2, lineHeight: 1.4 }}>{app.desc}</div>
+                  </div>
+                  <div style={{ marginLeft: "auto", width: 8, height: 8, borderRadius: "50%", background: "var(--blue-tint2)", border: "2px solid var(--blue)", flexShrink: 0 }} />
+                </div>
+              ))}
+              <div style={{ marginTop: 4, padding: "9px 12px", background: "var(--blue-tint)", borderRadius: "var(--r-sm)", fontSize: 11.5, color: "var(--blue-deep)", lineHeight: 1.4, width: "100%" }}>
+                Solo lee lo que tú autorices. Nada se modifica ni se comparte sin tu permiso.
+              </div>
+            </div>
+          )}
           {step === 4 && <div style={{ textAlign: "center" }}>
             <div style={{ width: 92, height: 92, borderRadius: 999, background: "var(--green-tint)", display: "grid", placeItems: "center", margin: "0 auto 16px", color: "var(--green)" }}><Icon name="check" size={46} /></div>
             <div style={{ fontWeight: 700, color: "var(--ink-soft)" }}>WhatsApp conectado</div>
@@ -333,7 +386,7 @@ function VariantTour({ onFinish }) {
         {/* mockup atenuado de la app */}
         <div className="card" style={{ padding: 0, overflow: "hidden", boxShadow: "var(--sh-lg)" }}>
           <div style={{ padding: "16px 22px", borderBottom: "1px solid var(--line)", display: "flex", gap: 11, alignItems: "center", background: "var(--surface-2)" }}>
-            <Avatar p={{ color: "#6B8875", initials: "SC" }} size={34} />
+            <Avatar p={{ color: "#2563EB", initials: "SC" }} size={34} />
             <div><div style={{ fontWeight: 800, fontSize: 15 }}>Salud Comunitaria — Villa El Sol</div><div style={{ fontSize: 12, color: "var(--muted)" }}>3 voces nuevas · hoy</div></div>
           </div>
           <div style={{ padding: 22, display: "flex", flexDirection: "column", gap: 14 }}>
