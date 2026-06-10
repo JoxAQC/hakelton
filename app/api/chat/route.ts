@@ -6,7 +6,7 @@ export const runtime = "nodejs";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { messages } = body;
+    const { messages, pendingAction } = body;
 
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
       return NextResponse.json(
@@ -20,10 +20,12 @@ export async function POST(req: NextRequest) {
     // and finally generate the output response.
     const result = await ngoGraph.invoke({
       messages: messages,
-      // We start query, context, nextStep with default empty values
       query: "",
       context: "",
-      nextStep: "generate"
+      nextStep: "generate",
+      requiresConfirmation: false,
+      pendingAction: pendingAction || null,
+      actionResult: ""
     });
 
     // Get the updated messages. LangGraph reducer appends new messages.
@@ -34,7 +36,9 @@ export async function POST(req: NextRequest) {
       reply: lastMessage ? lastMessage.content : "Lo siento, no se pudo procesar la consulta.",
       messages: updatedMessages,
       query: result.query,
-      context: result.context ? "Context was retrieved" : "No context retrieved"
+      context: result.context ? "Context was retrieved" : "No context retrieved",
+      requiresConfirmation: result.requiresConfirmation,
+      pendingAction: result.pendingAction
     });
   } catch (error) {
     console.error("Error in API route /api/chat:", error);

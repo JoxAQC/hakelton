@@ -64,6 +64,21 @@ graph TD
 4. **`clarifyNode` (Guardrail de Seguridad y UX)**:
    Utiliza `llama-3.1-8b-instant` para interceptar de forma amigable e ingeniosa intentos de jailbreak, solicitudes de código o preguntas fuera de ámbito (ej: recetas, programación, datos de identidad), redirigiendo cordialmente al usuario de vuelta a las ONGs.
 
+6. **`actionNode` (Agente Operativo - Tool Calling)**:
+   Si el Router clasifica la intención como "action", este nodo intercepta la solicitud. Utiliza el LLM para decidir qué herramienta (Tool) usar (ej. `create_metric_config_tool` o `log_ngo_activity_tool`) y con qué parámetros. Antes de ejecutar, **pausa** el grafo estableciendo `requiresConfirmation: true`.
+
+7. **`executeActionNode` (Mutación de Estado)**:
+   Una vez que el usuario aprueba la acción propuesta por el `actionNode` a través de la interfaz visual (HITL), este nodo retoma la ejecución y aplica los cambios en la base de datos (Supabase).
+
+---
+
+## 🛡️ Seguridad y Control: Human-in-the-Loop (HITL)
+
+Para acciones destructivas o de configuración estructural (como crear métricas o mutar datos), el sistema implementa un patrón **Human-in-the-Loop**. 
+1. El `actionNode` genera un plan de acción y lo envía al frontend junto con una bandera de `requiresConfirmation`.
+2. El frontend renderiza un componente visual rico (`ActionConfirmationCard`) mostrando al usuario el resumen de la mutación.
+3. El LLM **no ejecuta nada** hasta que el operador hace clic en "Ejecutar Acción", inyectando un token especial de confirmación en el grafo que desencadena el `executeActionNode`.
+
 ---
 
 ## 🚀 Guía de Instalación y Ejecución

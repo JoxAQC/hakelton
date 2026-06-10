@@ -26,6 +26,7 @@ const QUICK_SUGGESTIONS = [
 ];
 
 import { DATA } from "./LegacyApp";
+import ActionConfirmationCard from "../ui/components/agent/ActionConfirmationCard";
 
 interface ChatSidebarProps {
   isOpen: boolean;
@@ -38,6 +39,7 @@ export default function ChatSidebar({ isOpen, onClose, activeProject, setActiveP
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [pendingAction, setPendingAction] = useState<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Scroll to bottom on new messages
@@ -67,7 +69,7 @@ export default function ChatSidebar({ isOpen, onClose, activeProject, setActiveP
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ messages: payloadMessages }),
+        body: JSON.stringify({ messages: payloadMessages, pendingAction }),
       });
 
       if (!response.ok) {
@@ -78,6 +80,12 @@ export default function ChatSidebar({ isOpen, onClose, activeProject, setActiveP
       
       if (data.reply) {
         setMessages((prev) => [...prev, { role: "assistant", content: data.reply }]);
+        
+        if (data.requiresConfirmation && data.pendingAction) {
+          setPendingAction(data.pendingAction);
+        } else {
+          setPendingAction(null);
+        }
       } else {
         setMessages((prev) => [
           ...prev,
@@ -101,6 +109,16 @@ export default function ChatSidebar({ isOpen, onClose, activeProject, setActiveP
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     handleSendMessage(input);
+  };
+
+  const handleConfirmAction = () => {
+    setPendingAction(null);
+    handleSendMessage("[CONFIRM_ACTION]");
+  };
+
+  const handleRejectAction = () => {
+    setPendingAction(null);
+    handleSendMessage("[REJECT_ACTION]");
   };
 
   // Helper function to format message text into JSX with markdown elements
@@ -180,7 +198,7 @@ export default function ChatSidebar({ isOpen, onClose, activeProject, setActiveP
         <main className="chat-window">
           {/* Messages */}
           <div className="messages-container">
-            {messages.length === 0 ? (
+            {messages.filter(m => !m.content.includes("[CONFIRM_ACTION]") && !m.content.includes("[REJECT_ACTION]")).length === 0 ? (
               <div className="empty-state">
                 <div className="empty-icon">
                   <Bot size={32} />
@@ -191,7 +209,7 @@ export default function ChatSidebar({ isOpen, onClose, activeProject, setActiveP
                 </p>
               </div>
             ) : (
-              messages.map((msg, index) => (
+              messages.filter(m => !m.content.includes("[CONFIRM_ACTION]") && !m.content.includes("[REJECT_ACTION]")).map((msg, index, filteredArray) => (
                 <div key={index} className={`message-wrapper ${msg.role}`}>
                   <div className="message-bubble">
                     <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.4rem" }}>
@@ -211,6 +229,15 @@ export default function ChatSidebar({ isOpen, onClose, activeProject, setActiveP
                     </div>
                     <div>{renderMessageContent(msg.content)}</div>
                   </div>
+                  
+                  {/* Action Confirmation Rendered after the assistant message if pending */}
+                  {index === filteredArray.length - 1 && pendingAction && (
+                    <ActionConfirmationCard 
+                      pendingAction={pendingAction}
+                      onConfirm={handleConfirmAction}
+                      onReject={handleRejectAction}
+                    />
+                  )}
                 </div>
               ))
             )}
@@ -243,10 +270,10 @@ export default function ChatSidebar({ isOpen, onClose, activeProject, setActiveP
                 placeholder="Escribe tu consulta sobre ONGs..."
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                disabled={isLoading}
+                disabled={isLoading || !!pendingAction}
               />
             </div>
-            <button type="submit" className="send-button" disabled={isLoading || !input.trim()}>
+            <button type="submit" className="send-button" disabled={isLoading || !input.trim() || !!pendingAction}>
               <Send size={18} />
             </button>
           </form>
