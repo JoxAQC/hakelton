@@ -5,7 +5,7 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 /* --- data.js --- */
 /* Datos mock → DATA
    Dos tipos de voz: "testimonio" (comunidad) y "reporte" (equipo / voluntariado). */
-import { supabase } from "../lib/supabase/client";
+import { mockOrganizations } from "../lib/db/mock-db";
 const DATA = (function () {
   const people = {
     // Comunidad
@@ -240,11 +240,7 @@ const DATA = (function () {
 
 export async function loadSupabaseData() {
   try {
-    const { data: org } = await supabase
-      .from("organizations")
-      .select("*, programs(*)")
-      .eq("name", "Fundación Raíces")
-      .single();
+    const org = mockOrganizations.find(o => o.name === "Fundación Raíces");
 
     if (org && org.programs) {
       DATA.orgCategory = org.category;
@@ -252,7 +248,11 @@ export async function loadSupabaseData() {
         id: p.id,
         label: p.name,
         color: ["#6B8875", "#4A6352", "#7A9480", "#8B7355"][i % 4],
-        count: Math.floor(Math.random() * 5) + 1
+        count: Math.floor(Math.random() * 5) + 1,
+        impacted: p.settings?.impacted || Math.floor(Math.random() * 1000) + 100,
+        voices: p.settings?.voices || Math.floor(Math.random() * 100) + 10,
+        events: p.settings?.events || Math.floor(Math.random() * 10) + 1,
+        docs: p.settings?.docs || Math.floor(Math.random() * 15) + 2
       }));
     }
   } catch (error) {
@@ -2243,14 +2243,7 @@ function Panel({ title, sub, children, foot }) {
   );
 }
 
-/* Datos por proyecto */
-const PROJECT_DATA = {
-  todos:    { label: "Todos",               impacted: 1240, voices: 142, events: 8, docs: 11 },
-  salud:    { label: "Salud Comunitaria",   impacted: 480,  voices: 48,  events: 3, docs: 4  },
-  ambiente: { label: "Medio Ambiente",      impacted: 340,  voices: 36,  events: 2, docs: 3  },
-  educacion:{ label: "Educación",           impacted: 260,  voices: 32,  events: 2, docs: 2  },
-  alimenta: { label: "Seg. Alimentaria",    impacted: 160,  voices: 26,  events: 1, docs: 2  },
-};
+
 
 /* Tendencia por proyecto y scope */
 const TREND_DATA = {
@@ -2281,13 +2274,37 @@ const TREND_DATA = {
   },
 };
 
-function Analytics({ setPage, onNew, copy }) {
+function Analytics({ setPage, onNew, copy, activeProject: extActive, setActiveProject: extSetActive }) {
   const a = DATA.analytics;
   const [scope, setScope] = dUse("mes");
-  const [project, setProject] = dUse("todos");
+  const [localProject, setLocalProject] = dUse("todos");
+  
+  const project = extActive || localProject;
+  const setProject = extSetActive || setLocalProject;
+
   const sc = a.scopes.find(s => s.id === scope);
   const mult = sc.mult;
-  const pd = PROJECT_DATA[project];
+
+  const dynamicProjectData = {
+    todos: { 
+      label: "Todos", 
+      impacted: DATA.projects.reduce((acc, p) => acc + (p.impacted || 0), 0) || 1240,
+      voices: DATA.projects.reduce((acc, p) => acc + (p.voices || 0), 0) || 142,
+      events: DATA.projects.reduce((acc, p) => acc + (p.events || 0), 0) || 8,
+      docs: DATA.projects.reduce((acc, p) => acc + (p.docs || 0), 0) || 11 
+    }
+  };
+  DATA.projects.forEach(p => {
+    dynamicProjectData[p.id] = {
+      label: p.label,
+      impacted: p.impacted || 0,
+      voices: p.voices || 0,
+      events: p.events || 0,
+      docs: p.docs || 0
+    };
+  });
+
+  const pd = dynamicProjectData[project] || dynamicProjectData["todos"];
 
   const CARD_STYLE = { background: "#fff", borderRadius: "var(--r)", padding: "20px 22px", border: "1px solid var(--line)", boxShadow: "var(--sh-sm)" };
 
@@ -2324,7 +2341,7 @@ function Analytics({ setPage, onNew, copy }) {
 
       {/* ── Filtro por proyecto (tabs) ── */}
       <div style={{ display: "flex", gap: 6, marginBottom: 20, overflowX: "auto", paddingBottom: 2 }}>
-        {Object.entries(PROJECT_DATA).map(([id, p]) => (
+        {Object.entries(dynamicProjectData).map(([id, p]) => (
           <button key={id} onClick={() => setProject(id)} style={{
             border: "1.5px solid " + (project === id ? "var(--blue)" : "var(--line)"),
             background: project === id ? "var(--blue)" : "#fff",
