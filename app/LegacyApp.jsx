@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef, useMemo } from "react";
+import { BarChart as RechartsBarChart, Bar as RechartsBar, XAxis as RechartsXAxis, YAxis as RechartsYAxis, Tooltip as RechartsTooltip, CartesianGrid as RechartsCartesianGrid, ResponsiveContainer as RechartsResponsiveContainer, PieChart as RechartsPieChart, Pie as RechartsPie, Cell as RechartsCell } from "recharts";
 
 
 /* --- data.js --- */
@@ -2274,7 +2275,7 @@ const TREND_DATA = {
   },
 };
 
-function Analytics({ setPage, onNew, copy, activeProject: extActive, setActiveProject: extSetActive }) {
+function Analytics({ setPage, onNew, copy, activeProject: extActive, setActiveProject: extSetActive, savedMetrics }) {
   const a = DATA.analytics;
   const [scope, setScope] = dUse("mes");
   const [localProject, setLocalProject] = dUse("todos");
@@ -2353,13 +2354,30 @@ function Analytics({ setPage, onNew, copy, activeProject: extActive, setActivePr
         ))}
       </div>
 
-      {/* ── 4 tarjetas de métricas ── */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14, marginBottom: 20 }}>
+      {/* ── Tarjetas de métricas (Incluye las de RAG + Dinámicas) ── */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 14, marginBottom: 20 }}>
         {[
           { val: fmt(pd.impacted * mult), label: "Personas alcanzadas", icon: "users",  color: "var(--blue)",      bg: "var(--blue-tint)" },
           { val: fmt(pd.voices  * mult), label: "Voces recogidas",     icon: "mic",   color: "var(--warm-deep)", bg: "var(--warm-tint)" },
           { val: fmt(pd.events  * mult), label: "Eventos realizados",  icon: "check", color: "var(--green-deep)", bg: "var(--green-tint)" },
           { val: fmt(pd.docs    * mult), label: "Documentos subidos",  icon: "doc",   color: "var(--muted)",     bg: "var(--surface-2)" },
+          ...(savedMetrics || []).map(m => {
+            let displayVal = "45";
+            if (m.type === "percentage") {
+              displayVal = "85%";
+            } else if (m.type === "currency") {
+              displayVal = "$15,000";
+            } else if (m.unit) {
+              displayVal = `12 ${m.unit}`;
+            }
+            return {
+              val: displayVal,
+              label: m.name.charAt(0).toUpperCase() + m.name.slice(1) + " (IA)",
+              icon: "spark",
+              color: "var(--blue)",
+              bg: "var(--blue-tint)"
+            };
+          })
         ].map((m, i) => (
           <div key={i} style={{ ...CARD_STYLE, display: "flex", gap: 14, alignItems: "center" }}>
             <div style={{ width: 44, height: 44, borderRadius: 12, background: m.bg, display: "grid", placeItems: "center", flex: "none", color: m.color }}>
@@ -2604,6 +2622,7 @@ function Sidebar({ page, setPage, open, onNavigate }) {
     { id: "inicio", icon: "home", label: "Inicio" },
     { id: "convos", icon: "chat", label: "Mensajes", badge: "5" },
     { id: "informes", icon: "doc", label: "Informes" },
+    { id: "repositorio", icon: "chart", label: "Repositorio" },
   ];
   const orgNav = [
     { id: "equipo", icon: "users", label: "Equipo" },
@@ -2667,8 +2686,8 @@ function Sidebar({ page, setPage, open, onNavigate }) {
 }
 
 /* ---------------- Inicio (panel de datos + voces recientes) ---------------- */
-function Inicio({ onNew, setPage, copy }) {
-  return <Analytics setPage={setPage} onNew={onNew} copy={copy} />;
+function Inicio({ onNew, setPage, copy, savedMetrics }) {
+  return <Analytics setPage={setPage} onNew={onNew} copy={copy} savedMetrics={savedMetrics} />;
 }
 
 /* ---------------- Conversaciones (bandeja estilo inbox) ---------------- */
@@ -2968,6 +2987,134 @@ function Equipo() {
   );
 }
 
+/* ---------------- RepositorioPage (Visualización de Gráficos Guardados) ---------------- */
+function RepositorioPage({ savedCharts, setSavedCharts }) {
+  const handleDeleteChart = (index) => {
+    setSavedCharts(prev => prev.filter((_, i) => i !== index));
+  };
+
+  return (
+    <div className="page float-in">
+      <div style={{ display: "flex", alignItems: "flex-start", gap: 16, marginBottom: 22 }}>
+        <div style={{ flex: 1 }}>
+          <h2 style={{ fontSize: 24, fontWeight: 800, letterSpacing: "-.025em", margin: "0 0 3px" }}>
+            Repositorio de Gráficos
+          </h2>
+          <p style={{ color: "var(--muted)", fontSize: 13.5, margin: 0 }}>
+            Gráficos generados y guardados de forma segura mediante el asistente inteligente.
+          </p>
+        </div>
+      </div>
+
+      {savedCharts.length === 0 ? (
+        <div style={{ 
+          background: "#fff", 
+          borderRadius: "var(--r)", 
+          padding: "48px 24px", 
+          border: "1px solid var(--line)", 
+          boxShadow: "var(--sh-sm)",
+          textAlign: "center",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "12px"
+        }}>
+          <div style={{ 
+            width: 56, 
+            height: 56, 
+            borderRadius: 16, 
+            background: "var(--blue-tint)", 
+            color: "var(--blue)", 
+            display: "grid", 
+            placeItems: "center" 
+          }}>
+            <Icon name="chart" size={28} />
+          </div>
+          <h3 style={{ fontSize: 17, fontWeight: 800, margin: 0, color: "var(--ink)" }}>Repositorio vacío</h3>
+          <p style={{ fontSize: 13.5, color: "var(--muted)", margin: 0, maxWidth: "340px", lineHeight: 1.5 }}>
+            Pídele un gráfico al asistente en el chat y acéptalo para verlo guardado en esta sección.
+          </p>
+        </div>
+      ) : (
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(360px, 1fr))", gap: 16 }}>
+          {savedCharts.map((chart, idx) => (
+            <div key={idx} style={{ 
+              background: "#fff", 
+              borderRadius: "var(--r)", 
+              padding: "20px 22px", 
+              border: "1px solid var(--line)", 
+              boxShadow: "var(--sh-sm)",
+              display: "flex",
+              flexDirection: "column",
+              gap: "14px"
+            }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "12px" }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <h4 style={{ fontSize: 16, fontWeight: 800, margin: "0 0 4px", color: "var(--ink)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                    {chart.title}
+                  </h4>
+                  <p style={{ fontSize: 12.5, color: "var(--muted)", margin: 0, overflow: "hidden", textOverflow: "ellipsis", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", lineHeight: 1.4 }}>
+                    <b>Consulta:</b> "{chart.query}"
+                  </p>
+                </div>
+                <button 
+                  onClick={() => handleDeleteChart(idx)} 
+                  style={{ 
+                    border: "none", 
+                    background: "none", 
+                    color: "#ef4444", 
+                    cursor: "pointer", 
+                    padding: 4, 
+                    borderRadius: 6,
+                    display: "grid",
+                    placeItems: "center"
+                  }}
+                  title="Eliminar gráfico"
+                >
+                  <Icon name="trash" size={15} />
+                </button>
+              </div>
+
+              <div style={{ 
+                height: 220, 
+                width: "100%", 
+                background: "var(--surface-2)", 
+                borderRadius: "var(--r-sm)", 
+                padding: "12px 8px 4px",
+                boxSizing: "border-box"
+              }}>
+                {chart.type === "pie" ? (
+                  <RechartsResponsiveContainer width="100%" height="100%">
+                    <RechartsPieChart>
+                      <RechartsPie data={chart.data} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={70} fill="#8884d8">
+                        {chart.data?.map((entry, index) => (
+                          <RechartsCell key={`cell-${index}`} fill={["#3f6fb3", "#c97a4e", "#2f7d6b", "#cc6a52", "#c98a3a", "#b56a8a"][index % 6]} />
+                        ))}
+                      </RechartsPie>
+                      <RechartsTooltip />
+                    </RechartsPieChart>
+                  </RechartsResponsiveContainer>
+                ) : (
+                  <RechartsResponsiveContainer width="100%" height="100%">
+                    <RechartsBarChart data={chart.data}>
+                      <RechartsCartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--line-soft)" />
+                      <RechartsXAxis dataKey="name" tick={{fontSize: 10}} interval={0} angle={-15} textAnchor="end" height={40} stroke="var(--muted)" />
+                      <RechartsYAxis tick={{fontSize: 10}} stroke="var(--muted)" />
+                      <RechartsTooltip cursor={{fill: "rgba(0,0,0,0.03)"}} />
+                      <RechartsBar dataKey="value" fill="var(--blue)" radius={[4, 4, 0, 0]} />
+                    </RechartsBarChart>
+                  </RechartsResponsiveContainer>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ---------------- Root ---------------- */
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "accent": "#3f6fb3",
@@ -2982,11 +3129,10 @@ const TONE_COPY = {
   directo: { greet: "Hola" },
 };
 
-function App({ activeProject, setActiveProject }) {
+function App({ activeProject, setActiveProject, page, setPage, savedCharts, setSavedCharts, savedMetrics, setSavedMetrics }) {
   const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
   const [onb, setOnb] = aUse(true);
   const [variant, setVariant] = aUse("wizard");
-  const [page, setPage] = aUse("inicio");
   const [flow, setFlow] = aUse(false);
   const [menuOpen, setMenuOpen] = aUse(false);
 
@@ -3044,10 +3190,11 @@ function App({ activeProject, setActiveProject }) {
         {flow
           ? <ReportFlow onClose={() => setFlow(false)} tone={t} />
           : <>
-              {page === "inicio" && <Inicio onNew={() => setFlow(true)} setPage={setPage} copy={copy} />}
+              {page === "inicio" && <Inicio onNew={() => setFlow(true)} setPage={setPage} copy={copy} savedMetrics={savedMetrics} />}
               {page === "convos" && <div style={{ height: "100vh", overflow: "hidden" }}><Convos onNew={() => setFlow(true)} /></div>}
               {page === "informes" && <Informes onNew={() => setFlow(true)} />}
-              {page === "datos" && <Analytics activeProject={activeProject} setActiveProject={setActiveProject} setPage={setPage} onNew={() => setFlow(true)} copy={copy} />}
+              {page === "repositorio" && <RepositorioPage savedCharts={savedCharts} setSavedCharts={setSavedCharts} />}
+              {page === "datos" && <Analytics activeProject={activeProject} setActiveProject={setActiveProject} setPage={setPage} onNew={() => setFlow(true)} copy={copy} savedMetrics={savedMetrics} />}
               {page === "autom" && <Automatizaciones />}
               {page === "equipo" && <Equipo />}
             </>}

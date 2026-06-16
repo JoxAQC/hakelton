@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { Send, Bot, User, Sparkles, Globe, Heart, ShieldAlert, Cpu } from "lucide-react";
+import { Send, Bot, User, Sparkles, Globe, Heart, ShieldAlert, Cpu, BarChart3, Database } from "lucide-react";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 
 interface ChatMessage {
   role: "user" | "assistant" | "system";
@@ -33,13 +34,31 @@ interface ChatSidebarProps {
   onClose: () => void;
   activeProject?: any;
   setActiveProject?: (project: any) => void;
+  page: string;
+  setPage: (page: string) => void;
+  savedCharts: any[];
+  setSavedCharts: React.Dispatch<React.SetStateAction<any[]>>;
+  savedMetrics: any[];
+  setSavedMetrics: React.Dispatch<React.SetStateAction<any[]>>;
 }
 
-export default function ChatSidebar({ isOpen, onClose, activeProject, setActiveProject }: ChatSidebarProps) {
+export default function ChatSidebar({ 
+  isOpen, 
+  onClose, 
+  activeProject, 
+  setActiveProject,
+  page,
+  setPage,
+  savedCharts,
+  setSavedCharts,
+  savedMetrics,
+  setSavedMetrics
+}: ChatSidebarProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [pendingAction, setPendingAction] = useState<any>(null);
+  const [activeTab, setActiveTab] = useState<"chat" | "repo">("chat");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Scroll to bottom on new messages
@@ -82,7 +101,10 @@ export default function ChatSidebar({ isOpen, onClose, activeProject, setActiveP
         setMessages((prev) => [...prev, { role: "assistant", content: data.reply }]);
         
         if (data.requiresConfirmation && data.pendingAction) {
-          setPendingAction(data.pendingAction);
+          setPendingAction({
+            ...data.pendingAction,
+            query: data.query || textToSend
+          });
         } else {
           setPendingAction(null);
         }
@@ -112,6 +134,17 @@ export default function ChatSidebar({ isOpen, onClose, activeProject, setActiveP
   };
 
   const handleConfirmAction = () => {
+    if (pendingAction?.tool_name === "generate_chart_tool") {
+      setSavedCharts(prev => [...prev, {
+        ...pendingAction.parameters,
+        query: pendingAction.query || "Consulta de gráfico"
+      }]);
+    } else if (pendingAction?.tool_name === "create_metric_config_tool") {
+      setSavedMetrics(prev => [...prev, {
+        ...pendingAction.parameters,
+        query: pendingAction.query || "Consulta de métrica"
+      }]);
+    }
     setPendingAction(null);
     handleSendMessage("[CONFIRM_ACTION]");
   };
@@ -124,20 +157,50 @@ export default function ChatSidebar({ isOpen, onClose, activeProject, setActiveP
   // Helper function to format message text into JSX with markdown elements
   const renderMessageContent = (text: string) => {
     const parseInline = (inlineText: string): React.ReactNode[] => {
-      // Split by double asterisks for bolding
-      const boldParts = inlineText.split(/(\*\*.*?\*\*)/g);
-      return boldParts.map((part, idx) => {
-        if (part.startsWith("**") && part.endsWith("**")) {
-          return <strong key={idx}>{part.slice(2, -2)}</strong>;
+      // Split by markdown links like [Ver en la página de Repositorio](repositorio)
+      const linkParts = inlineText.split(/(\[[^\]]+\]\([^)]+\))/g);
+      return linkParts.map((part, idx) => {
+        const match = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+        if (match) {
+          const [, label, pageId] = match;
+          return (
+            <button
+              key={`link-${idx}`}
+              onClick={() => {
+                setPage(pageId);
+              }}
+              style={{
+                color: "#2563EB",
+                background: "none",
+                border: "none",
+                padding: 0,
+                font: "inherit",
+                cursor: "pointer",
+                textDecoration: "underline",
+                fontWeight: 600,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "2px"
+              }}
+            >
+              {label}
+            </button>
+          );
         }
-        // Split by single asterisks for italics
-        const italicParts = part.split(/(\*.*?\*)/g);
-        return italicParts.map((subPart, subIdx) => {
-          if (subPart.startsWith("*") && subPart.endsWith("*")) {
-            return <em key={`${idx}-${subIdx}`}>{subPart.slice(1, -1)}</em>;
+
+        const boldParts = part.split(/(\*\*.*?\*\*)/g);
+        return boldParts.map((bPart, bIdx) => {
+          if (bPart.startsWith("**") && bPart.endsWith("**")) {
+            return <strong key={`${idx}-${bIdx}`}>{bPart.slice(2, -2)}</strong>;
           }
-          return subPart;
-        });
+          const italicParts = bPart.split(/(\*.*?\*)/g);
+          return italicParts.map((subPart, subIdx) => {
+            if (subPart.startsWith("*") && subPart.endsWith("*")) {
+              return <em key={`${idx}-${bIdx}-${subIdx}`}>{subPart.slice(1, -1)}</em>;
+            }
+            return subPart;
+          });
+        }).flat();
       }).flat();
     };
 
@@ -191,10 +254,67 @@ export default function ChatSidebar({ isOpen, onClose, activeProject, setActiveP
         <button onClick={onClose} style={{ background: 'rgba(255,255,255,.2)', color: '#fff', border: 'none', width: '32px', height: '32px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px', flexShrink: 0 }}>✕</button>
       </header>
 
+      {/* Tabs */}
+      <div style={{ display: "flex", borderBottom: "1px solid #E2E8F0", background: "#F8FAFC" }}>
+        <button 
+          onClick={() => setActiveTab("chat")}
+          style={{ flex: 1, padding: "12px", border: "none", background: activeTab === "chat" ? "#fff" : "transparent", borderBottom: activeTab === "chat" ? "2px solid #2563EB" : "2px solid transparent", cursor: "pointer", fontWeight: activeTab === "chat" ? 600 : 400, color: activeTab === "chat" ? "#1E293B" : "#64748B" }}>
+          Chat
+        </button>
+        <button 
+          onClick={() => setActiveTab("repo")}
+          style={{ flex: 1, padding: "12px", border: "none", background: activeTab === "repo" ? "#fff" : "transparent", borderBottom: activeTab === "repo" ? "2px solid #2563EB" : "2px solid transparent", cursor: "pointer", fontWeight: activeTab === "repo" ? 600 : 400, color: activeTab === "repo" ? "#1E293B" : "#64748B", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px" }}>
+          <Database size={16} /> Repositorio {savedCharts.length > 0 && <span style={{ background: "#2563EB", color: "#fff", fontSize: "10px", padding: "2px 6px", borderRadius: "10px" }}>{savedCharts.length}</span>}
+        </button>
+      </div>
+
       {/* Main Layout */}
       <div className="chat-layout" style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
 
+        {/* Repositorio View */}
+        {activeTab === "repo" && (
+          <div style={{ flex: 1, overflowY: "auto", padding: "16px", background: "#F1F5F9" }}>
+            {savedCharts.length === 0 ? (
+              <div style={{ textAlign: "center", color: "#64748B", marginTop: "40px" }}>
+                <BarChart3 size={40} style={{ margin: "0 auto", opacity: 0.3, marginBottom: "12px" }} />
+                <p style={{ fontSize: "14px" }}>Aún no has guardado ningún gráfico.</p>
+              </div>
+            ) : (
+              savedCharts.map((chart, idx) => (
+                <div key={idx} style={{ padding: "16px", background: "#fff", borderRadius: "8px", border: "1px solid #e2e8f0", marginBottom: "16px", boxShadow: "0 1px 3px rgba(0,0,0,0.05)" }}>
+                  <h4 style={{ fontSize: "15px", fontWeight: "bold", marginBottom: "16px", textAlign: "center", color: "#1E293B" }}>{chart.title}</h4>
+                  <div style={{ height: "220px", width: "100%", marginBottom: "10px" }}>
+                    {chart.type === "pie" ? (
+                      <ResponsiveContainer width="100%" height="100%">
+                        <PieChart>
+                          <Pie data={chart.data} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={70} fill="#8884d8">
+                            {chart.data?.map((entry: any, index: number) => (
+                              <Cell key={`cell-${index}`} fill={["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899"][index % 6]} />
+                            ))}
+                          </Pie>
+                          <Tooltip />
+                        </PieChart>
+                      </ResponsiveContainer>
+                    ) : (
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={chart.data}>
+                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                          <XAxis dataKey="name" tick={{fontSize: 11}} interval={0} angle={-15} textAnchor="end" />
+                          <YAxis tick={{fontSize: 12}} />
+                          <Tooltip cursor={{fill: "#f1f5f9"}} />
+                          <Bar dataKey="value" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    )}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        )}
+
         {/* Chat Window */}
+        {activeTab === "chat" && (
         <main className="chat-window">
           {/* Messages */}
           <div className="messages-container">
@@ -210,7 +330,8 @@ export default function ChatSidebar({ isOpen, onClose, activeProject, setActiveP
               </div>
             ) : (
               messages.filter(m => !m.content.includes("[CONFIRM_ACTION]") && !m.content.includes("[REJECT_ACTION]")).map((msg, index, filteredArray) => (
-                <div key={index} className={`message-wrapper ${msg.role}`}>
+              <React.Fragment key={index}>
+                <div className={`message-wrapper ${msg.role}`}>
                   <div className="message-bubble">
                     <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.4rem" }}>
                       {msg.role === "user" ? (
@@ -229,17 +350,20 @@ export default function ChatSidebar({ isOpen, onClose, activeProject, setActiveP
                     </div>
                     <div>{renderMessageContent(msg.content)}</div>
                   </div>
-                  
-                  {/* Action Confirmation Rendered after the assistant message if pending */}
-                  {index === filteredArray.length - 1 && pendingAction && (
+                </div>
+                
+                {/* Action Confirmation Rendered after the assistant message if pending */}
+                {index === filteredArray.length - 1 && pendingAction && (
+                  <div style={{ display: "flex", width: "100%", justifyContent: "flex-start", marginTop: "4px", marginBottom: "12px" }}>
                     <ActionConfirmationCard 
                       pendingAction={pendingAction}
                       onConfirm={handleConfirmAction}
                       onReject={handleRejectAction}
                     />
-                  )}
-                </div>
-              ))
+                  </div>
+                )}
+              </React.Fragment>
+            ))
             )}
 
             {isLoading && (
@@ -278,6 +402,7 @@ export default function ChatSidebar({ isOpen, onClose, activeProject, setActiveP
             </button>
           </form>
         </main>
+        )}
       </div>
     </div>
     </div>

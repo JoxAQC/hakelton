@@ -11,6 +11,11 @@ export default function Home() {
   const [activeProject, setActiveProject] = useState(null);
   const [dataLoaded, setDataLoaded] = useState(false);
 
+  // Elevated dashboard state for cross-component communication (Human-in-the-loop)
+  const [page, setPage] = useState("inicio");
+  const [savedCharts, setSavedCharts] = useState<any[]>([]);
+  const [savedMetrics, setSavedMetrics] = useState<any[]>([]);
+
   useEffect(() => {
     loadSupabaseData().then(() => setDataLoaded(true));
   }, []);
@@ -22,7 +27,16 @@ export default function Home() {
   return (
     <>
       {/* Legacy Prototype UI */}
-      <LegacyApp activeProject={activeProject} setActiveProject={setActiveProject} />
+      <LegacyApp 
+        activeProject={activeProject} 
+        setActiveProject={setActiveProject} 
+        page={page}
+        setPage={setPage}
+        savedCharts={savedCharts}
+        setSavedCharts={setSavedCharts}
+        savedMetrics={savedMetrics}
+        setSavedMetrics={setSavedMetrics}
+      />
 
       {/* Floating Assistant Button */}
       <button
@@ -50,7 +64,18 @@ export default function Home() {
       </button>
 
       {/* Pop-up Chat Sidebar */}
-      <ChatSidebar isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} activeProject={activeProject} setActiveProject={setActiveProject} />
+      <ChatSidebar 
+        isOpen={isChatOpen} 
+        onClose={() => setIsChatOpen(false)} 
+        activeProject={activeProject} 
+        setActiveProject={setActiveProject} 
+        page={page}
+        setPage={setPage}
+        savedCharts={savedCharts}
+        setSavedCharts={setSavedCharts}
+        savedMetrics={savedMetrics}
+        setSavedMetrics={setSavedMetrics}
+      />
     </>
   );
 }

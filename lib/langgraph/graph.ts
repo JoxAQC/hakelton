@@ -24,7 +24,7 @@ export const AgentState = Annotation.Root({
     reducer: (left, right) => right ?? left,
     default: () => "",
   }),
-  nextStep: Annotation<"retrieve" | "generate" | "clarify" | "action" | "action_execute">({
+  nextStep: Annotation<"retrieve" | "generate" | "clarify" | "action" | "action_execute" | "action_reject">({
     reducer: (left, right) => right ?? left,
     default: () => "generate",
   }),
@@ -191,10 +191,7 @@ async function routerNode(state: typeof AgentState.State) {
   }
   if (lastMessage.content.includes("[REJECT_ACTION]")) {
     return { 
-      nextStep: "generate" as const,
-      requiresConfirmation: false,
-      pendingAction: null,
-      actionResult: "El usuario ha rechazado la acción."
+      nextStep: "action_reject" as const,
     };
   }
 
@@ -413,24 +410,38 @@ async function executeActionNode(state: typeof AgentState.State) {
   const { pendingAction } = state;
   
   if (!pendingAction) {
-    return { actionResult: "Error: No había ninguna acción pendiente.", nextStep: "generate" as const };
+    return { messages: [{ role: "assistant" as const, content: "No había acción pendiente." }] };
   }
 
-  // En un entorno real, aquí se llama a Supabase:
-  // await supabaseAdmin.from('metrics_config').insert(pendingAction.parameters);
-  
-  let resultStr = `[SISTEMA]: La herramienta ${pendingAction.tool_name} se ejecutó con éxito usando los parámetros: ${JSON.stringify(pendingAction.parameters)}. La base de datos ha sido actualizada.`;
-  
   if (pendingAction.tool_name === "generate_chart_tool") {
-    resultStr = `[SISTEMA]: El gráfico "${pendingAction.parameters.title}" se guardó en la sección de consultas guardadas exitosamente.`;
+    return {
+      requiresConfirmation: false,
+      pendingAction: null,
+      messages: [{ role: "assistant" as const, content: `✅ El gráfico **"${pendingAction.parameters.title}"** ha sido guardado exitosamente. [Ver en la página de Repositorio](repositorio)` }]
+    };
   }
 
+  if (pendingAction.tool_name === "create_metric_config_tool") {
+    return {
+      requiresConfirmation: false,
+      pendingAction: null,
+      messages: [{ role: "assistant" as const, content: `✅ La métrica **"${pendingAction.parameters.name}"** ha sido agregada exitosamente. [Ver en la página de Inicio](inicio)` }]
+    };
+  }
+
+  let resultStr = `[SISTEMA]: La herramienta ${pendingAction.tool_name} se ejecutó con éxito.`;
   return {
     requiresConfirmation: false,
     pendingAction: null,
-    actionResult: resultStr,
-    nextStep: "generate" as const,
-    messages: [{ role: "system" as const, content: resultStr }]
+    messages: [{ role: "assistant" as const, content: `La acción se ha ejecutado exitosamente.` }]
+  };
+}
+
+async function rejectActionNode(state: typeof AgentState.State) {
+  return {
+    requiresConfirmation: false,
+    pendingAction: null,
+    messages: [{ role: "assistant" as const, content: "Acción descartada. ¿Qué otra consulta tienes?" }]
   };
 }
 
@@ -442,6 +453,7 @@ const workflow = new StateGraph(AgentState)
   .addNode("clarify", clarifyNode)
   .addNode("action", actionNode)
   .addNode("action_execute", executeActionNode)
+  .addNode("action_reject", rejectActionNode)
   // Edges
   .addEdge(START, "router")
   .addConditionalEdges(
@@ -452,7 +464,8 @@ const workflow = new StateGraph(AgentState)
       generate: "generate",
       clarify: "clarify",
       action: "action",
-      action_execute: "action_execute"
+      action_execute: "action_execute",
+      action_reject: "action_reject"
     }
   )
   .addConditionalEdges(
@@ -464,7 +477,8 @@ const workflow = new StateGraph(AgentState)
     }
   )
   .addEdge("action", END) // Graph pauses after actionNode for confirmation
-  .addEdge("action_execute", "generate") // After execution, generate a final natural response
+  .addEdge("action_execute", END) // Flow terminates naturally after returning a response
+  .addEdge("action_reject", END) // Flow terminates after rejection message
   .addEdge("generate", END)
   .addEdge("clarify", END);
 
